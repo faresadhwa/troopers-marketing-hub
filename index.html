@@ -558,16 +558,6 @@
 </head>
 <body>
 
-<!-- API KEY MODAL -->
-<div class="modal-overlay" id="apiModal">
-  <div class="modal">
-    <h3>🔑 Enter Your API Key</h3>
-    <p>Enter your Claude API key to start using the Troopers Marketing Hub. Your key is stored only in this browser session and never sent anywhere except Anthropic's API.</p>
-    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
-    <button class="modal-btn" onclick="saveApiKey()">Start Using Hub</button>
-    <p class="modal-note">Get your API key at platform.anthropic.com</p>
-  </div>
-</div>
 
 <!-- HEADER -->
 <header>
@@ -716,7 +706,6 @@ const i18n = {
 
 let currentLang = 'en';
 let currentAgent = null;
-let apiKey = sessionStorage.getItem('troopers_api_key') || '';
 
 // ===== SYSTEM PROMPTS =====
 const TROOPERS_CI = `
@@ -1122,16 +1111,6 @@ Make ideas specific, creative, and immediately actionable. Mix hiring content wi
 
 // ===== CORE FUNCTIONS =====
 
-function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key.startsWith('sk-')) {
-    alert('Please enter a valid API key (starts with sk-)');
-    return;
-  }
-  apiKey = key;
-  sessionStorage.setItem('troopers_api_key', key);
-  document.getElementById('apiModal').classList.add('hidden');
-}
 
 function setLang(lang) {
   currentLang = lang;
@@ -1215,11 +1194,6 @@ function getUserMessage() {
 }
 
 async function generate() {
-  if (!apiKey) {
-    document.getElementById('apiModal').classList.remove('hidden');
-    return;
-  }
-
   const userMessage = getUserMessage();
   if (!userMessage) {
     alert('Please fill in the required fields.');
@@ -1242,7 +1216,6 @@ async function generate() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        apiKey: apiKey,
         systemPrompt: agents[currentAgent].systemPrompt,
         userMessage: userMessage
       })
@@ -1280,12 +1253,6 @@ function clearOutput() {
   document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
 }
 
-// Check for API key on load
-window.onload = () => {
-  if (!apiKey) {
-    document.getElementById('apiModal').classList.remove('hidden');
-  }
-};
 </script>
 </body>
 </html>

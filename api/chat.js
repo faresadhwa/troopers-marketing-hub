@@ -6,9 +6,15 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { apiKey, systemPrompt, userMessage } = req.body;
+  const { systemPrompt, userMessage } = req.body;
 
-  if (!apiKey || !userMessage) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ error: 'API key not configured on server' });
+  }
+
+  if (!userMessage) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
