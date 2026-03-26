@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troopers Marketing Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #131249;
+      --navy-mid: #1B1A68;
+      --orange: #F47F20;
+      --orange-light: #F48830;
+      --white: #FFFFFF;
+      --gray-light: #F5F5F7;
+      --gray-mid: #E0E0E0;
+      --gray-text: #666;
+      --success: #2E7D32;
+      --font-main: 'Poppins', 'Noto Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--gray-light);
+      color: var(--navy);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--navy);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    header img.logo {
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: var(--font-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--orange);
+      color: var(--orange);
+      background: rgba(244,127,32,0.1);
+    }
+
+    .hub-title {
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ===== HOME PAGE ===== */
+    #home-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .home-hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .home-hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .home-hero h1 span {
+      color: var(--orange);
+    }
+
+    .home-hero p {
+      font-size: 15px;
+      color: var(--gray-text);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .agent-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: 2px solid transparent;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transition: transform 0.25s;
+    }
+
+    .agent-card:hover {
+      border-color: var(--orange);
+      box-shadow: 0 8px 28px rgba(244,127,32,0.15);
+      transform: translateY(-3px);
+    }
+
+    .agent-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .agent-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .agent-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .agent-card p {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+
+    .agent-tag {
+      display: inline-block;
+      margin-top: 14px;
+      background: rgba(244,127,32,0.1);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== AGENT PAGE ===== */
+    #agent-page {
+      display: none;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 28px;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+      font-family: var(--font-main);
+    }
+
+    .back-btn:hover { color: var(--orange); }
+
+    .agent-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--white);
+    }
+
+    .agent-header .agent-icon-lg {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .agent-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .agent-header p {
+      font-size: 13px;
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .form-group label span.required {
+      color: var(--orange);
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-mid);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font-main);
+      color: var(--navy);
+      background: var(--white);
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--orange);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+    }
+
+    .platform-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .platform-check {
+      display: none;
+    }
+
+    .platform-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: 1.5px solid var(--gray-mid);
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .platform-check:checked + .platform-label {
+      border-color: var(--orange);
+      background: rgba(244,127,32,0.1);
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font-main);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .generate-btn:hover {
+      background: var(--orange-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(244,127,32,0.35);
+    }
+
+    .generate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== OUTPUT ===== */
+    .output-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: none;
+    }
+
+    .output-card.visible { display: block; }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1.5px solid var(--gray-mid);
+    }
+
+    .output-header h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .copy-btn, .clear-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-main);
+    }
+
+    .copy-btn {
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+    }
+
+    .copy-btn:hover { background: var(--navy-mid); }
+
+    .clear-btn {
+      background: transparent;
+      color: var(--gray-text);
+      border: 1.5px solid var(--gray-mid);
+    }
+
+    .clear-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+    .output-content {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #333;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Loading animation */
+    .loading-dots {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .loading-dots span {
+      width: 6px; height: 6px;
+      background: var(--white);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Streaming cursor */
+    .streaming-cursor::after {
+      content: '▋';
+      animation: blink 0.8s infinite;
+      color: var(--orange);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== TREND NOTE ===== */
+    .info-note {
+      background: rgba(244,127,32,0.08);
+      border-left: 3px solid var(--orange);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12.5px;
+      color: var(--gray-text);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      header { padding: 0 16px; }
+      .hub-title { display: none; }
+      #home-page, #agent-page { padding: 24px 16px; }
+      .home-hero h1 { font-size: 24px; }
+      .agents-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== API KEY MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.hidden { display: none; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      font-size: 13px;
+      color: var(--gray-text);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-mid);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font-main);
+      margin-bottom: 16px;
+    }
+
+    .modal input:focus {
+      outline: none;
+      border-color: var(--orange);
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-main);
+      cursor: pointer;
+    }
+
+    .modal-btn:hover { background: var(--orange-light); }
+
+    .modal-note {
+      font-size: 11px;
+      color: var(--gray-text);
+      margin-top: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <h3>🔑 Enter Your API Key</h3>
+    <p>Enter your Claude API key to start using the Troopers Marketing Hub. Your key is stored only in this browser session and never sent anywhere except Anthropic's API.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+    <button class="modal-btn" onclick="saveApiKey()">Start Using Hub</button>
+    <p class="modal-note">Get your API key at platform.anthropic.com</p>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <img src="logo.png" alt="TROOPERS Logo" class="logo" />
+  <div class="header-right">
+    <span class="hub-title" data-i18n="hub_title">Marketing Hub</span>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('bm')">BM</button>
+      <button class="lang-btn" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" onclick="setLang('ta')">தமிழ்</button>
+    </div>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<div id="home-page">
+  <div class="home-hero">
+    <h1 data-i18n="home_title">Your <span>Marketing</span> Command Centre</h1>
+    <p data-i18n="home_subtitle">5 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.</p>
+  </div>
+
+  <div class="agents-grid">
+
+    <div class="agent-card" onclick="openAgent('copywriter')">
+      <div class="agent-icon">✍️</div>
+      <h3 data-i18n="agent1_title">Social Media Copywriter</h3>
+      <p data-i18n="agent1_desc">Generate ready-to-post captions for Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — on-brand, every time.</p>
+      <span class="agent-tag" data-i18n="agent1_tag">6 PLATFORMS</span>
+    </div>
+
+    <div class="agent-card" onclick="openAgent('editor')">
+      <div class="agent-icon">🔍</div>
+      <h3 data-i18n="agent2_title">Content Editor</h3>
+      <p data-i18n="agent2_desc">Paste your draft and get it polished to match TROOPERS' brand voice, tone, and CI guidelines instantly.</p>
+      <span class="agent-tag" data-i18n="agent2_tag">BRAND CHECKER</span>
+    </div>
+
+    <div class="agent-card" onclick="openAgent('brief')">
+      <div class="agent-icon">📋</div>
+      <h3 data-i18n="agent3_title">Campaign Brief Generator</h3>
+      <p data-i18n="agent3_desc">Turn a simple idea into a full structured campaign brief — audience, messaging, channels, timeline, and KPIs.</p>
+      <span class="agent-tag" data-i18n="agent3_tag">FOR B2B & TALENT</span>
+    </div>
+
+    <div class="agent-card" onclick="openAgent('calendar')">
+      <div class="agent-icon">📅</div>
+      <h3 data-i18n="agent4_title">Content Calendar Planner</h3>
+      <p data-i18n="agent4_desc">Get a week-by-week posting plan with topics, content types, and suggested captions for your chosen period.</p>
+      <span class="agent-tag" data-i18n="agent4_tag">WEEKLY PLANNING</span>
+    </div>
+
+    <div class="agent-card" onclick="openAgent('trends')">
+      <div class="agent-icon">🔥</div>
+      <h3 data-i18n="agent5_title">Content Ideas & Trends</h3>
+      <p data-i18n="agent5_desc">Get 5–10 fresh TROOPERS content ideas inspired by what's trending. Add trending topics you've spotted for better ideas.</p>
+      <span class="agent-tag" data-i18n="agent5_tag">WEEKLY INSPIRATION</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- AGENT PAGE -->
+<div id="agent-page">
+  <button class="back-btn" onclick="goHome()">← <span data-i18n="back">Back to Hub</span></button>
+
+  <div class="agent-header">
+    <div class="agent-icon-lg" id="agent-icon-lg"></div>
+    <div>
+      <h2 id="agent-page-title"></h2>
+      <p id="agent-page-desc"></p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div id="agent-form-content"></div>
+    <button class="generate-btn" id="generateBtn" onclick="generate()">
+      <span id="btn-text">✨ Generate</span>
+    </button>
+  </div>
+
+  <div class="output-card" id="outputCard">
+    <div class="output-header">
+      <h4 data-i18n="output_title">✅ Generated Output</h4>
+      <div class="output-actions">
+        <button class="copy-btn" onclick="copyOutput()" data-i18n="copy_btn">Copy All</button>
+        <button class="clear-btn" onclick="clearOutput()" data-i18n="clear_btn">Clear</button>
+      </div>
+    </div>
+    <div class="output-content" id="outputContent"></div>
+  </div>
+</div>
+
+<script>
+// ===== TRANSLATIONS =====
+const i18n = {
+  en: {
+    hub_title: 'Marketing Hub',
+    home_title: 'Your <span>Marketing</span> Command Centre',
+    home_subtitle: '5 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.',
+    agent1_title: 'Social Media Copywriter', agent1_desc: 'Generate ready-to-post captions for Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — on-brand, every time.', agent1_tag: '6 PLATFORMS',
+    agent2_title: 'Content Editor', agent2_desc: "Paste your draft and get it polished to match TROOPERS' brand voice, tone, and CI guidelines instantly.", agent2_tag: 'BRAND CHECKER',
+    agent3_title: 'Campaign Brief Generator', agent3_desc: 'Turn a simple idea into a full structured campaign brief — audience, messaging, channels, timeline, and KPIs.', agent3_tag: 'FOR B2B & TALENT',
+    agent4_title: 'Content Calendar Planner', agent4_desc: 'Get a week-by-week posting plan with topics, content types, and suggested captions for your chosen period.', agent4_tag: 'WEEKLY PLANNING',
+    agent5_title: 'Content Ideas & Trends', agent5_desc: 'Get 5–10 fresh TROOPERS content ideas inspired by what\'s trending. Add trending topics you\'ve spotted for better ideas.', agent5_tag: 'WEEKLY INSPIRATION',
+    back: 'Back to Hub', output_title: '✅ Generated Output', copy_btn: 'Copy All', clear_btn: 'Clear',
+    generate_btn: '✨ Generate', generating: 'Generating...'
+  },
+  bm: {
+    hub_title: 'Hab Pemasaran',
+    home_title: 'Pusat Kawalan <span>Pemasaran</span> Anda',
+    home_subtitle: '5 ejen berkuasa AI dibina untuk TROOPERS. Cipta kandungan berjenama untuk mana-mana platform, dalam mana-mana bahasa, dalam beberapa saat.',
+    agent1_title: 'Penulis Media Sosial', agent1_desc: 'Jana kapsyen siap siar untuk Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — mengikut jenama, setiap masa.', agent1_tag: '6 PLATFORM',
+    agent2_title: 'Penyunting Kandungan', agent2_desc: 'Tampal draf anda dan dapatkannya digilap untuk sepadan dengan suara jenama, nada, dan garis panduan CI TROOPERS.', agent2_tag: 'PEMERIKSA JENAMA',
+    agent3_title: 'Penjana Ringkasan Kempen', agent3_desc: 'Tukar idea mudah kepada ringkasan kempen berstruktur — audiens, pesanan, saluran, jadual, dan KPI.', agent3_tag: 'UNTUK B2B & BAKAT',
+    agent4_title: 'Perancang Kalendar Kandungan', agent4_desc: 'Dapatkan pelan posting minggu demi minggu dengan topik, jenis kandungan, dan kapsyen yang dicadangkan.', agent4_tag: 'PERANCANGAN MINGGUAN',
+    agent5_title: 'Idea Kandungan & Trend', agent5_desc: 'Dapatkan 5–10 idea kandungan TROOPERS baharu yang diilhamkan oleh trend semasa.', agent5_tag: 'INSPIRASI MINGGUAN',
+    back: 'Kembali ke Hub', output_title: '✅ Output Dijana', copy_btn: 'Salin Semua', clear_btn: 'Kosongkan',
+    generate_btn: '✨ Jana', generating: 'Menjana...'
+  },
+  zh: {
+    hub_title: '营销中心',
+    home_title: '您的<span>营销</span>指挥中心',
+    home_subtitle: '5个专为TROOPERS打造的AI助手。几秒钟内为任何平台创建品牌内容。',
+    agent1_title: '社交媒体文案', agent1_desc: '为Instagram、TikTok、Facebook、LinkedIn、Threads和Twitter生成随时可发布的标题——始终符合品牌形象。', agent1_tag: '6个平台',
+    agent2_title: '内容编辑器', agent2_desc: '粘贴您的草稿，立即将其优化以符合TROOPERS的品牌声音、语气和CI指南。', agent2_tag: '品牌检查',
+    agent3_title: '活动简报生成器', agent3_desc: '将简单想法转变为完整的结构化活动简报——受众、信息、渠道、时间表和KPI。', agent3_tag: '适用于B2B和人才',
+    agent4_title: '内容日历规划师', agent4_desc: '获取按周排列的发布计划，包含主题、内容类型和建议标题。', agent4_tag: '每周规划',
+    agent5_title: '内容创意与趋势', agent5_desc: '获取5-10个受当前趋势启发的TROOPERS内容创意。', agent5_tag: '每周灵感',
+    back: '返回中心', output_title: '✅ 已生成内容', copy_btn: '复制全部', clear_btn: '清除',
+    generate_btn: '✨ 生成', generating: '生成中...'
+  },
+  ta: {
+    hub_title: 'மார்க்கெட்டிங் ஹப்',
+    home_title: 'உங்கள் <span>மார்க்கெட்டிங்</span> கட்டுப்பாட்டு மையம்',
+    home_subtitle: 'TROOPERS-க்காக கட்டப்பட்ட 5 AI முகவர்கள். எந்த தளத்திலும், எந்த மொழியிலும் உள்ளடக்கம் உருவாக்குங்கள்.',
+    agent1_title: 'சமூக ஊடக எழுத்தாளர்', agent1_desc: 'Instagram, TikTok, Facebook, LinkedIn-க்காக கேப்ஷன்கள் உருவாக்குங்கள் — எப்போதும் பிராண்டிற்கு ஏற்ப.', agent1_tag: '6 தளங்கள்',
+    agent2_title: 'உள்ளடக்க திருத்தியர்', agent2_desc: 'உங்கள் வரைவை ஒட்டி, TROOPERS பிராண்ட் குரலுக்கு ஏற்ப செம்மைப்படுத்துங்கள்.', agent2_tag: 'பிராண்ட் சரிபார்ப்பு',
+    agent3_title: 'பிரச்சாரம் சுருக்க உருவாக்கி', agent3_desc: 'எளிய யோசனையை முழு பிரச்சார சுருக்கமாக மாற்றுங்கள்.', agent3_tag: 'B2B மற்றும் திறமைக்காக',
+    agent4_title: 'உள்ளடக்க நாட்காட்டி திட்டமிடல்', agent4_desc: 'வாரந்தோறும் பதிவிடும் திட்டத்தை பெறுங்கள்.', agent4_tag: 'வாராந்திர திட்டமிடல்',
+    agent5_title: 'உள்ளடக்க யோசனைகள் & போக்குகள்', agent5_desc: 'தற்போதைய போக்குகளால் ஈர்க்கப்பட்ட 5–10 புதிய யோசனைகளைப் பெறுங்கள்.', agent5_tag: 'வாராந்திர உத்வேகம்',
+    back: 'ஹப்க்கு திரும்பு', output_title: '✅ உருவாக்கப்பட்ட வெளியீடு', copy_btn: 'அனைத்தையும் நகலெடு', clear_btn: 'அழி',
+    generate_btn: '✨ உருவாக்கு', generating: 'உருவாக்குகிறது...'
+  }
+};
+
+let currentLang = 'en';
+let currentAgent = null;
+let apiKey = sessionStorage.getItem('troopers_api_key') || '';
+
+// ===== SYSTEM PROMPTS =====
+const TROOPERS_CI = `
+TROOPERS BRAND GUIDELINES (always follow these):
+- Company: TROOPERS – Part-Time & Manpower Solutions Made Easy
+- Tagline: "Part-Time & Manpower Solutions Made Easy"
+- Mission: Bridging Talents with Opportunities
+- Vision: Leading Flexible Work Across Asia
+- Values: Accountability, Transparency, Legitimacy
+- Brand Voice: Professional yet approachable, energetic, empowering, trustworthy
+- Tone: Confident but not arrogant. Warm but not casual. Clear and direct.
+- Primary Colors: Navy (#131249), Orange (#F47F20) — use these as reference for tone
+- Font Style: Clean, modern, no fluff
+- CTA Rule: NEVER use phone numbers in CTAs. Use Job Codes or "Apply Now" / "Download App" instead.
+- Logo rule: Always mention "A Verified Job By: TROOPERS" for job posts
+- Target audiences:
+  (1) JOB SEEKERS: Young adults 18-35, part-time workers, students, gig economy workers in Malaysia & Singapore
+  (2) BUSINESSES/CLIENTS: HR managers, business owners, F&B chains, retail brands, hospitality groups needing part-time/contract staff
+- Markets: Malaysia (primary) and Singapore (expansion)
+- Avoid: Generic AI-sounding copy. Avoid overused phrases like "In today's fast-paced world", "Look no further", "We've got you covered"
+- Always sound like a real human wrote it
+- Use local context when relevant (hawker centres, MRT, Grab, etc.)
+`;
+
+const agents = {
+  copywriter: {
+    icon: '✍️',
+    title: { en: 'Social Media Copywriter', bm: 'Penulis Media Sosial', zh: '社交媒体文案', ta: 'சமூக ஊடக எழுத்தாளர்' },
+    desc: { en: 'Generate ready-to-post captions for 6 platforms in your chosen language', bm: 'Jana kapsyen untuk 6 platform dalam bahasa pilihan anda', zh: '为6个平台生成即发标题', ta: '6 தளங்களுக்கு கேப்ஷன்கள் உருவாக்குங்கள்' },
+    systemPrompt: `You are TROOPERS' expert social media copywriter. ${TROOPERS_CI}
+
+Your job: Write engaging, platform-optimised social media captions based on the user's brief.
+
+For each platform requested, write a separate caption tailored to that platform's style:
+- Instagram: Visual storytelling, emojis, line breaks, 3-5 relevant hashtags
+- TikTok: Hook in first line, trendy, conversational, 3-4 hashtags, short and punchy
+- Facebook: Slightly longer, conversational, can include a question to drive comments
+- LinkedIn: Professional but human, insight-driven, minimal emojis, 2-3 hashtags
+- Threads: Short, witty, conversational, feels like a real person talking
+- Twitter/X: Under 280 chars, punchy, hook-first, 1-2 hashtags max
+
+Always:
+- Vary the format per platform — don't just copy-paste
+- Make it feel human, not AI-generated
+- Follow TROOPERS CI at all times
+- Use the language specified by the user
+- If post is about job hiring, add "A Verified Job By: TROOPERS" and use Job Code format
+- End each platform section with a clear separator like "---"
+
+Output format:
+**[PLATFORM NAME]**
+[Caption here]
+---`,
+
+    form: `
+      <div class="form-group">
+        <label>What is this post about? <span class="required">*</span></label>
+        <textarea id="f_topic" placeholder="e.g. We're hiring part-time F&B crew in Singapore for a new bubble tea brand. Flexible hours, $13/hr, apply now." rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Select platforms <span class="required">*</span></label>
+        <div class="platform-checkboxes">
+          <input type="checkbox" class="platform-check" id="p_ig" value="Instagram" checked><label class="platform-label" for="p_ig">📸 Instagram</label>
+          <input type="checkbox" class="platform-check" id="p_tt" value="TikTok" checked><label class="platform-label" for="p_tt">🎵 TikTok</label>
+          <input type="checkbox" class="platform-check" id="p_fb" value="Facebook" checked><label class="platform-label" for="p_fb">👥 Facebook</label>
+          <input type="checkbox" class="platform-check" id="p_li" value="LinkedIn"><label class="platform-label" for="p_li">💼 LinkedIn</label>
+          <input type="checkbox" class="platform-check" id="p_th" value="Threads"><label class="platform-label" for="p_th">🧵 Threads</label>
+          <input type="checkbox" class="platform-check" id="p_tw" value="Twitter/X"><label class="platform-label" for="p_tw">🐦 Twitter/X</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Post type</label>
+        <select id="f_type">
+          <option value="hiring">🧑‍💼 Hiring / Job Post</option>
+          <option value="brand">🏢 Brand Awareness</option>
+          <option value="trend">🔥 Trend / Entertainment</option>
+          <option value="tips">💡 Tips / Educational</option>
+          <option value="promo">📣 Promotion / Announcement</option>
+          <option value="engagement">💬 Engagement / Question</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Output language</label>
+        <select id="f_lang">
+          <option value="English">English</option>
+          <option value="Bahasa Malaysia">Bahasa Malaysia</option>
+          <option value="Mandarin Chinese">Mandarin Chinese (中文)</option>
+          <option value="Tamil">Tamil (தமிழ்)</option>
+          <option value="English and Bahasa Malaysia mixed (Manglish/Rojak style)">Manglish / Rojak</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target audience</label>
+        <select id="f_audience">
+          <option value="job seekers (part-time workers, students, young adults in Malaysia/Singapore)">Job Seekers (Workers)</option>
+          <option value="businesses and HR managers looking for part-time/manpower solutions">Businesses & HR Managers</option>
+          <option value="general public for brand awareness">General Public</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Any specific details or keywords? (optional)</label>
+        <input type="text" id="f_extra" placeholder="e.g. Job Code: SG-FNB-001, location: Orchard, $13/hr" />
+      </div>
+    `
+  },
+
+  editor: {
+    icon: '🔍',
+    title: { en: 'Content Editor', bm: 'Penyunting Kandungan', zh: '内容编辑器', ta: 'உள்ளடக்க திருத்தியர்' },
+    desc: { en: 'Polish your draft to match TROOPERS brand voice and CI guidelines', bm: 'Perhalus draf anda mengikut suara jenama dan garis panduan CI TROOPERS', zh: '将您的草稿打磨成符合TROOPERS品牌声音的内容', ta: 'உங்கள் வரைவை TROOPERS பிராண்ட் குரலுக்கு ஏற்ப செம்மைப்படுத்துங்கள்' },
+    systemPrompt: `You are TROOPERS' expert content editor and brand guardian. ${TROOPERS_CI}
+
+Your job: Review and improve the user's draft content to make it:
+1. Match TROOPERS brand voice perfectly
+2. Sound human, not AI-generated
+3. Be compelling and engaging for the target audience
+4. Follow all CI rules (no phone numbers in CTA, use Job Codes, etc.)
+5. Be grammatically correct in the language it's written in
+
+Output format:
+**EDITED VERSION:**
+[Your improved version here]
+
+---
+
+**WHAT CHANGED & WHY:**
+[Brief bullet points explaining key changes]
+
+---
+
+**CI COMPLIANCE CHECK:**
+✅ [things that are good]
+⚠️ [things to watch out for, if any]`,
+
+    form: `
+      <div class="form-group">
+        <label>Paste your draft content here <span class="required">*</span></label>
+        <textarea id="f_draft" placeholder="Paste your caption, post, or copy here..." rows="6"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Platform this is for</label>
+        <select id="f_platform">
+          <option value="Instagram">Instagram</option>
+          <option value="TikTok">TikTok</option>
+          <option value="Facebook">Facebook</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Threads">Threads</option>
+          <option value="Twitter/X">Twitter/X</option>
+          <option value="General / Not Platform Specific">General</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anything specific you want improved? (optional)</label>
+        <input type="text" id="f_focus" placeholder="e.g. Make it punchier, more casual, add hashtags, check CI compliance..." />
+      </div>
+    `
+  },
+
+  brief: {
+    icon: '📋',
+    title: { en: 'Campaign Brief Generator', bm: 'Penjana Ringkasan Kempen', zh: '活动简报生成器', ta: 'பிரச்சாரம் சுருக்க உருவாக்கி' },
+    desc: { en: 'Turn your campaign idea into a full structured brief for your team or vendors', bm: 'Tukar idea kempen anda kepada ringkasan berstruktur untuk pasukan atau vendor', zh: '将您的活动创意转变为完整的结构化简报', ta: 'உங்கள் பிரச்சார யோசனையை முழு கட்டமைப்பு சுருக்கமாக மாற்றுங்கள்' },
+    systemPrompt: `You are TROOPERS' senior marketing strategist. ${TROOPERS_CI}
+
+Your job: Generate a comprehensive, structured campaign brief based on the user's input.
+
+Output a professional campaign brief in this exact format:
+
+# 📋 CAMPAIGN BRIEF: [Campaign Name]
+
+## 1. CAMPAIGN OVERVIEW
+- Objective:
+- Campaign Type: (Awareness / Recruitment / Lead Gen / Engagement)
+- Market: (Malaysia / Singapore / Both)
+- Duration:
+
+## 2. TARGET AUDIENCE
+- Primary:
+- Secondary:
+- Key Insights:
+
+## 3. KEY MESSAGES
+- Main Message:
+- Supporting Messages: (3 bullet points)
+- Tone & Voice:
+
+## 4. PLATFORMS & CHANNELS
+(For each platform: recommended content type, posting frequency, key message angle)
+
+## 5. CONTENT STRATEGY
+- Content Pillars:
+- Content Mix: (% educational / % promotional / % entertainment / % engagement)
+
+## 6. SUGGESTED TIMELINE
+(Week-by-week breakdown)
+
+## 7. KPIs & SUCCESS METRICS
+- Primary KPIs:
+- Secondary KPIs:
+- Target Numbers: (realistic estimates)
+
+## 8. BUDGET CONSIDERATIONS
+(General guidance, no specific numbers unless provided)
+
+## 9. ACTION ITEMS
+(Checklist of what needs to be prepared)
+
+Make it practical, specific to TROOPERS, and immediately usable by the team.`,
+
+    form: `
+      <div class="form-group">
+        <label>What is this campaign about? <span class="required">*</span></label>
+        <textarea id="f_campaign" placeholder="e.g. We want to recruit F&B part-time workers in Singapore for our new client Molly Tea — a premium bubble tea chain with 2 outlets in SG. Workers may need Food Hygiene Certificate sponsorship." rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Campaign objective</label>
+        <select id="f_objective">
+          <option value="Talent Recruitment — attract job seekers to apply">Talent Recruitment (attract workers)</option>
+          <option value="B2B Lead Generation — attract businesses to use TROOPERS">B2B Lead Gen (attract clients)</option>
+          <option value="Brand Awareness — grow TROOPERS visibility">Brand Awareness</option>
+          <option value="Engagement — grow social media community">Community Engagement</option>
+          <option value="Mixed — both talent recruitment and brand awareness">Mixed (Talent + Brand)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target market</label>
+        <select id="f_market">
+          <option value="Singapore">Singapore</option>
+          <option value="Malaysia">Malaysia</option>
+          <option value="Both Malaysia and Singapore">Both Malaysia & Singapore</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Campaign duration</label>
+        <select id="f_duration">
+          <option value="1 week">1 Week</option>
+          <option value="2 weeks">2 Weeks</option>
+          <option value="1 month" selected>1 Month</option>
+          <option value="3 months">3 Months</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Any specific details or context? (optional)</label>
+        <textarea id="f_context" placeholder="e.g. Budget is limited, focus on organic social. Key selling point is flexible hours and weekly pay." rows="3"></textarea>
+      </div>
+    `
+  },
+
+  calendar: {
+    icon: '📅',
+    title: { en: 'Content Calendar Planner', bm: 'Perancang Kalendar Kandungan', zh: '内容日历规划师', ta: 'உள்ளடக்க நாட்காட்டி திட்டமிடல்' },
+    desc: { en: 'Get a structured content plan with topics, formats, and caption ideas', bm: 'Dapatkan pelan kandungan berstruktur dengan topik, format, dan idea kapsyen', zh: '获取包含主题、格式和标题创意的结构化内容计划', ta: 'தலைப்புகள், வடிவங்கள் மற்றும் கேப்ஷன் யோசனைகளுடன் உள்ளடக்கத் திட்டம் பெறுங்கள்' },
+    systemPrompt: `You are TROOPERS' content strategist and calendar planner. ${TROOPERS_CI}
+
+Your job: Create a detailed, practical content calendar for the specified period.
+
+Output format — create a structured calendar like this:
+
+# 📅 CONTENT CALENDAR: [Period]
+**Focus Theme:** [Main theme]
+**Platforms:** [Selected platforms]
+**Total Posts:** [Number]
+
+---
+
+## WEEK 1: [Theme/Focus]
+| Day | Platform | Content Type | Topic/Angle | Caption Hook | Hashtags |
+|-----|----------|-------------|-------------|--------------|----------|
+[Fill in each day]
+
+[Repeat for each week]
+
+---
+
+## CONTENT PILLARS BREAKDOWN
+- [Pillar 1]: X posts
+- [Pillar 2]: X posts
+- etc.
+
+## TIPS FOR THIS PERIOD
+[3-5 practical tips for executing this calendar]
+
+Make the calendar realistic for a team of 5, practical to execute, and varied in content types (reels, carousels, static posts, stories).`,
+
+    form: `
+      <div class="form-group">
+        <label>Planning period <span class="required">*</span></label>
+        <select id="f_period">
+          <option value="1 week (7 days)">1 Week</option>
+          <option value="2 weeks (14 days)" selected>2 Weeks</option>
+          <option value="1 month (4 weeks)">1 Month</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Main theme or focus for this period</label>
+        <input type="text" id="f_theme" placeholder="e.g. Singapore expansion launch, Ramadan hiring push, Brand visibility drive" />
+      </div>
+      <div class="form-group">
+        <label>Select platforms to plan for</label>
+        <div class="platform-checkboxes">
+          <input type="checkbox" class="platform-check" id="cp_ig" value="Instagram" checked><label class="platform-label" for="cp_ig">📸 Instagram</label>
+          <input type="checkbox" class="platform-check" id="cp_tt" value="TikTok" checked><label class="platform-label" for="cp_tt">🎵 TikTok</label>
+          <input type="checkbox" class="platform-check" id="cp_fb" value="Facebook"><label class="platform-label" for="cp_fb">👥 Facebook</label>
+          <input type="checkbox" class="platform-check" id="cp_li" value="LinkedIn"><label class="platform-label" for="cp_li">💼 LinkedIn</label>
+          <input type="checkbox" class="platform-check" id="cp_th" value="Threads"><label class="platform-label" for="cp_th">🧵 Threads</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Posting frequency per week</label>
+        <select id="f_freq">
+          <option value="3-4 posts per week (manageable)">3–4 posts/week (manageable)</option>
+          <option value="5-7 posts per week (active)" selected>5–7 posts/week (active)</option>
+          <option value="daily posting (high volume)">Daily (high volume)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Content mix preference</label>
+        <select id="f_mix">
+          <option value="balanced mix of hiring posts, brand content, trends, and tips">Balanced (hiring + brand + trends)</option>
+          <option value="mostly hiring and recruitment content">Mostly Hiring Posts</option>
+          <option value="mostly brand awareness and entertainment content">Mostly Brand & Entertainment</option>
+          <option value="mostly educational tips and industry insights">Mostly Educational</option>
+        </select>
+      </div>
+    `
+  },
+
+  trends: {
+    icon: '🔥',
+    title: { en: 'Content Ideas & Trends', bm: 'Idea Kandungan & Trend', zh: '内容创意与趋势', ta: 'உள்ளடக்க யோசனைகள் & போக்குகள்' },
+    desc: { en: 'Get TROOPERS-specific content ideas inspired by current trends', bm: 'Dapatkan idea kandungan TROOPERS yang diilhamkan oleh trend semasa', zh: '获取受当前趋势启发的TROOPERS专属内容创意', ta: 'தற்போதைய போக்குகளால் ஈர்க்கப்பட்ட TROOPERS-குரிய யோசனைகள் பெறுங்கள்' },
+    systemPrompt: `You are TROOPERS' creative content strategist and trend analyst. ${TROOPERS_CI}
+
+Your job: Generate fresh, creative content ideas for TROOPERS based on current trends and the context provided.
+
+For each idea, provide:
+
+# 🔥 CONTENT IDEAS FOR TROOPERS
+**Generated:** [Today's context]
+**Market Focus:** [Market specified]
+
+---
+
+## IDEA [NUMBER]: [Catchy Idea Title]
+- **Platform:** [Best platform for this]
+- **Format:** [Reel / Carousel / Static / Story / TikTok video]
+- **Trend it rides:** [What trend/topic this taps into]
+- **Angle for TROOPERS:** [How TROOPERS specifically should approach this]
+- **Caption Hook:** [First line that stops the scroll]
+- **Content Description:** [What the actual content would look like]
+- **Hashtags:** [5-7 relevant hashtags]
+- **Why this works:** [One sentence on why this is timely]
+
+---
+
+[Repeat for 7-10 ideas]
+
+## BONUS: TRENDING FORMATS TO TRY THIS WEEK
+[3 trending content formats that TROOPERS can adapt]
+
+Make ideas specific, creative, and immediately actionable. Mix hiring content with brand content. Include at least 2 ideas in Bahasa Malaysia or local dialect.`,
+
+    form: `
+      <div class="info-note">
+        💡 <strong>How this works:</strong> This agent generates trend-inspired content ideas using knowledge of current social media trends. For the freshest results, paste any trending topics or hashtags you've seen this week in the field below.
+      </div>
+      <div class="form-group">
+        <label>Any trending topics you've spotted this week? (optional but recommended)</label>
+        <textarea id="f_trends" placeholder="e.g. #WorkLifeBalance trending on TikTok, 'quiet quitting' viral on LinkedIn, bubble tea TikTok trends, Ramadan content surge..." rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Focus area for ideas <span class="required">*</span></label>
+        <select id="f_focus_area">
+          <option value="a mix of both hiring content and brand visibility content">Both (Hiring + Brand)</option>
+          <option value="attracting job seekers and part-time workers">Attract Job Seekers</option>
+          <option value="attracting business clients and HR managers">Attract Business Clients</option>
+          <option value="pure brand awareness and entertainment">Brand & Entertainment</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target market</label>
+        <select id="f_mkt">
+          <option value="Singapore">Singapore 🇸🇬</option>
+          <option value="Malaysia">Malaysia 🇲🇾</option>
+          <option value="Both Malaysia and Singapore">Both 🇲🇾🇸🇬</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Any specific campaign or event happening soon? (optional)</label>
+        <input type="text" id="f_event" placeholder="e.g. Hari Raya in 3 weeks, Singapore expansion launch, new client Molly Tea onboarding" />
+      </div>
+      <div class="form-group">
+        <label>How many ideas do you want?</label>
+        <select id="f_count">
+          <option value="5">5 Ideas (quick)</option>
+          <option value="7" selected>7 Ideas (recommended)</option>
+          <option value="10">10 Ideas (full batch)</option>
+        </select>
+      </div>
+    `
+  }
+};
+
+// ===== CORE FUNCTIONS =====
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-')) {
+    alert('Please enter a valid API key (starts with sk-)');
+    return;
+  }
+  apiKey = key;
+  sessionStorage.setItem('troopers_api_key', key);
+  document.getElementById('apiModal').classList.add('hidden');
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang] && i18n[lang][key]) {
+      el.innerHTML = i18n[lang][key];
+    }
+  });
+}
+
+function openAgent(agentId) {
+  currentAgent = agentId;
+  const agent = agents[agentId];
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('agent-page').style.display = 'block';
+  document.getElementById('agent-icon-lg').textContent = agent.icon;
+  document.getElementById('agent-page-title').textContent = agent.title[currentLang] || agent.title.en;
+  document.getElementById('agent-page-desc').textContent = agent.desc[currentLang] || agent.desc.en;
+  document.getElementById('agent-form-content').innerHTML = agent.form;
+  clearOutput();
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  document.getElementById('home-page').style.display = 'block';
+  document.getElementById('agent-page').style.display = 'none';
+  currentAgent = null;
+  window.scrollTo(0, 0);
+}
+
+function getUserMessage() {
+  const agent = currentAgent;
+  if (agent === 'copywriter') {
+    const topic = document.getElementById('f_topic').value.trim();
+    if (!topic) return null;
+    const platforms = [...document.querySelectorAll('.platform-check:checked')].map(c => c.value).join(', ');
+    if (!platforms) return null;
+    const type = document.getElementById('f_type').value;
+    const lang = document.getElementById('f_lang').value;
+    const audience = document.getElementById('f_audience').value;
+    const extra = document.getElementById('f_extra').value;
+    return `Write social media captions for the following:\n\nTOPIC: ${topic}\nPLATFORMS: ${platforms}\nPOST TYPE: ${type}\nOUTPUT LANGUAGE: ${lang}\nTARGET AUDIENCE: ${audience}${extra ? '\nEXTRA DETAILS: ' + extra : ''}`;
+  }
+  if (agent === 'editor') {
+    const draft = document.getElementById('f_draft').value.trim();
+    if (!draft) return null;
+    const platform = document.getElementById('f_platform').value;
+    const focus = document.getElementById('f_focus').value;
+    return `Please review and improve this content:\n\nPLATFORM: ${platform}\nDRAFT:\n${draft}${focus ? '\n\nSPECIFIC FOCUS: ' + focus : ''}`;
+  }
+  if (agent === 'brief') {
+    const campaign = document.getElementById('f_campaign').value.trim();
+    if (!campaign) return null;
+    const objective = document.getElementById('f_objective').value;
+    const market = document.getElementById('f_market').value;
+    const duration = document.getElementById('f_duration').value;
+    const context = document.getElementById('f_context').value;
+    return `Generate a campaign brief:\n\nCAMPAIGN IDEA: ${campaign}\nOBJECTIVE: ${objective}\nMARKET: ${market}\nDURATION: ${duration}${context ? '\nADDITIONAL CONTEXT: ' + context : ''}`;
+  }
+  if (agent === 'calendar') {
+    const period = document.getElementById('f_period').value;
+    const theme = document.getElementById('f_theme').value;
+    const platforms = [...document.querySelectorAll('[id^="cp_"]:checked')].map(c => c.value).join(', ');
+    if (!platforms) return null;
+    const freq = document.getElementById('f_freq').value;
+    const mix = document.getElementById('f_mix').value;
+    return `Create a content calendar:\n\nPERIOD: ${period}\nTHEME: ${theme || 'General TROOPERS content'}\nPLATFORMS: ${platforms}\nFREQUENCY: ${freq}\nCONTENT MIX: ${mix}`;
+  }
+  if (agent === 'trends') {
+    const trends = document.getElementById('f_trends').value;
+    const focus = document.getElementById('f_focus_area').value;
+    const market = document.getElementById('f_mkt').value;
+    const event = document.getElementById('f_event').value;
+    const count = document.getElementById('f_count').value;
+    return `Generate ${count} content ideas for TROOPERS.\n\nMARKET: ${market}\nFOCUS: ${focus}${trends ? '\nTRENDING TOPICS THIS WEEK: ' + trends : ''}${event ? '\nUPCOMING EVENT/CAMPAIGN: ' + event : ''}`;
+  }
+  return null;
+}
+
+async function generate() {
+  if (!apiKey) {
+    document.getElementById('apiModal').classList.remove('hidden');
+    return;
+  }
+
+  const userMessage = getUserMessage();
+  if (!userMessage) {
+    alert('Please fill in the required fields.');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const btnText = document.getElementById('btn-text');
+  btn.disabled = true;
+  btnText.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div> Generating...`;
+
+  const outputCard = document.getElementById('outputCard');
+  const outputContent = document.getElementById('outputContent');
+  outputCard.classList.add('visible');
+  outputContent.textContent = '';
+  outputContent.classList.add('streaming-cursor');
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey: apiKey,
+        systemPrompt: agents[currentAgent].systemPrompt,
+        userMessage: userMessage
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'API request failed');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            const text = parsed.delta?.text || '';
+            fullText += text;
+            outputContent.textContent = fullText;
+          } catch {}
+        }
+      }
+    }
+
+    outputContent.classList.remove('streaming-cursor');
+  } catch (err) {
+    outputContent.classList.remove('streaming-cursor');
+    outputContent.textContent = '❌ Error: ' + err.message + '\n\nPlease check your API key or try again.';
+  }
+
+  btn.disabled = false;
+  btnText.innerHTML = '✨ Generate Again';
+}
+
+function copyOutput() {
+  const text = document.getElementById('outputContent').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = i18n[currentLang]?.copy_btn || 'Copy All'; }, 2000);
+  });
+}
+
+function clearOutput() {
+  document.getElementById('outputCard').classList.remove('visible');
+  document.getElementById('outputContent').textContent = '';
+  document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
+}
+
+// Check for API key on load
+window.onload = () => {
+  if (!apiKey) {
+    document.getElementById('apiModal').classList.remove('hidden');
+  }
+};
+</script>
+</body>
+</html>

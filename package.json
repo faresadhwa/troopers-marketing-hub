@@ -1,0 +1,9 @@
+{
+  "name": "troopers-marketing-hub",
+  "version": "1.0.0",
+  "description": "Troopers Marketing Hub - AI-powered content agents",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
