@@ -1248,35 +1248,14 @@ async function generate() {
       })
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error || 'API request failed');
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          try {
-            const parsed = JSON.parse(data);
-            const text = parsed.delta?.text || '';
-            fullText += text;
-            outputContent.textContent = fullText;
-          } catch {}
-        }
-      }
+      throw new Error(data.error || 'API request failed');
     }
 
     outputContent.classList.remove('streaming-cursor');
+    outputContent.textContent = data.result || 'No response received.';
   } catch (err) {
     outputContent.classList.remove('streaming-cursor');
     outputContent.textContent = '❌ Error: ' + err.message + '\n\nPlease check your API key or try again.';
