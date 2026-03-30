@@ -366,6 +366,7 @@
       border-radius: 16px;
       padding: 28px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-top: 20px;
       display: none;
     }
 
@@ -419,21 +420,21 @@
 
     .output-content {
       font-size: 14px;
-      line-height: 1.8;
+      line-height: 1.65;
       color: #333;
       word-break: break-word;
     }
-    .output-content .md-h2 { font-size: 18px; font-weight: 700; color: var(--navy); margin: 20px 0 6px; }
-    .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 16px 0 4px; }
-    .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 12px 0 2px; }
-    .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 14px 0; }
-    .output-content .md-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; overflow-x: auto; display: block; }
+    .output-content .md-h2 { font-size: 18px; font-weight: 700; color: var(--navy); margin: 18px 0 4px; }
+    .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 14px 0 3px; }
+    .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 10px 0 2px; }
+    .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 12px 0; }
+    .output-content .md-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.88em; overflow-x: auto; display: block; }
     .output-content .md-table th, .output-content .md-table td { border: 1px solid #e5e7eb; padding: 7px 11px; text-align: left; vertical-align: top; }
     .output-content .md-table th { background: #f0f4ff; font-weight: 700; color: var(--navy); }
     .output-content .md-table tr:nth-child(even) td { background: #f9fafb; }
-    .output-content .md-li { display: block; padding-left: 18px; position: relative; margin: 2px 0; }
+    .output-content .md-li { display: block; padding-left: 18px; position: relative; margin: 3px 0; }
     .output-content .md-li::before { content: '•'; position: absolute; left: 5px; color: var(--primary); font-weight: bold; }
-    .output-content .md-ol-li { display: block; padding-left: 26px; position: relative; margin: 2px 0; }
+    .output-content .md-ol-li { display: block; padding-left: 26px; position: relative; margin: 3px 0; }
     .output-content .md-li-num { position: absolute; left: 4px; font-weight: 700; color: var(--primary); min-width: 18px; }
 
     /* Loading animation */
@@ -1374,6 +1375,14 @@ function renderMarkdown(text) {
 
   // Line breaks
   html = html.replace(/\n/g, '<br>');
+
+  // Strip <br> between consecutive bullet/numbered items (they're display:block, no gap needed)
+  html = html.replace(/(<\/span>)<br>(<span class="md-(?:li|ol-li)")/g, '$1$2');
+  // Strip <br> immediately after block-level tags (headers, hr) — they have own margins
+  html = html.replace(/(<\/h[2-4]>)<br>/g, '$1');
+  html = html.replace(/(<hr[^>]*>)<br>/g, '$1');
+  // Collapse 3+ consecutive <br> down to 2
+  html = html.replace(/(<br>){3,}/g, '<br><br>');
 
   return html;
 }
