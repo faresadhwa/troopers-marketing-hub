@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Troopers Marketing Hub</title>
+  <title>TROOPERS Marketing Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -23,7 +23,7 @@
 
     body {
       font-family: var(--font-main);
-      background: var(--gray-light);
+      background: var(--white);
       color: var(--navy);
       min-height: 100vh;
     }
@@ -156,12 +156,11 @@
     .agent-icon {
       width: 52px;
       height: 52px;
-      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      background: var(--navy);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
       margin-bottom: 16px;
     }
 
@@ -216,7 +215,7 @@
     .back-btn:hover { color: var(--orange); }
 
     .agent-header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      background: var(--navy);
       border-radius: 16px;
       padding: 28px;
       margin-bottom: 28px;
@@ -229,12 +228,11 @@
     .agent-header .agent-icon-lg {
       width: 60px;
       height: 60px;
-      background: rgba(255,255,255,0.1);
+      background: var(--orange);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
       flex-shrink: 0;
     }
 
@@ -583,35 +581,35 @@
   <div class="agents-grid">
 
     <div class="agent-card" onclick="openAgent('copywriter')">
-      <div class="agent-icon">✍️</div>
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3 data-i18n="agent1_title">Social Media Copywriter</h3>
       <p data-i18n="agent1_desc">Generate ready-to-post captions for Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — on-brand, every time.</p>
       <span class="agent-tag" data-i18n="agent1_tag">6 PLATFORMS</span>
     </div>
 
     <div class="agent-card" onclick="openAgent('editor')">
-      <div class="agent-icon">🔍</div>
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8" stroke="white" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M8 11l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3 data-i18n="agent2_title">Content Editor</h3>
       <p data-i18n="agent2_desc">Paste your draft and get it polished to match TROOPERS' brand voice, tone, and CI guidelines instantly.</p>
       <span class="agent-tag" data-i18n="agent2_tag">BRAND CHECKER</span>
     </div>
 
     <div class="agent-card" onclick="openAgent('brief')">
-      <div class="agent-icon">📋</div>
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="2" width="8" height="4" rx="1" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 17h6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
       <h3 data-i18n="agent3_title">Campaign Brief Generator</h3>
       <p data-i18n="agent3_desc">Turn a simple idea into a full structured campaign brief — audience, messaging, channels, timeline, and KPIs.</p>
       <span class="agent-tag" data-i18n="agent3_tag">FOR B2B & TALENT</span>
     </div>
 
     <div class="agent-card" onclick="openAgent('calendar')">
-      <div class="agent-icon">📅</div>
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="14" r="1.2" fill="white"/><circle cx="12" cy="14" r="1.2" fill="white"/><circle cx="16" cy="14" r="1.2" fill="white"/><circle cx="8" cy="18" r="1.2" fill="white"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg></div>
       <h3 data-i18n="agent4_title">Content Calendar Planner</h3>
       <p data-i18n="agent4_desc">Get a week-by-week posting plan with topics, content types, and suggested captions for your chosen period.</p>
       <span class="agent-tag" data-i18n="agent4_tag">WEEKLY PLANNING</span>
     </div>
 
     <div class="agent-card" onclick="openAgent('trends')">
-      <div class="agent-icon">🔥</div>
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 7 22 7 22 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3 data-i18n="agent5_title">Content Ideas & Trends</h3>
       <p data-i18n="agent5_desc">Get 5–10 fresh TROOPERS content ideas inspired by what's trending. Add trending topics you've spotted for better ideas.</p>
       <span class="agent-tag" data-i18n="agent5_tag">WEEKLY INSPIRATION</span>
@@ -732,7 +730,7 @@ TROOPERS BRAND GUIDELINES (always follow these):
 
 const agents = {
   copywriter: {
-    icon: '✍️',
+    icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     title: { en: 'Social Media Copywriter', bm: 'Penulis Media Sosial', zh: '社交媒体文案', ta: 'சமூக ஊடக எழுத்தாளர்' },
     desc: { en: 'Generate ready-to-post captions for 6 platforms in your chosen language', bm: 'Jana kapsyen untuk 6 platform dalam bahasa pilihan anda', zh: '为6个平台生成即发标题', ta: '6 தளங்களுக்கு கேப்ஷன்கள் உருவாக்குங்கள்' },
     systemPrompt: `You are TROOPERS' expert social media copywriter. ${TROOPERS_CI}
@@ -813,7 +811,7 @@ Output format:
   },
 
   editor: {
-    icon: '🔍',
+    icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8" stroke="white" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M8 11l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     title: { en: 'Content Editor', bm: 'Penyunting Kandungan', zh: '内容编辑器', ta: 'உள்ளடக்க திருத்தியர்' },
     desc: { en: 'Polish your draft to match TROOPERS brand voice and CI guidelines', bm: 'Perhalus draf anda mengikut suara jenama dan garis panduan CI TROOPERS', zh: '将您的草稿打磨成符合TROOPERS品牌声音的内容', ta: 'உங்கள் வரைவை TROOPERS பிராண்ட் குரலுக்கு ஏற்ப செம்மைப்படுத்துங்கள்' },
     systemPrompt: `You are TROOPERS' expert content editor and brand guardian. ${TROOPERS_CI}
@@ -865,7 +863,7 @@ Output format:
   },
 
   brief: {
-    icon: '📋',
+    icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="2" width="8" height="4" rx="1" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 17h6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
     title: { en: 'Campaign Brief Generator', bm: 'Penjana Ringkasan Kempen', zh: '活动简报生成器', ta: 'பிரச்சாரம் சுருக்க உருவாக்கி' },
     desc: { en: 'Turn your campaign idea into a full structured brief for your team or vendors', bm: 'Tukar idea kempen anda kepada ringkasan berstruktur untuk pasukan atau vendor', zh: '将您的活动创意转变为完整的结构化简报', ta: 'உங்கள் பிரச்சார யோசனையை முழு கட்டமைப்பு சுருக்கமாக மாற்றுங்கள்' },
     systemPrompt: `You are TROOPERS' senior marketing strategist. ${TROOPERS_CI}
@@ -955,7 +953,7 @@ Make it practical, specific to TROOPERS, and immediately usable by the team.`,
   },
 
   calendar: {
-    icon: '📅',
+    icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="14" r="1.2" fill="white"/><circle cx="12" cy="14" r="1.2" fill="white"/><circle cx="16" cy="14" r="1.2" fill="white"/><circle cx="8" cy="18" r="1.2" fill="white"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg>',
     title: { en: 'Content Calendar Planner', bm: 'Perancang Kalendar Kandungan', zh: '内容日历规划师', ta: 'உள்ளடக்க நாட்காட்டி திட்டமிடல்' },
     desc: { en: 'Get a structured content plan with topics, formats, and caption ideas', bm: 'Dapatkan pelan kandungan berstruktur dengan topik, format, dan idea kapsyen', zh: '获取包含主题、格式和标题创意的结构化内容计划', ta: 'தலைப்புகள், வடிவங்கள் மற்றும் கேப்ஷன் யோசனைகளுடன் உள்ளடக்கத் திட்டம் பெறுங்கள்' },
     systemPrompt: `You are TROOPERS' content strategist and calendar planner. ${TROOPERS_CI}
@@ -1034,7 +1032,7 @@ Make the calendar realistic for a team of 5, practical to execute, and varied in
   },
 
   trends: {
-    icon: '🔥',
+    icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 7 22 7 22 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     title: { en: 'Content Ideas & Trends', bm: 'Idea Kandungan & Trend', zh: '内容创意与趋势', ta: 'உள்ளடக்க யோசனைகள் & போக்குகள்' },
     desc: { en: 'Get TROOPERS-specific content ideas inspired by current trends', bm: 'Dapatkan idea kandungan TROOPERS yang diilhamkan oleh trend semasa', zh: '获取受当前趋势启发的TROOPERS专属内容创意', ta: 'தற்போதைய போக்குகளால் ஈர்க்கப்பட்ட TROOPERS-குரிய யோசனைகள் பெறுங்கள்' },
     systemPrompt: `You are TROOPERS' creative content strategist and trend analyst. ${TROOPERS_CI}
@@ -1129,7 +1127,7 @@ function openAgent(agentId) {
   const agent = agents[agentId];
   document.getElementById('home-page').style.display = 'none';
   document.getElementById('agent-page').style.display = 'block';
-  document.getElementById('agent-icon-lg').textContent = agent.icon;
+  document.getElementById('agent-icon-lg').innerHTML = agent.icon;
   document.getElementById('agent-page-title').textContent = agent.title[currentLang] || agent.title.en;
   document.getElementById('agent-page-desc').textContent = agent.desc[currentLang] || agent.desc.en;
   document.getElementById('agent-form-content').innerHTML = agent.form;
