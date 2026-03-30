@@ -421,9 +421,12 @@
       font-size: 14px;
       line-height: 1.8;
       color: #333;
-      white-space: pre-wrap;
       word-break: break-word;
     }
+    .output-content .md-h2 { font-size: 18px; font-weight: 700; color: var(--navy); margin: 20px 0 6px; }
+    .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 16px 0 4px; }
+    .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 12px 0 2px; }
+    .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 14px 0; }
 
     /* Loading animation */
     .loading-dots {
@@ -1269,6 +1272,34 @@ function getUserMessage() {
   return null;
 }
 
+let lastOutputRaw = '';
+
+function renderMarkdown(text) {
+  let html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Headers
+  html = html.replace(/^### (.+)$/gm, '<h4 class="md-h4">$1</h4>');
+  html = html.replace(/^## (.+)$/gm, '<h3 class="md-h3">$1</h3>');
+  html = html.replace(/^# (.+)$/gm, '<h2 class="md-h2">$1</h2>');
+
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // Italic (only single * not followed by another *)
+  html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+  // Horizontal rules: --- or ——— variants
+  html = html.replace(/^[-—]{3,}$/gm, '<hr class="md-hr">');
+
+  // Line breaks
+  html = html.replace(/\n/g, '<br>');
+
+  return html;
+}
+
 async function generate() {
   const userMessage = getUserMessage();
   if (!userMessage) {
@@ -1304,10 +1335,12 @@ async function generate() {
     }
 
     outputContent.classList.remove('streaming-cursor');
-    outputContent.textContent = data.result || 'No response received.';
+    lastOutputRaw = data.result || 'No response received.';
+    outputContent.innerHTML = renderMarkdown(lastOutputRaw);
   } catch (err) {
     outputContent.classList.remove('streaming-cursor');
-    outputContent.textContent = '❌ Error: ' + err.message + '\n\nPlease check your API key or try again.';
+    lastOutputRaw = '❌ Error: ' + err.message + '\n\nPlease check your API key or try again.';
+    outputContent.textContent = lastOutputRaw;
   }
 
   btn.disabled = false;
@@ -1315,7 +1348,7 @@ async function generate() {
 }
 
 function copyOutput() {
-  const text = document.getElementById('outputContent').textContent;
+  const text = lastOutputRaw || document.getElementById('outputContent').textContent;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.querySelector('.copy-btn');
     btn.textContent = '✅ Copied!';
