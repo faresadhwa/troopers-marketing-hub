@@ -1414,10 +1414,13 @@ async function fetchLiveTrends() {
 
     if (data.topics && data.topics.length > 0) {
       textarea.value = data.topics.join(', ');
+      status.style.color = 'var(--success)';
       status.textContent = `✅ ${data.count} trends loaded`;
       btn.textContent = '🔄 Refresh Trends';
     } else {
-      status.textContent = '⚠️ No trends found — try again later';
+      const firstError = data.errors && data.errors[0];
+      status.style.color = '#b45309';
+      status.textContent = firstError ? `⚠️ ${firstError}` : '⚠️ No trends found — try again later';
       btn.textContent = '🔍 Fetch Live Trends';
     }
   } catch (err) {
