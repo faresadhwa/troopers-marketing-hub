@@ -1120,6 +1120,11 @@ function setLang(lang) {
       el.innerHTML = i18n[lang][key];
     }
   });
+  if (currentAgent) {
+    const agent = agents[currentAgent];
+    document.getElementById('agent-page-title').textContent = agent.title[lang] || agent.title.en;
+    document.getElementById('agent-page-desc').textContent = agent.desc[lang] || agent.desc.en;
+  }
 }
 
 function openAgent(agentId) {
