@@ -427,6 +427,14 @@
     .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 16px 0 4px; }
     .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 12px 0 2px; }
     .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 14px 0; }
+    .output-content .md-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; overflow-x: auto; display: block; }
+    .output-content .md-table th, .output-content .md-table td { border: 1px solid #e5e7eb; padding: 7px 11px; text-align: left; vertical-align: top; }
+    .output-content .md-table th { background: #f0f4ff; font-weight: 700; color: var(--navy); }
+    .output-content .md-table tr:nth-child(even) td { background: #f9fafb; }
+    .output-content .md-li { display: block; padding-left: 18px; position: relative; margin: 2px 0; }
+    .output-content .md-li::before { content: '•'; position: absolute; left: 5px; color: var(--primary); font-weight: bold; }
+    .output-content .md-ol-li { display: block; padding-left: 26px; position: relative; margin: 2px 0; }
+    .output-content .md-li-num { position: absolute; left: 4px; font-weight: 700; color: var(--primary); min-width: 18px; }
 
     /* Loading animation */
     .loading-dots {
@@ -1062,7 +1070,7 @@ Make it practical, specific to TROOPERS, and immediately usable by the team.`,
 
 Your job: Create a detailed, practical content calendar for the specified period.
 
-Output format — create a structured calendar like this:
+Output format — use this exact structure (NO markdown tables, NO | pipe characters):
 
 # 📅 CONTENT CALENDAR: [Period]
 **Focus Theme:** [Main theme]
@@ -1072,22 +1080,36 @@ Output format — create a structured calendar like this:
 ---
 
 ## WEEK 1: [Theme/Focus]
-| Day | Platform | Content Type | Topic/Angle | Caption Hook | Hashtags |
-|-----|----------|-------------|-------------|--------------|----------|
-[Fill in each day]
+**Goal:** [Brief goal for the week]
 
-[Repeat for each week]
+**Day 1 (Mon) — [Platform]**
+- Content Type: [e.g. Static Post, Reel, Carousel, Stories]
+- Topic/Angle: [What the post is about]
+- Caption Hook: "[Opening line of caption]"
+- Hashtags: #tag1 #tag2 #tag3
+
+**Day 2 (Tue) — [Platform]**
+- Content Type: ...
+- Topic/Angle: ...
+- Caption Hook: "..."
+- Hashtags: ...
+
+[Continue for each posting day in the week]
+
+[Repeat ## WEEK section for each week]
 
 ---
 
 ## CONTENT PILLARS BREAKDOWN
 - [Pillar 1]: X posts
 - [Pillar 2]: X posts
-- etc.
 
 ## TIPS FOR THIS PERIOD
-[3-5 practical tips for executing this calendar]
+1. [Tip 1]
+2. [Tip 2]
+3. [Tip 3]
 
+IMPORTANT: Never use markdown tables (| column | rows). Always use the bullet-point day format shown above.
 Make the calendar realistic for a team of 5, practical to execute, and varied in content types (reels, carousels, static posts, stories).`,
 
     form: `
@@ -1328,6 +1350,27 @@ function renderMarkdown(text) {
 
   // Horizontal rules: --- or ——— variants
   html = html.replace(/^[-—]{3,}$/gm, '<hr class="md-hr">');
+
+  // Tables — convert | col | col | rows into HTML table
+  html = html.replace(/(\|.+\|(?:\n|$))+/g, (tableBlock) => {
+    const lines = tableBlock.split('\n').map(l => l.trim()).filter(l => l.startsWith('|') && l.endsWith('|'));
+    const dataLines = lines.filter(l => !/^\|[\s\-|:]+\|$/.test(l));
+    if (dataLines.length === 0) return '';
+    let tbl = '<table class="md-table">';
+    dataLines.forEach((line, i) => {
+      const cells = line.split('|').slice(1, -1).map(c => c.trim());
+      const tag = i === 0 ? 'th' : 'td';
+      tbl += `<tr>${cells.map(c => `<${tag}>${c}</${tag}>`).join('')}</tr>`;
+    });
+    tbl += '</table>';
+    return tbl;
+  });
+
+  // Bullet lists
+  html = html.replace(/^- (.+)$/gm, '<span class="md-li">$1</span>');
+
+  // Numbered lists
+  html = html.replace(/^(\d+)\. (.+)$/gm, '<span class="md-ol-li"><span class="md-li-num">$1.</span> $2</span>');
 
   // Line breaks
   html = html.replace(/\n/g, '<br>');
