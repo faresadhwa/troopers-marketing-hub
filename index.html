@@ -1418,9 +1418,11 @@ async function fetchLiveTrends() {
       status.textContent = `✅ ${data.count} trends loaded`;
       btn.textContent = '🔄 Refresh Trends';
     } else {
-      const firstError = data.errors && data.errors[0];
+      const errSummary = data.errors && data.errors.length > 0
+        ? `⚠️ ${data.errors.join(' | ')}`
+        : '⚠️ No trends found — try again later';
       status.style.color = '#b45309';
-      status.textContent = firstError ? `⚠️ ${firstError}` : '⚠️ No trends found — try again later';
+      status.textContent = errSummary;
       btn.textContent = '🔍 Fetch Live Trends';
     }
   } catch (err) {

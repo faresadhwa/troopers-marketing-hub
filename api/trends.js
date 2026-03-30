@@ -8,11 +8,9 @@ module.exports = async function handler(req, res) {
   const topics = [];
   const errors = [];
 
-  // Browser-like headers — required to avoid 403/blocking
   const browserUA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
-  // Fetch with timeout to avoid Vercel 10s function limit
-  async function fetchTimeout(url, opts = {}, ms = 6000) {
+  async function fetchTimeout(url, opts = {}, ms = 7000) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), ms);
     try {
@@ -25,26 +23,30 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // ── Google Trends RSS (SG + MY) ─────────────────────────────────────────────
+  // ── Google Trends JSON API (replaces discontinued RSS feed) ─────────────────
+  // Returns )]}'  prefix that must be stripped before JSON.parse
   for (const geo of ['SG', 'MY']) {
     try {
       const r = await fetchTimeout(
-        `https://trends.google.com/trends/trendingsearches/daily/rss?geo=${geo}`,
-        { headers: { 'User-Agent': browserUA, 'Accept': 'application/xml,text/xml,*/*' } }
+        `https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=-480&geo=${geo}&ns=15`,
+        { headers: { 'User-Agent': browserUA, 'Accept': 'application/json, text/plain, */*' } }
       );
       if (!r.ok) {
         errors.push(`Google Trends ${geo}: HTTP ${r.status}`);
         continue;
       }
-      const xml = await r.text();
-      if (!xml.includes('<item>')) {
-        errors.push(`Google Trends ${geo}: no items in response (may be a consent/error page)`);
+      const raw = await r.text();
+      // Strip the ")]}'\n" security prefix Google adds
+      const json = JSON.parse(raw.replace(/^\)\]\}',?\n?/, ''));
+      const days = json?.default?.trendingSearchesDays || [];
+      if (days.length === 0) {
+        errors.push(`Google Trends ${geo}: no trending data returned`);
         continue;
       }
-      const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
-      for (const item of items) {
-        const m = item.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/);
-        if (m && m[1].trim()) topics.push(m[1].trim());
+      const searches = days[0]?.trendingSearches || [];
+      for (const trend of searches) {
+        const title = trend?.title?.query;
+        if (title) topics.push(title);
       }
     } catch (err) {
       errors.push(`Google Trends ${geo}: ${err.name === 'AbortError' ? 'timeout' : err.message}`);
@@ -52,33 +54,26 @@ module.exports = async function handler(req, res) {
   }
 
   // ── Reddit public JSON API ───────────────────────────────────────────────────
-  // Try 'hot' first (always has posts), fall back to 'top?t=week'
   for (const sub of ['singapore', 'malaysia', 'careerguidance']) {
     let got = false;
-    for (const url of [
-      `https://www.reddit.com/r/${sub}/hot.json?limit=5`,
-      `https://www.reddit.com/r/${sub}/top.json?limit=5&t=week`
-    ]) {
+    // Try hot (always has posts), then top/week as fallback
+    for (const path of [`hot.json?limit=5`, `top.json?limit=5&t=week`]) {
       if (got) break;
       try {
-        const r = await fetchTimeout(url, {
-          headers: {
-            'User-Agent': browserUA,
-            'Accept': 'application/json'
-          }
-        });
+        const r = await fetchTimeout(
+          `https://www.reddit.com/r/${sub}/${path}`,
+          { headers: { 'User-Agent': browserUA, 'Accept': 'application/json' } }
+        );
         if (!r.ok) {
           errors.push(`Reddit r/${sub}: HTTP ${r.status}`);
           continue;
         }
         const json = await r.json();
         const posts = json?.data?.children || [];
-        if (posts.length > 0) {
-          for (const post of posts) {
-            if (post?.data?.title) topics.push(post.data.title);
-          }
-          got = true;
+        for (const post of posts) {
+          if (post?.data?.title) topics.push(post.data.title);
         }
+        if (posts.length > 0) got = true;
       } catch (err) {
         errors.push(`Reddit r/${sub}: ${err.name === 'AbortError' ? 'timeout' : err.message}`);
       }
