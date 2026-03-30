@@ -462,6 +462,37 @@
       50% { opacity: 0; }
     }
 
+    /* ===== FETCH TRENDS BUTTON ===== */
+    .label-with-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .label-with-action label { margin-bottom: 0; }
+    .fetch-trends-btn {
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-main);
+      white-space: nowrap;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .fetch-trends-btn:hover:not(:disabled) { background: var(--orange); }
+    .fetch-trends-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .fetch-trends-status {
+      font-size: 12px;
+      color: var(--success);
+      margin-bottom: 6px;
+      min-height: 18px;
+    }
+
     /* ===== TREND NOTE ===== */
     .info-note {
       background: rgba(244,127,32,0.08);
@@ -1142,7 +1173,11 @@ Make ideas specific, creative, and immediately actionable. Mix hiring content wi
         💡 <strong>How this works:</strong> This agent generates trend-inspired content ideas using knowledge of current social media trends. For the freshest results, paste any trending topics or hashtags you've seen this week in the field below.
       </div>
       <div class="form-group">
-        <label data-i18n="trends_f1">Any trending topics you've spotted this week? (optional but recommended)</label>
+        <div class="label-with-action">
+          <label data-i18n="trends_f1">Any trending topics you've spotted this week? (optional but recommended)</label>
+          <button type="button" class="fetch-trends-btn" id="fetchTrendsBtn" onclick="fetchLiveTrends()">🔍 Fetch Live Trends</button>
+        </div>
+        <div class="fetch-trends-status" id="fetchTrendsStatus"></div>
         <textarea id="f_trends" placeholder="e.g. #WorkLifeBalance trending on TikTok, 'quiet quitting' viral on LinkedIn, bubble tea TikTok trends, Ramadan content surge..." rows="3"></textarea>
       </div>
       <div class="form-group">
@@ -1360,6 +1395,37 @@ function clearOutput() {
   document.getElementById('outputCard').classList.remove('visible');
   document.getElementById('outputContent').textContent = '';
   document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
+}
+
+async function fetchLiveTrends() {
+  const btn = document.getElementById('fetchTrendsBtn');
+  const status = document.getElementById('fetchTrendsStatus');
+  const textarea = document.getElementById('f_trends');
+  if (!btn || !textarea) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Fetching trends...';
+  status.textContent = '';
+
+  try {
+    const response = await fetch('/api/trends');
+    if (!response.ok) throw new Error('Server error');
+    const data = await response.json();
+
+    if (data.topics && data.topics.length > 0) {
+      textarea.value = data.topics.join(', ');
+      status.textContent = `✅ ${data.count} trends loaded`;
+      btn.textContent = '🔄 Refresh Trends';
+    } else {
+      status.textContent = '⚠️ No trends found — try again later';
+      btn.textContent = '🔍 Fetch Live Trends';
+    }
+  } catch (err) {
+    status.textContent = '❌ Could not fetch trends';
+    btn.textContent = '🔍 Fetch Live Trends';
+  }
+
+  btn.disabled = false;
 }
 
 </script>
