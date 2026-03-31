@@ -642,18 +642,19 @@
       color: #333;
       word-break: break-word;
     }
-    .output-content .md-h2 { font-size: 18px; font-weight: 700; color: var(--navy); margin: 18px 0 4px; }
-    .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 14px 0 3px; }
-    .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 10px 0 2px; }
-    .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 12px 0; }
-    .output-content .md-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.88em; overflow-x: auto; display: block; }
+    .output-content .md-h2 { font-size: 18px; font-weight: 700; color: var(--navy); margin: 26px 0 10px; }
+    .output-content .md-h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 20px 0 8px; }
+    .output-content .md-h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 14px 0 6px; }
+    .output-content .md-h2:first-child, .output-content .md-h3:first-child { margin-top: 4px; }
+    .output-content .md-hr { border: none; border-top: 1px solid var(--gray-mid); margin: 18px 0; }
+    .output-content .md-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; overflow-x: auto; display: block; }
     .output-content .md-table th, .output-content .md-table td { border: 1px solid #e5e7eb; padding: 7px 11px; text-align: left; vertical-align: top; }
     .output-content .md-table th { background: #f0f4ff; font-weight: 700; color: var(--navy); }
     .output-content .md-table tr:nth-child(even) td { background: #f9fafb; }
-    .output-content .md-li { display: block; padding-left: 18px; position: relative; margin: 3px 0; }
-    .output-content .md-li::before { content: '•'; position: absolute; left: 5px; color: var(--primary); font-weight: bold; }
-    .output-content .md-ol-li { display: block; padding-left: 26px; position: relative; margin: 3px 0; }
-    .output-content .md-li-num { position: absolute; left: 4px; font-weight: 700; color: var(--primary); min-width: 18px; }
+    .output-content .md-li { display: block; padding-left: 18px; position: relative; margin: 5px 0; }
+    .output-content .md-li::before { content: '•'; position: absolute; left: 5px; color: var(--orange); font-weight: bold; }
+    .output-content .md-ol-li { display: block; padding-left: 26px; position: relative; margin: 5px 0; }
+    .output-content .md-li-num { position: absolute; left: 4px; font-weight: 700; color: var(--orange); min-width: 18px; }
 
     /* Loading animation */
     .loading-dots {
@@ -880,6 +881,123 @@
       margin-top: 12px;
       text-align: center;
     }
+
+    /* ===== TOAST NOTIFICATIONS ===== */
+    #toast-container {
+      position: fixed; top: 80px; right: 20px; z-index: 9000;
+      display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--navy); color: white;
+      padding: 12px 18px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.22);
+      pointer-events: auto;
+      display: flex; align-items: center; gap: 10px;
+      animation: toastIn 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+      max-width: 320px; line-height: 1.4;
+    }
+    .toast-icon { font-size: 16px; flex-shrink: 0; }
+    .toast.toast-success { border-left: 3px solid #2E7D32; }
+    .toast.toast-error   { border-left: 3px solid #c62828; background: #b71c1c; }
+    .toast.toast-info    { border-left: 3px solid var(--orange); }
+    .toast.hiding { animation: toastOut 0.25s ease forwards; }
+    @keyframes toastIn  { from { opacity:0; transform: translateX(24px); } to { opacity:1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform: translateX(0); } to { opacity:0; transform: translateX(24px); } }
+
+    /* ===== THEME SWITCHER ===== */
+    #theme-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 500;
+      width: 48px; height: 48px;
+      background: var(--navy); color: white;
+      border: none; border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    #theme-fab:hover { transform: scale(1.1); box-shadow: 0 6px 22px rgba(0,0,0,0.3); }
+    #theme-panel {
+      position: fixed; bottom: 82px; right: 24px; z-index: 500;
+      background: white; border-radius: 16px; padding: 16px 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      width: 210px; display: none;
+    }
+    #theme-panel.open {
+      display: block;
+      animation: panelIn 0.22s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    @keyframes panelIn {
+      from { opacity:0; transform: translateY(10px) scale(0.96); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    .theme-panel-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--gray-text); margin-bottom: 10px;
+    }
+    .theme-options { display: flex; flex-direction: column; gap: 6px; }
+    .theme-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; border-radius: 10px;
+      cursor: pointer; border: 1.5px solid transparent;
+      transition: all 0.15s; font-size: 13px; font-weight: 500;
+      color: var(--navy); background: none;
+      font-family: var(--font-main); text-align: left; width: 100%;
+    }
+    .theme-option:hover { border-color: var(--gray-mid); background: var(--gray-light); }
+    .theme-option.active { border-color: var(--orange); background: rgba(244,127,32,0.07); }
+    .theme-swatch {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; overflow: hidden; flex-shrink: 0; border: 1.5px solid rgba(0,0,0,0.08);
+    }
+    .theme-swatch-half { flex: 1; }
+
+    /* ===== PDF EXPORT BUTTON ===== */
+    .export-pdf-btn {
+      background: transparent; border: 1.5px solid var(--gray-mid); color: var(--gray-text);
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; font-family: var(--font-main);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .export-pdf-btn:hover { border-color: var(--navy); color: var(--navy); background: rgba(19,18,73,0.05); }
+
+    /* ===== PRINT / PDF STYLES ===== */
+    #print-header {
+      display: none;
+      align-items: center; justify-content: space-between;
+      margin-bottom: 24px; padding-bottom: 14px;
+      border-bottom: 3px solid var(--orange);
+    }
+    .print-header-logo { height: 34px; object-fit: contain; }
+    .print-header-meta { font-size: 11px; color: var(--gray-text); text-align: right; line-height: 1.6; }
+
+    @media print {
+      #intro-screen, header, .back-btn, .form-card,
+      .output-actions, .section-copy-btn, .generate-btn,
+      .sa-platform-tabs, .bm-history-bar, .bm-region-group,
+      #theme-fab, #theme-panel, #toast-container, .export-pdf-btn,
+      .bm-history-btn, #bm-prev-card, .lang-switcher, .hub-title,
+      #bm-history-modal { display: none !important; }
+
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: white; font-size: 13px; }
+
+      #home-page { display: none !important; }
+
+      #print-header { display: flex !important; }
+
+      .output-card, #sa-results .output-card, #bm-results-card {
+        display: block !important; box-shadow: none !important;
+        border: none !important; padding: 0 !important; margin-top: 0 !important;
+      }
+      .output-header { border-bottom: 1.5px solid #e0e0e0 !important; margin-bottom: 18px !important; padding-bottom: 12px !important; }
+      .sa-tab-content { display: block !important; }
+      .sa-chart-canvas-wrap { height: 160px !important; }
+      .bm-source-block { break-inside: avoid; }
+      .sa-post-card { break-inside: avoid; }
+
+      @page { margin: 18mm 20mm; size: A4; }
+    }
   </style>
 </head>
 <body>
@@ -993,6 +1111,10 @@
       <h4 data-i18n="output_title">✅ Generated Output</h4>
       <div class="output-actions">
         <button class="copy-btn" onclick="copyOutput()" data-i18n="copy_btn">Copy All</button>
+        <button class="export-pdf-btn" onclick="exportPDF('agent')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          Export PDF
+        </button>
         <button class="clear-btn" onclick="clearOutput()" data-i18n="clear_btn">Clear</button>
       </div>
     </div>
@@ -1096,6 +1218,24 @@
   <!-- History modal -->
   <div id="bm-history-modal" style="display:none;"></div>
 
+</div>
+
+<!-- Print Header (visible only during print) -->
+<div id="print-header">
+  <img src="Troopers_Logo-03.png" class="print-header-logo" alt="TROOPERS" />
+  <div class="print-header-meta" id="print-header-meta"></div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Theme FAB + Panel -->
+<button id="theme-fab" onclick="toggleThemePanel()" title="Change theme">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+<div id="theme-panel">
+  <div class="theme-panel-title">App Theme</div>
+  <div class="theme-options" id="theme-options"></div>
 </div>
 
 <script>
@@ -1397,7 +1537,7 @@ Your job: Generate a comprehensive, structured campaign brief based on the user'
 
 Output a professional campaign brief in this exact format:
 
-# 📋 CAMPAIGN BRIEF: [Campaign Name]
+# CAMPAIGN BRIEF: [Campaign Name]
 
 ## 1. CAMPAIGN OVERVIEW
 - Objective:
@@ -1487,7 +1627,7 @@ Your job: Create a detailed, practical content calendar for the specified period
 
 Output format — use this exact structure (NO markdown tables, NO | pipe characters):
 
-# 📅 CONTENT CALENDAR: [Period]
+# CONTENT CALENDAR: [Period]
 **Focus Theme:** [Main theme]
 **Platforms:** [Selected platforms]
 **Total Posts:** [Number]
@@ -1580,7 +1720,7 @@ Your job: Generate fresh, creative content ideas for TROOPERS based on current t
 
 For each idea, provide:
 
-# 🔥 CONTENT IDEAS FOR TROOPERS
+# CONTENT IDEAS FOR TROOPERS
 **Generated:** [Today's context]
 **Market Focus:** [Market specified]
 
@@ -1819,6 +1959,8 @@ function renderMarkdown(text) {
   // Strip <br> immediately after block-level tags (headers, hr) — they have own margins
   html = html.replace(/(<\/h[2-4]>)<br>/g, '$1');
   html = html.replace(/(<hr[^>]*>)<br>/g, '$1');
+  // Strip <br> immediately BEFORE headers — let their top margin handle spacing
+  html = html.replace(/(<br>)+(<h[2-4])/g, '$2');
   // Collapse 3+ consecutive <br> down to 2
   html = html.replace(/(<br>){3,}/g, '<br><br>');
 
@@ -1828,7 +1970,7 @@ function renderMarkdown(text) {
 async function generate() {
   const userMessage = getUserMessage();
   if (!userMessage) {
-    alert('Please fill in the required fields.');
+    showToast('Please fill in the required fields.', 'error');
     return;
   }
 
@@ -1928,9 +2070,14 @@ function setSaTab(tab) {
   document.querySelectorAll('.sa-tab-content').forEach(el => el.style.display = 'none');
   const content = document.getElementById(`sa-tab-${tab}`);
   if (content) content.style.display = 'block';
-  // Resize charts when tab becomes visible
   requestAnimationFrame(() => {
     Object.values(saCharts).forEach(c => c.resize());
+    // Animate counters if they haven't been animated yet (still show 0)
+    if (content) {
+      content.querySelectorAll('.sa-metric-value[data-target]').forEach(el => {
+        if (el.textContent === '0') animateCounter(el, parseInt(el.dataset.target) || 0);
+      });
+    }
   });
 }
 
@@ -2163,12 +2310,12 @@ async function fetchSocialAnalytics() {
     const fb = data.facebook;
     const fbMetrics = `
       <div class="sa-metrics-grid">
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.page.followers)}</div><div class="sa-metric-label">Followers</div></div>
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_impressions || 0)}</div><div class="sa-metric-label">Impressions</div></div>
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_impressions_unique || 0)}</div><div class="sa-metric-label">Reach</div></div>
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_engaged_users || 0)}</div><div class="sa-metric-label">Engaged Users</div></div>
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_fan_adds || 0)}</div><div class="sa-metric-label">New Followers</div></div>
-        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_views_total || 0)}</div><div class="sa-metric-label">Page Views</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.page.followers}">0</div><div class="sa-metric-label">Followers</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.insights.page_impressions || 0}">0</div><div class="sa-metric-label">Impressions</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.insights.page_impressions_unique || 0}">0</div><div class="sa-metric-label">Reach</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.insights.page_engaged_users || 0}">0</div><div class="sa-metric-label">Engaged Users</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.insights.page_fan_adds || 0}">0</div><div class="sa-metric-label">New Followers</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value" data-target="${fb.insights.page_views_total || 0}">0</div><div class="sa-metric-label">Page Views</div></div>
       </div>
       <div class="sa-charts-section">
         <div class="sa-chart-row single">
@@ -2217,12 +2364,12 @@ async function fetchSocialAnalytics() {
       const ig = data.instagram;
       igContent = `
         <div class="sa-metrics-grid">
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.profile.followers)}</div><div class="sa-metric-label">Followers</div></div>
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.impressions || 0)}</div><div class="sa-metric-label">Impressions</div></div>
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.reach || 0)}</div><div class="sa-metric-label">Reach</div></div>
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.profile_views || 0)}</div><div class="sa-metric-label">Profile Views</div></div>
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.profile.media_count)}</div><div class="sa-metric-label">Total Posts</div></div>
-          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.website_clicks || 0)}</div><div class="sa-metric-label">Link Clicks</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.profile.followers}">0</div><div class="sa-metric-label">Followers</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.insights.impressions || 0}">0</div><div class="sa-metric-label">Impressions</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.insights.reach || 0}">0</div><div class="sa-metric-label">Reach</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.insights.profile_views || 0}">0</div><div class="sa-metric-label">Profile Views</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.profile.media_count}">0</div><div class="sa-metric-label">Total Posts</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value" data-target="${ig.insights.website_clicks || 0}">0</div><div class="sa-metric-label">Link Clicks</div></div>
         </div>
         <div class="sa-charts-section">
           <div class="sa-chart-row single">
@@ -2275,6 +2422,10 @@ async function fetchSocialAnalytics() {
           <h4>📊 ${marketLabel} · ${periodLabel}</h4>
           <div class="output-actions">
             <button class="copy-btn" onclick="copySaOutput()">Copy Report</button>
+            <button class="export-pdf-btn" onclick="exportPDF('analytics')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              Export PDF
+            </button>
           </div>
         </div>
         <div class="sa-platform-tabs">
@@ -2305,10 +2456,14 @@ async function fetchSocialAnalytics() {
     resultsEl.style.display = 'block';
     window.scrollTo(0, resultsEl.offsetTop - 20);
 
-    // Build charts after DOM is rendered
+    // Build charts + animate counters after DOM is rendered
     requestAnimationFrame(() => {
       buildFbCharts(data.facebook);
       if (data.instagram) buildIgCharts(data.instagram);
+      // Animate metric counters on the visible (facebook) tab
+      document.querySelectorAll('#sa-tab-facebook .sa-metric-value[data-target]').forEach(el => {
+        animateCounter(el, parseInt(el.dataset.target) || 0);
+      });
     });
 
     // Build Claude prompt
@@ -2432,7 +2587,7 @@ function setBmRegion(region) {
 
 async function searchBrandMonitor() {
   const keyword = document.getElementById('bm-keyword').value.trim();
-  if (!keyword) { alert('Please enter a brand or keyword to search.'); return; }
+  if (!keyword) { showToast('Please enter a brand or keyword to search.', 'error'); return; }
 
   const btn = document.getElementById('bmSearchBtn');
   const btnText = document.getElementById('bm-btn-text');
@@ -2518,6 +2673,10 @@ async function searchBrandMonitor() {
         <h4>🔍 "${keyword}" <span style="font-size:12px;font-weight:400;color:var(--gray-text);">in ${regionLabel}</span></h4>
         <div class="output-actions">
           <button class="copy-btn" onclick="copyBmOutput()">Copy All</button>
+          <button class="export-pdf-btn" onclick="exportPDF('brand')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            Export PDF
+          </button>
           <button class="clear-btn" onclick="clearBmOutput()">Clear</button>
         </div>
       </div>
@@ -2750,6 +2909,110 @@ function copySectionText(elementId, btn) {
     btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
   });
+}
+
+// ===== TOAST NOTIFICATIONS =====
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 260);
+  }, 3500);
+}
+
+// ===== ANIMATED COUNTERS =====
+function animateCounter(el, target) {
+  if (!target || target === 0) { el.textContent = '0'; return; }
+  const duration = 1100;
+  const start = performance.now();
+  function step(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(eased * target);
+    el.textContent = formatNum(current);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = formatNum(target);
+  }
+  requestAnimationFrame(step);
+}
+
+// ===== THEME SWITCHER =====
+const THEMES = {
+  navy:     { name: 'Navy Classic',  primary: '#131249', vars: { '--navy': '#131249', '--navy-mid': '#1B1A68', '--gray-light': '#F5F5F7', '--gray-mid': '#E0E0E0', '--white': '#FFFFFF' } },
+  midnight: { name: 'Midnight',      primary: '#080B1E', vars: { '--navy': '#080B1E', '--navy-mid': '#10133A', '--gray-light': '#F0F0F8', '--gray-mid': '#DCDCE8', '--white': '#FFFFFF' } },
+  steel:    { name: 'Steel Blue',    primary: '#1E3A5F', vars: { '--navy': '#1E3A5F', '--navy-mid': '#2A5282', '--gray-light': '#EEF3F8', '--gray-mid': '#D0DCE8', '--white': '#FFFFFF' } },
+  charcoal: { name: 'Charcoal',      primary: '#1A1A1A', vars: { '--navy': '#1A1A1A', '--navy-mid': '#2E2E2E', '--gray-light': '#F5F5F5', '--gray-mid': '#E0E0E0', '--white': '#FFFFFF' } },
+};
+let currentTheme = 'navy';
+
+function applyTheme(themeId) {
+  const theme = THEMES[themeId];
+  if (!theme) return;
+  currentTheme = themeId;
+  const root = document.documentElement;
+  Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+  localStorage.setItem('troopersTheme', themeId);
+  renderThemeOptions();
+}
+
+function toggleThemePanel() {
+  const panel = document.getElementById('theme-panel');
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+  } else {
+    renderThemeOptions();
+    panel.classList.add('open');
+  }
+}
+
+function renderThemeOptions() {
+  const container = document.getElementById('theme-options');
+  if (!container) return;
+  container.innerHTML = Object.entries(THEMES).map(([id, theme]) => `
+    <button class="theme-option ${id === currentTheme ? 'active' : ''}" onclick="applyTheme('${id}'); document.getElementById('theme-panel').classList.remove('open');">
+      <div class="theme-swatch">
+        <div class="theme-swatch-half" style="background:${theme.primary}"></div>
+        <div class="theme-swatch-half" style="background:#F47F20"></div>
+      </div>
+      <span>${theme.name}</span>
+    </button>`).join('');
+}
+
+// Close theme panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('theme-panel');
+  const fab = document.getElementById('theme-fab');
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && e.target !== fab && !fab.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+// Init theme from localStorage
+(function initTheme() {
+  const saved = localStorage.getItem('troopersTheme');
+  if (saved && THEMES[saved]) applyTheme(saved);
+  else renderThemeOptions();
+})();
+
+// ===== PDF EXPORT =====
+function exportPDF(type) {
+  const now = new Date().toLocaleDateString('en-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+  let agentName = '';
+  if (type === 'agent' && currentAgent) agentName = agents[currentAgent]?.title?.en || '';
+  else if (type === 'analytics') agentName = 'Social Media Analytics';
+  else if (type === 'brand') agentName = 'Brand Monitor';
+  const meta = document.getElementById('print-header-meta');
+  if (meta) meta.innerHTML = `TROOPERS Marketing Hub &nbsp;·&nbsp; ${agentName}<br><span style="color:#F47F20">${now}</span>`;
+  document.getElementById('print-header').style.display = 'flex';
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => { document.getElementById('print-header').style.display = 'none'; }, 800);
+  }, 80);
 }
 
 // ===== ENTER KEY SUPPORT =====
