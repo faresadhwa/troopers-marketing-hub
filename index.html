@@ -22,6 +22,77 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== INTRO SCREEN ===== */
+    #intro-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--navy);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0;
+    }
+    #intro-screen.fade-out {
+      animation: introFadeOut 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    @keyframes introFadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(1.04); }
+    }
+    .intro-logo {
+      width: 180px; max-width: 60vw;
+      opacity: 0;
+      animation: introLogoIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+    @keyframes introLogoIn {
+      from { opacity: 0; transform: scale(0.85) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .intro-logo.fade-logo-out {
+      animation: introLogoOut 0.35s ease-in forwards;
+    }
+    @keyframes introLogoOut {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(0.9); }
+    }
+    .intro-text {
+      position: absolute;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0;
+    }
+    .intro-text.show {
+      animation: introTextIn 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    @keyframes introTextIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .intro-text-main {
+      font-size: clamp(22px, 5vw, 36px);
+      font-weight: 800;
+      color: white;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .intro-text-main span { color: var(--orange); }
+    .intro-text-sub {
+      font-size: clamp(11px, 2vw, 14px);
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      text-align: center;
+    }
+    .intro-bar {
+      position: absolute; bottom: 48px;
+      width: 48px; height: 3px;
+      background: var(--orange);
+      border-radius: 2px;
+      opacity: 0;
+      animation: introBarIn 0.5s ease 1.2s forwards;
+    }
+    @keyframes introBarIn {
+      from { opacity: 0; width: 0; }
+      to   { opacity: 1; width: 48px; }
+    }
+
     /* ===== PAGE TRANSITIONS ===== */
     #home-page, #agent-page, #social-analytics-page, #brand-monitor-page {
       animation-duration: 0.35s;
@@ -746,6 +817,15 @@
 </head>
 <body>
 
+<!-- INTRO SCREEN -->
+<div id="intro-screen">
+  <img src="Troopers_Logo-06.png" alt="TROOPERS" class="intro-logo" id="intro-logo" />
+  <div class="intro-text" id="intro-text">
+    <div class="intro-text-main">Marketing <span>Hub</span></div>
+    <div class="intro-text-sub">Powered by TROOPERS</div>
+  </div>
+  <div class="intro-bar"></div>
+</div>
 
 <!-- HEADER -->
 <header>
@@ -2532,6 +2612,31 @@ async function fetchLiveTrends() {
 
   btn.disabled = false;
 }
+
+// ===== INTRO SCREEN =====
+(function runIntro() {
+  const screen = document.getElementById('intro-screen');
+  const logo   = document.getElementById('intro-logo');
+  const text   = document.getElementById('intro-text');
+
+  // Step 1: logo appears (via CSS animation, 0.3s delay + 0.7s duration = done at ~1s)
+  // Step 2: at 1.4s — fade logo out, fade text in
+  setTimeout(() => {
+    logo.classList.add('fade-logo-out');
+    setTimeout(() => {
+      logo.style.display = 'none';
+      text.classList.add('show');
+    }, 350);
+  }, 1400);
+
+  // Step 3: at 2.8s — fade entire screen out, reveal main page
+  setTimeout(() => {
+    screen.classList.add('fade-out');
+    setTimeout(() => {
+      screen.style.display = 'none';
+    }, 600);
+  }, 2800);
+})();
 
 </script>
 </body>
