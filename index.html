@@ -285,22 +285,33 @@
       gap: 6px;
     }
 
-    .lang-btn {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.7);
-      padding: 4px 10px;
+    .lang-select {
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.85);
+      padding: 5px 28px 5px 10px;
       border-radius: 20px;
       font-size: 12px;
       font-family: var(--font-main);
       cursor: pointer;
       transition: all 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      outline: none;
     }
-
-    .lang-btn:hover, .lang-btn.active {
+    .lang-select:focus, .lang-select:hover {
       border-color: var(--orange);
       color: var(--orange);
-      background: rgba(244,127,32,0.1);
+      background-color: rgba(244,127,32,0.1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23F47F20' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    }
+    .lang-select option {
+      background: #131249;
+      color: white;
+      font-family: var(--font-main);
     }
 
     .hub-title {
@@ -789,14 +800,19 @@
     @media (max-width: 600px) {
       header { padding: 0 16px; }
       .hub-title { display: none; }
-      .lang-btn { padding: 3px 7px; font-size: 11px; }
-      #home-page { padding: 24px 16px; }
+      .lang-select { font-size: 11px; padding: 4px 24px 4px 8px; }
+      #home-page { padding: 20px 14px; }
+      .home-hero { margin-bottom: 24px; }
       #agent-page { padding: 20px 14px; }
       #social-analytics-page, #brand-monitor-page { padding: 20px 14px; }
       .home-hero h1 { font-size: 22px; }
       .home-hero p { font-size: 13px; }
-      .agents-grid { grid-template-columns: 1fr; gap: 14px; }
-      .agent-card { padding: 20px; }
+      .agents-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .agent-card { padding: 16px; }
+      .agent-icon { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 10px; }
+      .agent-card h3 { font-size: 14px; margin-bottom: 6px; }
+      .agent-card p { font-size: 12px; }
+      .agent-tag { font-size: 10px; padding: 3px 8px; margin-top: 10px; }
       .form-card { padding: 18px; }
       .generate-btn { font-size: 14px; padding: 14px; }
       .output-card { padding: 18px; }
@@ -830,7 +846,6 @@
     }
     @media (max-width: 400px) {
       .sa-metrics-grid { grid-template-columns: 1fr 1fr; }
-      .lang-switcher { gap: 3px; }
     }
 
     /* ===== API KEY MODAL ===== */
@@ -1113,7 +1128,7 @@
       .output-actions, .section-copy-btn, .generate-btn,
       .sa-platform-tabs, .bm-history-bar, .bm-region-group,
       #theme-fab, #theme-panel, #toast-container, .export-pdf-btn,
-      .bm-history-btn, #bm-prev-card, .lang-switcher, .hub-title,
+      .bm-history-btn, #bm-prev-card, .lang-select, .hub-title,
       #bm-history-modal { display: none !important; }
 
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1154,12 +1169,12 @@
   <img src="Troopers_Logo-01.png" alt="TROOPERS Logo" class="logo" id="header-logo" />
   <div class="header-right">
     <span class="hub-title" data-i18n="hub_title">Marketing Hub</span>
-    <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('bm')">BM</button>
-      <button class="lang-btn" onclick="setLang('zh')">中文</button>
-      <button class="lang-btn" onclick="setLang('ta')">தமிழ்</button>
-    </div>
+    <select class="lang-select" onchange="setLang(this.value)">
+      <option value="en">EN</option>
+      <option value="bm">BM</option>
+      <option value="zh">中文</option>
+      <option value="ta">தமிழ்</option>
+    </select>
   </div>
 </header>
 
@@ -1941,8 +1956,8 @@ function applyTranslations(lang) {
 
 function setLang(lang) {
   currentLang = lang;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  const sel = document.querySelector('.lang-select');
+  if (sel) sel.value = lang;
   applyTranslations(lang);
   if (currentAgent) {
     const agent = agents[currentAgent];
@@ -3067,19 +3082,19 @@ function animateCounter(el, target) {
 // ===== THEME SWITCHER =====
 const THEMES = {
   white: {
-    name: 'Classic White', logo: 'Troopers_Logo-01.png', favicon: 'Troopers_Logo-05.png', primary: '#131249',
+    name: 'Classic White', logo: 'Troopers_Logo-03.png', mobileLogo: 'Troopers_Logo-06.png', favicon: 'Troopers_Logo-05.png', primary: '#131249',
     vars: { '--navy': '#131249', '--navy-mid': '#1B1A68', '--surface': '#FFFFFF', '--card': '#FFFFFF', '--card-alt': '#F5F5F7', '--text-on-surface': '#131249', '--text-muted-surface': '#666666', '--input-bg': '#FFFFFF', '--input-border': '#E0E0E0' }
   },
   cream: {
-    name: 'Warm Cream', logo: 'Troopers_Logo-02.png', favicon: 'Troopers_Logo-05.png', primary: '#7A4A1E',
+    name: 'Warm Cream', logo: 'Troopers_Logo-04.png', mobileLogo: 'Troopers_Logo-07.png', favicon: 'Troopers_Logo-05.png', primary: '#7A4A1E',
     vars: { '--navy': '#131249', '--navy-mid': '#1B1A68', '--surface': '#FBF6F0', '--card': '#FFFFFF', '--card-alt': '#F0E8DE', '--text-on-surface': '#131249', '--text-muted-surface': '#665544', '--input-bg': '#FFFFFF', '--input-border': '#DDD0C4' }
   },
   steel: {
-    name: 'Steel Blue', logo: 'Troopers_Logo-03.png', favicon: 'Troopers_Logo-05.png', primary: '#1E3A5F',
+    name: 'Steel Blue', logo: 'Troopers_Logo-03.png', mobileLogo: 'Troopers_Logo-06.png', favicon: 'Troopers_Logo-05.png', primary: '#1E3A5F',
     vars: { '--navy': '#1E3A5F', '--navy-mid': '#2A5282', '--surface': '#EEF3F8', '--card': '#FFFFFF', '--card-alt': '#DDE8F2', '--text-on-surface': '#1E3A5F', '--text-muted-surface': '#4A6A88', '--input-bg': '#FFFFFF', '--input-border': '#C8D8E8' }
   },
   dark: {
-    name: 'Midnight Dark', logo: 'Troopers_Logo-04.png', favicon: 'Troopers_Logo-06.png', primary: '#0C0C26',
+    name: 'Midnight Dark', logo: 'Troopers_Logo-04.png', mobileLogo: 'Troopers_Logo-07.png', favicon: 'Troopers_Logo-06.png', primary: '#0C0C26',
     vars: { '--navy': '#131249', '--navy-mid': '#1B1A68', '--surface': '#0C0C26', '--card': '#1A1A3E', '--card-alt': '#131330', '--text-on-surface': '#FFFFFF', '--text-muted-surface': 'rgba(255,255,255,0.5)', '--input-bg': '#0C0C26', '--input-border': '#2A2A58' }
   },
 };
@@ -3098,7 +3113,10 @@ function applyTheme(themeId) {
   Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
   root.setAttribute('data-theme', themeId);
   const headerLogo = document.getElementById('header-logo');
-  if (headerLogo) headerLogo.src = theme.logo;
+  if (headerLogo) {
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    headerLogo.src = (isMobile && theme.mobileLogo) ? theme.mobileLogo : theme.logo;
+  }
   updateFavicon(theme.favicon);
   localStorage.setItem('troopersTheme', themeId);
   renderThemeOptions();
