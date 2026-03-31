@@ -21,6 +21,84 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== BRAND MONITOR ===== */
+    .bm-region-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .bm-region-btn {
+      background: transparent;
+      border: 1.5px solid var(--gray-mid);
+      color: var(--navy);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-family: var(--font-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bm-region-btn.active { background: var(--navy); border-color: var(--navy); color: white; }
+    .bm-region-btn:hover:not(.active) { border-color: var(--orange); color: var(--orange); }
+
+    .bm-source-block { margin-bottom: 20px; border-left: 3px solid var(--orange); padding-left: 14px; }
+    .bm-source-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--orange); margin-bottom: 8px; }
+    .bm-source-region {
+      display: inline-block; font-size: 10px; background: var(--gray-light);
+      color: var(--gray-text); border-radius: 4px; padding: 1px 6px; margin-left: 6px; font-weight: 400; text-transform: none; letter-spacing: 0;
+    }
+    .bm-headline { font-size: 13.5px; color: var(--navy); margin-bottom: 6px; line-height: 1.5; display: flex; align-items: flex-start; gap: 6px; }
+    .bm-headline-dot { color: var(--orange); flex-shrink: 0; margin-top: 1px; }
+    .bm-headline-text { flex: 1; }
+    .bm-headline a { color: var(--navy); text-decoration: none; }
+    .bm-headline a:hover { color: var(--orange); text-decoration: underline; }
+    .bm-source-link { font-size: 11px; color: var(--orange); text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+    .bm-source-link:hover { text-decoration: underline; }
+
+    .bm-summary-section { margin-top: 28px; padding-top: 20px; border-top: 2px solid var(--gray-mid); }
+    .bm-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--navy-mid); margin-bottom: 14px; }
+    .bm-main-point {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      color: white; border-radius: 12px; padding: 18px 20px; margin-top: 18px;
+    }
+    .bm-main-point-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--orange); margin-bottom: 8px; }
+    .bm-main-point-text { font-size: 14px; line-height: 1.6; }
+
+    .bm-no-results { text-align: center; color: var(--gray-text); padding: 40px 20px; line-height: 1.8; }
+    .bm-results-meta { font-size: 12px; color: var(--gray-text); margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-mid); }
+
+    .bm-prev-banner {
+      background: #fff8f0; border: 1.5px solid var(--orange); border-radius: 10px;
+      padding: 14px 18px; font-size: 13px; color: var(--navy); line-height: 1.6;
+    }
+    .bm-prev-banner-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--orange); margin-bottom: 6px; }
+    .bm-prev-headline { font-size: 12px; color: var(--gray-text); margin-top: 4px; }
+
+    .bm-history-btn {
+      background: transparent; border: 1.5px solid var(--navy); color: var(--navy);
+      padding: 10px 24px; border-radius: 20px; font-size: 13px; font-family: var(--font-main);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .bm-history-btn:hover { background: var(--navy); color: white; }
+
+    .bm-modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .bm-modal {
+      background: white; border-radius: 16px; width: 100%; max-width: 680px;
+      max-height: 80vh; overflow-y: auto; padding: 28px;
+    }
+    .bm-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .bm-modal-header h3 { font-size: 18px; color: var(--navy); }
+    .bm-modal-close { background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--gray-text); line-height: 1; }
+    .bm-modal-close:hover { color: var(--navy); }
+    .bm-history-item { border: 1px solid var(--gray-mid); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+    .bm-history-item:last-child { margin-bottom: 0; }
+    .bm-history-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
+    .bm-history-brand { font-weight: 700; font-size: 15px; color: var(--navy); }
+    .bm-history-meta { font-size: 11px; color: var(--gray-text); white-space: nowrap; }
+    .bm-history-region { font-size: 11px; color: var(--gray-text); margin-top: 2px; }
+    .bm-history-preview { font-size: 12px; color: var(--gray-text); line-height: 1.6; }
+    .bm-history-empty { text-align: center; color: var(--gray-text); padding: 40px 0; }
+
     body {
       font-family: var(--font-main);
       background: var(--white);
@@ -658,6 +736,13 @@
       <span class="agent-tag" data-i18n="agent5_tag">WEEKLY INSPIRATION</span>
     </div>
 
+    <div class="agent-card" onclick="openBrandMonitor()">
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3" stroke="white" stroke-width="2"/><circle cx="11" cy="11" r="7" stroke="white" stroke-width="2" stroke-dasharray="3 2"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <h3>Brand Monitor</h3>
+      <p>Track what's being said about any brand or keyword across 25+ Malaysia & Singapore news sources, forums, and media — with AI analysis.</p>
+      <span class="agent-tag">LIVE MENTIONS</span>
+    </div>
+
   </div>
 </div>
 
@@ -692,13 +777,67 @@
   </div>
 </div>
 
+<!-- BRAND MONITOR PAGE -->
+<div id="brand-monitor-page" style="display:none; max-width:860px; margin:0 auto; padding:32px 24px;">
+
+  <button class="back-btn" onclick="goHome()">← <span data-i18n="back">Back to Hub</span></button>
+
+  <div class="agent-header">
+    <div class="agent-icon-lg">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="3" stroke="white" stroke-width="2"/>
+        <circle cx="11" cy="11" r="7" stroke="white" stroke-width="2" stroke-dasharray="3 2"/>
+        <path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Brand Monitor</h2>
+      <p>Track what's being said about any brand or keyword across 25+ sources in Malaysia & Singapore</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-group">
+      <label>Brand or keyword to monitor <span class="required">*</span></label>
+      <input type="text" id="bm-keyword" placeholder="e.g. Milo, McDonald's Malaysia, Grab, Troopers..." />
+    </div>
+    <div class="form-group">
+      <label>Region</label>
+      <div class="bm-region-group">
+        <button class="bm-region-btn active" data-region="both" onclick="setBmRegion('both')">🇲🇾🇸🇬 Both</button>
+        <button class="bm-region-btn" data-region="MY" onclick="setBmRegion('MY')">🇲🇾 Malaysia only</button>
+        <button class="bm-region-btn" data-region="SG" onclick="setBmRegion('SG')">🇸🇬 Singapore only</button>
+      </div>
+    </div>
+    <button class="generate-btn" id="bmSearchBtn" onclick="searchBrandMonitor()">
+      <span id="bm-btn-text">🔍 Search Brand</span>
+    </button>
+  </div>
+
+  <!-- Previous search comparison (auto-shown if brand was searched before) -->
+  <div id="bm-prev-card" class="output-card" style="display:none;"></div>
+
+  <!-- Results -->
+  <div id="bm-results-card" class="output-card" style="display:none;"></div>
+
+  <!-- History button -->
+  <div id="bm-history-bar" style="display:none; text-align:center; margin:20px 0;">
+    <button class="bm-history-btn" onclick="showBrandHistory()">📋 View All Search History</button>
+  </div>
+
+  <!-- History modal -->
+  <div id="bm-history-modal" style="display:none;"></div>
+
+</div>
+
 <script>
 // ===== TRANSLATIONS =====
 const i18n = {
   en: {
     hub_title: 'Marketing Hub',
     home_title: 'Your <span>Marketing</span> Command Centre',
-    home_subtitle: '5 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.',
+    home_subtitle: '6 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.',
     agent1_title: 'Social Media Copywriter', agent1_desc: 'Generate ready-to-post captions for Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — on-brand, every time.', agent1_tag: '6 PLATFORMS',
     agent2_title: 'Content Editor', agent2_desc: "Paste your draft and get it polished to match TROOPERS' brand voice, tone, and CI guidelines instantly.", agent2_tag: 'BRAND CHECKER',
     agent3_title: 'Campaign Brief Generator', agent3_desc: 'Turn a simple idea into a full structured campaign brief — audience, messaging, channels, timeline, and KPIs.', agent3_tag: 'FOR B2B & TALENT',
@@ -727,7 +866,7 @@ const i18n = {
   bm: {
     hub_title: 'Hab Pemasaran',
     home_title: 'Pusat Kawalan <span>Pemasaran</span> Anda',
-    home_subtitle: '5 ejen berkuasa AI dibina untuk TROOPERS. Cipta kandungan berjenama untuk mana-mana platform, dalam mana-mana bahasa, dalam beberapa saat.',
+    home_subtitle: '6 ejen berkuasa AI dibina untuk TROOPERS. Cipta kandungan berjenama untuk mana-mana platform, dalam mana-mana bahasa, dalam beberapa saat.',
     agent1_title: 'Penulis Media Sosial', agent1_desc: 'Jana kapsyen siap siar untuk Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — mengikut jenama, setiap masa.', agent1_tag: '6 PLATFORM',
     agent2_title: 'Penyunting Kandungan', agent2_desc: 'Tampal draf anda dan dapatkannya digilap untuk sepadan dengan suara jenama, nada, dan garis panduan CI TROOPERS.', agent2_tag: 'PEMERIKSA JENAMA',
     agent3_title: 'Penjana Ringkasan Kempen', agent3_desc: 'Tukar idea mudah kepada ringkasan kempen berstruktur — audiens, pesanan, saluran, jadual, dan KPI.', agent3_tag: 'UNTUK B2B & BAKAT',
@@ -756,7 +895,7 @@ const i18n = {
   zh: {
     hub_title: '营销中心',
     home_title: '您的<span>营销</span>指挥中心',
-    home_subtitle: '5个专为TROOPERS打造的AI助手。几秒钟内为任何平台创建品牌内容。',
+    home_subtitle: '6个专为TROOPERS打造的AI助手。几秒钟内为任何平台创建品牌内容。',
     agent1_title: '社交媒体文案', agent1_desc: '为Instagram、TikTok、Facebook、LinkedIn、Threads和Twitter生成随时可发布的标题——始终符合品牌形象。', agent1_tag: '6个平台',
     agent2_title: '内容编辑器', agent2_desc: '粘贴您的草稿，立即将其优化以符合TROOPERS的品牌声音、语气和CI指南。', agent2_tag: '品牌检查',
     agent3_title: '活动简报生成器', agent3_desc: '将简单想法转变为完整的结构化活动简报——受众、信息、渠道、时间表和KPI。', agent3_tag: '适用于B2B和人才',
@@ -785,7 +924,7 @@ const i18n = {
   ta: {
     hub_title: 'மார்க்கெட்டிங் ஹப்',
     home_title: 'உங்கள் <span>மார்க்கெட்டிங்</span> கட்டுப்பாட்டு மையம்',
-    home_subtitle: 'TROOPERS-க்காக கட்டப்பட்ட 5 AI முகவர்கள். எந்த தளத்திலும், எந்த மொழியிலும் உள்ளடக்கம் உருவாக்குங்கள்.',
+    home_subtitle: 'TROOPERS-க்காக கட்டப்பட்ட 6 AI முகவர்கள். எந்த தளத்திலும், எந்த மொழியிலும் உள்ளடக்கம் உருவாக்குங்கள்.',
     agent1_title: 'சமூக ஊடக எழுத்தாளர்', agent1_desc: 'Instagram, TikTok, Facebook, LinkedIn-க்காக கேப்ஷன்கள் உருவாக்குங்கள் — எப்போதும் பிராண்டிற்கு ஏற்ப.', agent1_tag: '6 தளங்கள்',
     agent2_title: 'உள்ளடக்க திருத்தியர்', agent2_desc: 'உங்கள் வரைவை ஒட்டி, TROOPERS பிராண்ட் குரலுக்கு ஏற்ப செம்மைப்படுத்துங்கள்.', agent2_tag: 'பிராண்ட் சரிபார்ப்பு',
     agent3_title: 'பிரச்சாரம் சுருக்க உருவாக்கி', agent3_desc: 'எளிய யோசனையை முழு பிரச்சார சுருக்கமாக மாற்றுங்கள்.', agent3_tag: 'B2B மற்றும் திறமைக்காக',
@@ -1277,6 +1416,7 @@ function openAgent(agentId) {
 function goHome() {
   document.getElementById('home-page').style.display = 'block';
   document.getElementById('agent-page').style.display = 'none';
+  document.getElementById('brand-monitor-page').style.display = 'none';
   currentAgent = null;
   window.scrollTo(0, 0);
 }
@@ -1447,6 +1587,278 @@ function clearOutput() {
   document.getElementById('outputCard').classList.remove('visible');
   document.getElementById('outputContent').textContent = '';
   document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
+}
+
+// ===== BRAND MONITOR =====
+
+let bmRegion = 'both';
+
+function openBrandMonitor() {
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('agent-page').style.display = 'none';
+  document.getElementById('brand-monitor-page').style.display = 'block';
+  document.getElementById('bm-keyword').value = '';
+  document.getElementById('bm-results-card').style.display = 'none';
+  document.getElementById('bm-prev-card').style.display = 'none';
+  document.getElementById('bm-history-bar').style.display = 'none';
+  bmRegion = 'both';
+  document.querySelectorAll('.bm-region-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.bm-region-btn[data-region="both"]').classList.add('active');
+  currentAgent = null;
+  window.scrollTo(0, 0);
+}
+
+function setBmRegion(region) {
+  bmRegion = region;
+  document.querySelectorAll('.bm-region-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.region === region);
+  });
+}
+
+async function searchBrandMonitor() {
+  const keyword = document.getElementById('bm-keyword').value.trim();
+  if (!keyword) { alert('Please enter a brand or keyword to search.'); return; }
+
+  const btn = document.getElementById('bmSearchBtn');
+  const btnText = document.getElementById('bm-btn-text');
+  btn.disabled = true;
+  btnText.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div> Searching...`;
+
+  const resultsCard = document.getElementById('bm-results-card');
+  const prevCard = document.getElementById('bm-prev-card');
+  resultsCard.style.display = 'none';
+  prevCard.style.display = 'none';
+
+  // Check history for this brand+region combo
+  const history = getBrandHistory();
+  const prevEntry = history.find(h =>
+    h.keyword.toLowerCase() === keyword.toLowerCase() && h.region === bmRegion
+  );
+
+  try {
+    const response = await fetch(`/api/brand-monitor?keyword=${encodeURIComponent(keyword)}&region=${bmRegion}`);
+    if (!response.ok) throw new Error('Search failed. Please try again.');
+    const data = await response.json();
+
+    // Show previous search banner if exists
+    if (prevEntry) {
+      const prevDate = new Date(prevEntry.timestamp).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+      const prevHeadlines = (prevEntry.headlines || []).slice(0, 3)
+        .map(h => `<div class="bm-prev-headline">• [${h.source}] ${h.title}</div>`).join('');
+      prevCard.innerHTML = `
+        <div class="output-header"><h4>🕐 Previous Search — ${prevDate}</h4></div>
+        <div class="bm-prev-banner">
+          <div class="bm-prev-banner-label">Last searched ${prevDate} · ${prevEntry.total} mentions across ${prevEntry.sources} sources</div>
+          ${prevHeadlines}
+          ${prevEntry.headlines?.length > 3 ? `<div class="bm-prev-headline" style="margin-top:4px;color:var(--orange);">+ ${prevEntry.headlines.length - 3} more</div>` : ''}
+        </div>`;
+      prevCard.classList.add('visible');
+      prevCard.style.display = 'block';
+    }
+
+    if (!data.results || data.results.length === 0) {
+      resultsCard.innerHTML = `
+        <div class="output-header"><h4>🔍 "${keyword}"</h4></div>
+        <div class="bm-no-results">😔 No mentions found for <strong>"${keyword}"</strong> in the selected region and sources right now.<br><br>Try a broader keyword, or check back later as sources update.</div>`;
+      resultsCard.classList.add('visible');
+      resultsCard.style.display = 'block';
+      btn.disabled = false;
+      btnText.innerHTML = '🔍 Search Again';
+      return;
+    }
+
+    // Build headlines HTML
+    const regionLabel = bmRegion === 'both' ? 'Malaysia & Singapore' : bmRegion === 'MY' ? 'Malaysia' : 'Singapore';
+    let headlinesHtml = data.results.map(group => `
+      <div class="bm-source-block">
+        <div class="bm-source-name">${group.source}<span class="bm-source-region">${group.region}</span></div>
+        ${group.items.map(item => `
+          <div class="bm-headline">
+            <span class="bm-headline-dot">•</span>
+            <span class="bm-headline-text">${item.title}</span>
+            ${item.url ? `<a class="bm-source-link" href="${item.url}" target="_blank" rel="noopener noreferrer">↗ View</a>` : ''}
+          </div>`).join('')}
+      </div>`).join('');
+
+    resultsCard.innerHTML = `
+      <div class="output-header">
+        <h4>🔍 "${keyword}" <span style="font-size:12px;font-weight:400;color:var(--gray-text);">in ${regionLabel}</span></h4>
+        <div class="output-actions">
+          <button class="copy-btn" onclick="copyBmOutput()">Copy All</button>
+          <button class="clear-btn" onclick="clearBmOutput()">Clear</button>
+        </div>
+      </div>
+      <div class="bm-results-meta">${data.total} mention${data.total !== 1 ? 's' : ''} found across ${data.results.length} source${data.results.length !== 1 ? 's' : ''}</div>
+      <div id="bm-headlines">${headlinesHtml}</div>
+      <div class="bm-summary-section">
+        <div class="bm-summary-title">📊 AI Analysis</div>
+        <div id="bm-summary" class="output-content streaming-cursor" style="font-size:14px;line-height:1.7;min-height:60px;">Generating analysis...</div>
+        <div class="bm-main-point" id="bm-main-point" style="display:none;">
+          <div class="bm-main-point-label">💡 Bottom Line</div>
+          <div class="bm-main-point-text" id="bm-main-point-text"></div>
+        </div>
+      </div>`;
+    resultsCard.classList.add('visible');
+    resultsCard.style.display = 'block';
+
+    // Build Claude prompt
+    const allHeadlines = data.results
+      .flatMap(g => g.items.map(i => `[${g.source}] ${i.title}`))
+      .join('\n');
+
+    const prevContext = prevEntry
+      ? `\n\nPREVIOUS SEARCH (${new Date(prevEntry.timestamp).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' })}): Found ${prevEntry.total} mentions across ${prevEntry.sources} sources. Previous summary excerpt: ${prevEntry.summary.substring(0, 300)}`
+      : '';
+
+    const claudeResponse = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemPrompt: `You are a sharp brand intelligence analyst for TROOPERS, a marketing agency based in Malaysia and Singapore. Your job is to analyse brand mentions and media coverage, delivering clear and actionable insights for marketing teams.`,
+        userMessage: `Analyse the following media mentions and online discussions about "${keyword}" in the ${regionLabel} market.${prevContext}
+
+CURRENT MENTIONS (${data.total} total across ${data.results.length} sources):
+${allHeadlines}
+
+Provide your analysis in this exact format:
+
+## Summary
+3-4 sentences summarising what is currently being said about this brand/keyword. Cover sentiment, key themes, and which types of media are covering it.
+
+## Key Themes
+3-5 bullet points of the main topics or angles appearing in the coverage.
+${prevEntry ? `
+## Compared to Last Search
+Compare this to the previous search. Has coverage volume changed? Has the sentiment or topic focus shifted? What's new or different?` : ''}
+
+## Bottom Line
+In 2-3 sentences: the single most important thing happening with this brand right now, and what a marketing team should know about it.
+
+Keep it concise, professional, and insight-driven. No fluff.`
+      })
+    });
+
+    const claudeData = await claudeResponse.json();
+    const claudeText = claudeData.result || 'Could not generate analysis.';
+
+    // Separate Bottom Line from the rest
+    const bottomLineMatch = claudeText.match(/##\s*Bottom Line\s*\n+([\s\S]+?)(?:\n##|$)/i);
+    const bottomLine = bottomLineMatch?.[1]?.trim() || '';
+    const summaryText = bottomLine
+      ? claudeText.replace(/##\s*Bottom Line\s*\n+[\s\S]+?(?:\n##|$)/i, '').trim()
+      : claudeText;
+
+    document.getElementById('bm-summary').classList.remove('streaming-cursor');
+    document.getElementById('bm-summary').innerHTML = renderMarkdown(summaryText);
+
+    if (bottomLine) {
+      document.getElementById('bm-main-point').style.display = 'block';
+      document.getElementById('bm-main-point-text').textContent = bottomLine;
+    }
+
+    // Save to localStorage history
+    saveBrandHistory({
+      keyword,
+      region: bmRegion,
+      timestamp: data.timestamp,
+      total: data.total,
+      sources: data.results.length,
+      summary: claudeText.substring(0, 600),
+      headlines: data.results.flatMap(g => g.items.map(i => ({ source: g.source, title: i.title, url: i.url }))).slice(0, 15)
+    });
+
+    document.getElementById('bm-history-bar').style.display = 'block';
+
+  } catch (err) {
+    resultsCard.innerHTML = `
+      <div class="output-header"><h4>🔍 "${keyword}"</h4></div>
+      <div class="bm-no-results">❌ ${err.message}<br><br>Please check your connection and try again.</div>`;
+    resultsCard.classList.add('visible');
+    resultsCard.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btnText.innerHTML = '🔍 Search Again';
+}
+
+function clearBmOutput() {
+  document.getElementById('bm-results-card').style.display = 'none';
+  document.getElementById('bm-results-card').classList.remove('visible');
+  document.getElementById('bm-prev-card').style.display = 'none';
+  document.getElementById('bm-prev-card').classList.remove('visible');
+}
+
+function copyBmOutput() {
+  const headlines = [...document.querySelectorAll('.bm-headline')].map(el => el.textContent.trim().replace('↗ View', '').trim()).join('\n');
+  const summary = document.getElementById('bm-summary')?.textContent?.trim() || '';
+  const mainPoint = document.getElementById('bm-main-point-text')?.textContent?.trim() || '';
+  const text = [headlines, summary ? '\n\nAI Analysis:\n' + summary : '', mainPoint ? '\nBottom Line:\n' + mainPoint : ''].join('').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#bm-results-card .copy-btn');
+    if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = 'Copy All'; }, 2000); }
+  });
+}
+
+// ── History (localStorage) ────────────────────────────────────────────────────
+
+function getBrandHistory() {
+  try { return JSON.parse(localStorage.getItem('bmHistory') || '[]'); }
+  catch { return []; }
+}
+
+function saveBrandHistory(entry) {
+  try {
+    let history = getBrandHistory();
+    history = history.filter(h => !(h.keyword.toLowerCase() === entry.keyword.toLowerCase() && h.region === entry.region));
+    history.unshift(entry);
+    localStorage.setItem('bmHistory', JSON.stringify(history.slice(0, 30)));
+  } catch (_) {}
+}
+
+function showBrandHistory() {
+  const history = getBrandHistory();
+  const modal = document.getElementById('bm-history-modal');
+
+  let content;
+  if (history.length === 0) {
+    content = `<div class="bm-history-empty">No search history yet. Search a brand to get started.</div>`;
+  } else {
+    content = history.map(h => {
+      const date = new Date(h.timestamp).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+      const regionLabel = h.region === 'both' ? '🇲🇾🇸🇬 Both' : h.region === 'MY' ? '🇲🇾 Malaysia' : '🇸🇬 Singapore';
+      const previews = (h.headlines || []).slice(0, 2).map(hl => `• ${hl.title}`).join('<br>');
+      return `
+        <div class="bm-history-item">
+          <div class="bm-history-item-header">
+            <div>
+              <div class="bm-history-brand">${h.keyword}</div>
+              <div class="bm-history-region">${regionLabel} · ${h.total} mentions · ${h.sources} sources</div>
+            </div>
+            <div class="bm-history-meta">${date}</div>
+          </div>
+          ${previews ? `<div class="bm-history-preview">${previews}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  modal.innerHTML = `
+    <div class="bm-modal-overlay" onclick="closeBrandHistoryModal(event)">
+      <div class="bm-modal">
+        <div class="bm-modal-header">
+          <h3>📋 Search History</h3>
+          <button class="bm-modal-close" onclick="document.getElementById('bm-history-modal').style.display='none'">✕</button>
+        </div>
+        <p style="font-size:12px;color:var(--gray-text);margin-bottom:18px;">Last ${history.length} brand search${history.length !== 1 ? 'es' : ''} — stored in your browser</p>
+        ${content}
+      </div>
+    </div>`;
+  modal.style.display = 'block';
+}
+
+function closeBrandHistoryModal(event) {
+  if (event && event.target.classList.contains('bm-modal-overlay')) {
+    document.getElementById('bm-history-modal').style.display = 'none';
+  }
 }
 
 async function fetchLiveTrends() {
