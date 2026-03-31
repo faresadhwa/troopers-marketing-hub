@@ -21,10 +21,10 @@ module.exports = async function handler(req, res) {
 
   const BASE = 'https://graph.facebook.com/v25.0';
   const days = parseInt(period) || 30;
+  const since = Math.floor(Date.now() / 1000) - days * 86400;
 
   async function apiFetch(path) {
-    const url = `${BASE}${path}`;
-    const r = await fetch(url);
+    const r = await fetch(`${BASE}${path}`);
     const json = await r.json();
     if (json.error) throw new Error(json.error.message);
     return json;
@@ -33,33 +33,37 @@ module.exports = async function handler(req, res) {
   try {
     // ── Facebook Page basics ──────────────────────────────────────────────────
     const pageData = await apiFetch(
-      `/${pageId}?fields=id,name,fan_count,followers_count,website&access_token=${token}`
+      `/${pageId}?fields=id,name,fan_count,followers_count&access_token=${token}`
     );
 
-    // ── Facebook Page Insights ────────────────────────────────────────────────
+    // ── Facebook Page Insights — totals + daily breakdown ────────────────────
     let fbInsights = {};
+    let fbDaily = {}; // { metric_name: [{date, value}] }
+
     try {
       const metrics = [
         'page_impressions',
         'page_impressions_unique',
         'page_engaged_users',
         'page_post_engagements',
-        'page_fans',
         'page_fan_adds',
         'page_fan_removes',
-        'page_views_total',
-        'page_actions_post_reactions_total'
+        'page_views_total'
       ].join(',');
 
       const insightsData = await apiFetch(
-        `/${pageId}/insights?metric=${metrics}&period=day&since=${Math.floor(Date.now() / 1000) - days * 86400}&access_token=${token}`
+        `/${pageId}/insights?metric=${metrics}&period=day&since=${since}&access_token=${token}`
       );
 
-      // Sum up values for each metric
       if (insightsData.data) {
         for (const metric of insightsData.data) {
-          const total = metric.values?.reduce((sum, v) => sum + (typeof v.value === 'number' ? v.value : 0), 0) || 0;
-          fbInsights[metric.name] = total;
+          // Daily breakdown
+          fbDaily[metric.name] = (metric.values || []).map(v => ({
+            date: v.end_time ? v.end_time.split('T')[0] : '',
+            value: typeof v.value === 'number' ? v.value : 0
+          }));
+          // Total
+          fbInsights[metric.name] = fbDaily[metric.name].reduce((sum, v) => sum + v.value, 0);
         }
       }
     } catch (_) {}
@@ -68,7 +72,7 @@ module.exports = async function handler(req, res) {
     let recentPosts = [];
     try {
       const postsData = await apiFetch(
-        `/${pageId}/posts?fields=id,message,created_time,full_picture,permalink_url&limit=10&access_token=${token}`
+        `/${pageId}/posts?fields=id,message,created_time,permalink_url&limit=10&access_token=${token}`
       );
 
       if (postsData.data) {
@@ -105,6 +109,7 @@ module.exports = async function handler(req, res) {
     // ── Instagram Business Account ────────────────────────────────────────────
     let igData = null;
     let igInsights = {};
+    let igDaily = {};
     let igPosts = [];
 
     try {
@@ -114,21 +119,38 @@ module.exports = async function handler(req, res) {
       const igId = igAccount?.instagram_business_account?.id;
 
       if (igId) {
-        // IG profile basics
         igData = await apiFetch(
-          `/${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count,profile_picture_url&access_token=${token}`
+          `/${igId}?fields=id,username,name,biography,followers_count,follows_count,media_count&access_token=${token}`
         );
 
-        // IG account insights
+        // IG insights — totals + daily breakdown
         try {
-          const igMetrics = 'impressions,reach,profile_views,follower_count,website_clicks';
+          const igMetrics = 'impressions,reach,profile_views,website_clicks';
           const igIns = await apiFetch(
-            `/${igId}/insights?metric=${igMetrics}&period=day&since=${Math.floor(Date.now() / 1000) - days * 86400}&access_token=${token}`
+            `/${igId}/insights?metric=${igMetrics}&period=day&since=${since}&access_token=${token}`
           );
           if (igIns.data) {
             for (const m of igIns.data) {
-              igInsights[m.name] = m.values?.reduce((sum, v) => sum + (v.value || 0), 0) || 0;
+              igDaily[m.name] = (m.values || []).map(v => ({
+                date: v.end_time ? v.end_time.split('T')[0] : '',
+                value: v.value || 0
+              }));
+              igInsights[m.name] = igDaily[m.name].reduce((sum, v) => sum + v.value, 0);
             }
+          }
+        } catch (_) {}
+
+        // IG follower count daily (separate metric)
+        try {
+          const igFollowers = await apiFetch(
+            `/${igId}/insights?metric=follower_count&period=day&since=${since}&access_token=${token}`
+          );
+          if (igFollowers.data?.[0]) {
+            igDaily['follower_count'] = (igFollowers.data[0].values || []).map(v => ({
+              date: v.end_time ? v.end_time.split('T')[0] : '',
+              value: v.value || 0
+            }));
+            igInsights['follower_count'] = igDaily['follower_count'].reduce((sum, v) => sum + v.value, 0);
           }
         } catch (_) {}
 
@@ -171,9 +193,8 @@ module.exports = async function handler(req, res) {
       }
     } catch (_) {}
 
-    // Sort posts by engagement
-    recentPosts.sort((a, b) => b.engaged_users - a.engaged_users);
-    igPosts.sort((a, b) => b.engagement - a.engagement);
+    recentPosts.sort((a, b) => (b.engaged_users + b.reactions) - (a.engaged_users + a.reactions));
+    igPosts.sort((a, b) => (b.likes + b.comments) - (a.likes + a.comments));
 
     return res.status(200).json({
       market,
@@ -186,6 +207,7 @@ module.exports = async function handler(req, res) {
           fans: pageData.fan_count || 0
         },
         insights: fbInsights,
+        daily: fbDaily,
         posts: recentPosts
       },
       instagram: igData ? {
@@ -198,6 +220,7 @@ module.exports = async function handler(req, res) {
           media_count: igData.media_count || 0
         },
         insights: igInsights,
+        daily: igDaily,
         posts: igPosts
       } : null,
       timestamp: new Date().toISOString()

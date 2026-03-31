@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TROOPERS Marketing Hub</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -22,6 +23,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ===== SOCIAL ANALYTICS ===== */
+    .sa-charts-section { margin-bottom: 28px; }
+    .sa-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .sa-chart-row.single { grid-template-columns: 1fr; }
+    @media (max-width: 640px) { .sa-chart-row { grid-template-columns: 1fr; } }
+    .sa-chart-card { background: var(--gray-light); border-radius: 12px; padding: 16px; }
+    .sa-chart-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--navy-mid); margin-bottom: 14px; }
+    .sa-chart-canvas-wrap { position: relative; height: 200px; }
+
     .sa-platform-tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--gray-mid); }
     .sa-tab {
       padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -1710,6 +1719,10 @@ function setSaTab(tab) {
   document.querySelectorAll('.sa-tab-content').forEach(el => el.style.display = 'none');
   const content = document.getElementById(`sa-tab-${tab}`);
   if (content) content.style.display = 'block';
+  // Resize charts when tab becomes visible
+  requestAnimationFrame(() => {
+    Object.values(saCharts).forEach(c => c.resize());
+  });
 }
 
 function formatNum(n) {
@@ -1722,6 +1735,184 @@ function formatNum(n) {
 function formatDate(ts) {
   if (!ts) return '';
   return new Date(ts).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// ── Chart helpers ─────────────────────────────────────────────────────────────
+const NAVY = '#131249';
+const ORANGE = '#F47F20';
+const ORANGE_LIGHT = 'rgba(244,127,32,0.15)';
+const NAVY_LIGHT = 'rgba(19,18,73,0.12)';
+const saCharts = {};
+
+function destroyChart(id) {
+  if (saCharts[id]) { saCharts[id].destroy(); delete saCharts[id]; }
+}
+
+function makeLineChart(canvasId, labels, datasets) {
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  saCharts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, color: NAVY } } },
+      scales: {
+        x: { ticks: { font: { family: 'Poppins', size: 10 }, color: '#999', maxTicksLimit: 8 }, grid: { display: false } },
+        y: { ticks: { font: { family: 'Poppins', size: 10 }, color: '#999' }, grid: { color: '#f0f0f0' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function makeBarChart(canvasId, labels, datasets, horizontal = false) {
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  saCharts[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: horizontal ? 'y' : 'x',
+      plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, color: NAVY } } },
+      scales: {
+        x: { ticks: { font: { family: 'Poppins', size: 10 }, color: '#999', maxTicksLimit: 8 }, grid: { display: false } },
+        y: { ticks: { font: { family: 'Poppins', size: 10 }, color: '#999' }, grid: { color: '#f0f0f0' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function makeDonutChart(canvasId, labels, values, colors) {
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  saCharts[canvasId] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 11 }, color: NAVY, padding: 12 } } }
+    }
+  });
+}
+
+function formatDateLabel(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' });
+}
+
+function buildFbCharts(fb) {
+  const daily = fb.daily || {};
+  const posts = fb.posts || [];
+
+  // Line chart — Impressions & Reach over time
+  const impData = daily['page_impressions'] || [];
+  const reachData = daily['page_impressions_unique'] || [];
+  const engData = daily['page_engaged_users'] || [];
+  const labels = impData.map(d => formatDateLabel(d.date));
+
+  makeLineChart('fb-chart-line', labels, [
+    { label: 'Impressions', data: impData.map(d => d.value), borderColor: ORANGE, backgroundColor: ORANGE_LIGHT, tension: 0.4, fill: true, pointRadius: 3 },
+    { label: 'Reach', data: reachData.map(d => d.value), borderColor: NAVY, backgroundColor: NAVY_LIGHT, tension: 0.4, fill: true, pointRadius: 3 },
+    { label: 'Engaged Users', data: engData.map(d => d.value), borderColor: '#2E7D32', backgroundColor: 'rgba(46,125,50,0.1)', tension: 0.4, fill: true, pointRadius: 3 }
+  ]);
+
+  // Bar chart — New followers vs Unfollows
+  const fanAdds = daily['page_fan_adds'] || [];
+  const fanRemoves = daily['page_fan_removes'] || [];
+  const fanLabels = fanAdds.map(d => formatDateLabel(d.date));
+  makeBarChart('fb-chart-followers', fanLabels, [
+    { label: 'New Followers', data: fanAdds.map(d => d.value), backgroundColor: ORANGE, borderRadius: 4 },
+    { label: 'Unfollows', data: fanRemoves.map(d => d.value), backgroundColor: NAVY_LIGHT, borderRadius: 4 }
+  ]);
+
+  // Bar chart — Top posts by engagement (horizontal)
+  if (posts.length > 0) {
+    const topPosts = posts.slice(0, 6);
+    const postLabels = topPosts.map((p, i) => `Post ${i + 1}`);
+    makeBarChart('fb-chart-posts', postLabels, [
+      { label: 'Engaged Users', data: topPosts.map(p => p.engaged_users), backgroundColor: ORANGE, borderRadius: 4 },
+      { label: 'Impressions', data: topPosts.map(p => p.impressions), backgroundColor: NAVY_LIGHT, borderRadius: 4 },
+      { label: 'Reach', data: topPosts.map(p => p.reach), backgroundColor: 'rgba(19,18,73,0.25)', borderRadius: 4 }
+    ], false);
+  }
+
+  // Overview comparison bar
+  makeBarChart('fb-chart-overview', ['Impressions', 'Reach', 'Engaged Users', 'Page Views', 'New Followers'], [
+    {
+      label: 'Total for period',
+      data: [
+        fb.insights.page_impressions || 0,
+        fb.insights.page_impressions_unique || 0,
+        fb.insights.page_engaged_users || 0,
+        fb.insights.page_views_total || 0,
+        fb.insights.page_fan_adds || 0
+      ],
+      backgroundColor: [ORANGE, NAVY, '#2E7D32', '#1565C0', '#6A1B9A'],
+      borderRadius: 6
+    }
+  ], true);
+}
+
+function buildIgCharts(ig) {
+  const daily = ig.daily || {};
+  const posts = ig.posts || [];
+
+  // Line chart — Impressions & Reach
+  const impData = daily['impressions'] || [];
+  const reachData = daily['reach'] || [];
+  const pvData = daily['profile_views'] || [];
+  const labels = impData.map(d => formatDateLabel(d.date));
+
+  makeLineChart('ig-chart-line', labels, [
+    { label: 'Impressions', data: impData.map(d => d.value), borderColor: ORANGE, backgroundColor: ORANGE_LIGHT, tension: 0.4, fill: true, pointRadius: 3 },
+    { label: 'Reach', data: reachData.map(d => d.value), borderColor: NAVY, backgroundColor: NAVY_LIGHT, tension: 0.4, fill: true, pointRadius: 3 },
+    { label: 'Profile Views', data: pvData.map(d => d.value), borderColor: '#1565C0', backgroundColor: 'rgba(21,101,192,0.1)', tension: 0.4, fill: true, pointRadius: 3 }
+  ]);
+
+  // Donut — Content type breakdown
+  if (posts.length > 0) {
+    const typeCounts = posts.reduce((acc, p) => {
+      acc[p.media_type] = (acc[p.media_type] || 0) + 1;
+      return acc;
+    }, {});
+    makeDonutChart('ig-chart-types',
+      Object.keys(typeCounts),
+      Object.values(typeCounts),
+      [ORANGE, NAVY, '#2E7D32', '#1565C0', '#6A1B9A']
+    );
+  }
+
+  // Bar chart — Top posts likes + comments
+  if (posts.length > 0) {
+    const topPosts = posts.slice(0, 6);
+    const postLabels = topPosts.map((p, i) => `Post ${i + 1}`);
+    makeBarChart('ig-chart-posts', postLabels, [
+      { label: 'Likes', data: topPosts.map(p => p.likes), backgroundColor: ORANGE, borderRadius: 4 },
+      { label: 'Comments', data: topPosts.map(p => p.comments), backgroundColor: NAVY, borderRadius: 4 },
+      { label: 'Saved', data: topPosts.map(p => p.saved), backgroundColor: '#2E7D32', borderRadius: 4 }
+    ], false);
+  }
+
+  // Overview comparison bar
+  makeBarChart('ig-chart-overview', ['Impressions', 'Reach', 'Profile Views', 'Website Clicks', 'New Followers'], [
+    {
+      label: 'Total for period',
+      data: [
+        ig.insights.impressions || 0,
+        ig.insights.reach || 0,
+        ig.insights.profile_views || 0,
+        ig.insights.website_clicks || 0,
+        ig.insights.follower_count || 0
+      ],
+      backgroundColor: [ORANGE, NAVY, '#2E7D32', '#1565C0', '#6A1B9A'],
+      borderRadius: 6
+    }
+  ], true);
 }
 
 async function fetchSocialAnalytics() {
@@ -1752,6 +1943,30 @@ async function fetchSocialAnalytics() {
         <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_engaged_users || 0)}</div><div class="sa-metric-label">Engaged Users</div></div>
         <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_fan_adds || 0)}</div><div class="sa-metric-label">New Followers</div></div>
         <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_views_total || 0)}</div><div class="sa-metric-label">Page Views</div></div>
+      </div>
+      <div class="sa-charts-section">
+        <div class="sa-chart-row single">
+          <div class="sa-chart-card">
+            <div class="sa-chart-title">Impressions, Reach & Engaged Users Over Time</div>
+            <div class="sa-chart-canvas-wrap"><canvas id="fb-chart-line"></canvas></div>
+          </div>
+        </div>
+        <div class="sa-chart-row">
+          <div class="sa-chart-card">
+            <div class="sa-chart-title">Follower Growth vs Unfollows</div>
+            <div class="sa-chart-canvas-wrap"><canvas id="fb-chart-followers"></canvas></div>
+          </div>
+          <div class="sa-chart-card">
+            <div class="sa-chart-title">Metrics Overview (Total)</div>
+            <div class="sa-chart-canvas-wrap"><canvas id="fb-chart-overview"></canvas></div>
+          </div>
+        </div>
+        <div class="sa-chart-row single">
+          <div class="sa-chart-card">
+            <div class="sa-chart-title">Top Posts Performance</div>
+            <div class="sa-chart-canvas-wrap"><canvas id="fb-chart-posts"></canvas></div>
+          </div>
+        </div>
       </div>`;
 
     const fbPosts = fb.posts.length > 0 ? `
@@ -1782,6 +1997,30 @@ async function fetchSocialAnalytics() {
           <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.profile_views || 0)}</div><div class="sa-metric-label">Profile Views</div></div>
           <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.profile.media_count)}</div><div class="sa-metric-label">Total Posts</div></div>
           <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.website_clicks || 0)}</div><div class="sa-metric-label">Link Clicks</div></div>
+        </div>
+        <div class="sa-charts-section">
+          <div class="sa-chart-row single">
+            <div class="sa-chart-card">
+              <div class="sa-chart-title">Impressions, Reach & Profile Views Over Time</div>
+              <div class="sa-chart-canvas-wrap"><canvas id="ig-chart-line"></canvas></div>
+            </div>
+          </div>
+          <div class="sa-chart-row">
+            <div class="sa-chart-card">
+              <div class="sa-chart-title">Content Type Breakdown</div>
+              <div class="sa-chart-canvas-wrap"><canvas id="ig-chart-types"></canvas></div>
+            </div>
+            <div class="sa-chart-card">
+              <div class="sa-chart-title">Metrics Overview (Total)</div>
+              <div class="sa-chart-canvas-wrap"><canvas id="ig-chart-overview"></canvas></div>
+            </div>
+          </div>
+          <div class="sa-chart-row single">
+            <div class="sa-chart-card">
+              <div class="sa-chart-title">Top Posts — Likes, Comments & Saves</div>
+              <div class="sa-chart-canvas-wrap"><canvas id="ig-chart-posts"></canvas></div>
+            </div>
+          </div>
         </div>
         ${ig.posts.length > 0 ? `
         <div class="sa-posts-title">📝 Recent Posts (by engagement)</div>
@@ -1833,6 +2072,12 @@ async function fetchSocialAnalytics() {
 
     resultsEl.style.display = 'block';
     window.scrollTo(0, resultsEl.offsetTop - 20);
+
+    // Build charts after DOM is rendered
+    requestAnimationFrame(() => {
+      buildFbCharts(data.facebook);
+      if (data.instagram) buildIgCharts(data.instagram);
+    });
 
     // Build Claude prompt
     const fbSummary = `
