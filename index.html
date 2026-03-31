@@ -21,6 +21,39 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== SOCIAL ANALYTICS ===== */
+    .sa-platform-tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--gray-mid); }
+    .sa-tab {
+      padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+      border: none; background: transparent; color: var(--gray-text); font-family: var(--font-main);
+      border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
+    }
+    .sa-tab.active { color: var(--navy); border-bottom-color: var(--orange); }
+    .sa-tab:hover:not(.active) { color: var(--navy); }
+
+    .sa-metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .sa-metric-card {
+      background: var(--gray-light); border-radius: 12px; padding: 16px;
+      text-align: center;
+    }
+    .sa-metric-value { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .sa-metric-label { font-size: 11px; color: var(--gray-text); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+    .sa-posts-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--navy-mid); margin-bottom: 14px; }
+    .sa-post-card { border: 1px solid var(--gray-mid); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+    .sa-post-caption { font-size: 13px; color: var(--navy); margin-bottom: 10px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .sa-post-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+    .sa-post-stat { font-size: 12px; color: var(--gray-text); }
+    .sa-post-stat strong { color: var(--navy); font-weight: 700; }
+    .sa-post-link { font-size: 11px; color: var(--orange); text-decoration: none; margin-left: auto; }
+    .sa-post-link:hover { text-decoration: underline; }
+    .sa-post-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+    .sa-post-type { font-size: 10px; background: var(--navy); color: white; border-radius: 4px; padding: 2px 7px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+    .sa-post-date { font-size: 11px; color: var(--gray-text); }
+
+    .sa-ai-section { margin-top: 28px; padding-top: 20px; border-top: 2px solid var(--gray-mid); }
+    .sa-no-data { text-align: center; color: var(--gray-text); padding: 30px 0; font-size: 13px; }
+
     /* ===== BRAND MONITOR ===== */
     .bm-region-group { display: flex; gap: 8px; flex-wrap: wrap; }
     .bm-region-btn {
@@ -736,6 +769,13 @@
       <span class="agent-tag" data-i18n="agent5_tag">WEEKLY INSPIRATION</span>
     </div>
 
+    <div class="agent-card" onclick="openSocialAnalytics()">
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="12" width="4" height="10" rx="1" fill="white"/><rect x="9" y="7" width="4" height="15" rx="1" fill="white"/><rect x="16" y="2" width="4" height="20" rx="1" fill="white"/></svg></div>
+      <h3>Social Media Analytics</h3>
+      <p>Pull live Facebook & Instagram metrics for Troopers SG, get AI-powered analysis and recommendations on what to post next.</p>
+      <span class="agent-tag">LIVE DATA</span>
+    </div>
+
     <div class="agent-card" onclick="openBrandMonitor()">
       <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3" stroke="white" stroke-width="2"/><circle cx="11" cy="11" r="7" stroke="white" stroke-width="2" stroke-dasharray="3 2"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
       <h3>Brand Monitor</h3>
@@ -775,6 +815,50 @@
     </div>
     <div class="output-content" id="outputContent"></div>
   </div>
+</div>
+
+<!-- SOCIAL ANALYTICS PAGE -->
+<div id="social-analytics-page" style="display:none; max-width:900px; margin:0 auto; padding:32px 24px;">
+
+  <button class="back-btn" onclick="goHome()">← <span data-i18n="back">Back to Hub</span></button>
+
+  <div class="agent-header">
+    <div class="agent-icon-lg">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="12" width="4" height="10" rx="1" fill="white"/>
+        <rect x="9" y="7" width="4" height="15" rx="1" fill="white"/>
+        <rect x="16" y="2" width="4" height="20" rx="1" fill="white"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Social Media Analytics</h2>
+      <p>Live Facebook & Instagram metrics with AI-powered analysis and recommendations</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-group">
+      <label>Market</label>
+      <div class="bm-region-group">
+        <button class="bm-region-btn active" data-sa-market="SG" onclick="setSaMarket('SG')">🇸🇬 Singapore</button>
+        <button class="bm-region-btn" data-sa-market="MY" onclick="setSaMarket('MY')">🇲🇾 Malaysia</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Period</label>
+      <div class="bm-region-group">
+        <button class="bm-region-btn" data-sa-period="7" onclick="setSaPeriod('7')">Last 7 days</button>
+        <button class="bm-region-btn active" data-sa-period="30" onclick="setSaPeriod('30')">Last 30 days</button>
+        <button class="bm-region-btn" data-sa-period="90" onclick="setSaPeriod('90')">Last 90 days</button>
+      </div>
+    </div>
+    <button class="generate-btn" id="saFetchBtn" onclick="fetchSocialAnalytics()">
+      <span id="sa-btn-text">📊 Pull Latest Data</span>
+    </button>
+  </div>
+
+  <div id="sa-results" style="display:none;"></div>
+
 </div>
 
 <!-- BRAND MONITOR PAGE -->
@@ -837,7 +921,7 @@ const i18n = {
   en: {
     hub_title: 'Marketing Hub',
     home_title: 'Your <span>Marketing</span> Command Centre',
-    home_subtitle: '6 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.',
+    home_subtitle: '7 AI-powered agents built for TROOPERS. Create on-brand content for any platform, in any language, in seconds.',
     agent1_title: 'Social Media Copywriter', agent1_desc: 'Generate ready-to-post captions for Instagram, TikTok, Facebook, LinkedIn, Threads & Twitter — on-brand, every time.', agent1_tag: '6 PLATFORMS',
     agent2_title: 'Content Editor', agent2_desc: "Paste your draft and get it polished to match TROOPERS' brand voice, tone, and CI guidelines instantly.", agent2_tag: 'BRAND CHECKER',
     agent3_title: 'Campaign Brief Generator', agent3_desc: 'Turn a simple idea into a full structured campaign brief — audience, messaging, channels, timeline, and KPIs.', agent3_tag: 'FOR B2B & TALENT',
@@ -1417,6 +1501,7 @@ function goHome() {
   document.getElementById('home-page').style.display = 'block';
   document.getElementById('agent-page').style.display = 'none';
   document.getElementById('brand-monitor-page').style.display = 'none';
+  document.getElementById('social-analytics-page').style.display = 'none';
   currentAgent = null;
   window.scrollTo(0, 0);
 }
@@ -1587,6 +1672,262 @@ function clearOutput() {
   document.getElementById('outputCard').classList.remove('visible');
   document.getElementById('outputContent').textContent = '';
   document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
+}
+
+// ===== SOCIAL ANALYTICS =====
+
+let saMarket = 'SG';
+let saPeriod = '30';
+let saCurrentTab = 'facebook';
+
+function openSocialAnalytics() {
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('agent-page').style.display = 'none';
+  document.getElementById('brand-monitor-page').style.display = 'none';
+  document.getElementById('social-analytics-page').style.display = 'block';
+  document.getElementById('sa-results').style.display = 'none';
+  currentAgent = null;
+  window.scrollTo(0, 0);
+}
+
+function setSaMarket(market) {
+  saMarket = market;
+  document.querySelectorAll('[data-sa-market]').forEach(b => {
+    b.classList.toggle('active', b.dataset.saMarket === market);
+  });
+}
+
+function setSaPeriod(period) {
+  saPeriod = period;
+  document.querySelectorAll('[data-sa-period]').forEach(b => {
+    b.classList.toggle('active', b.dataset.saPeriod === period);
+  });
+}
+
+function setSaTab(tab) {
+  saCurrentTab = tab;
+  document.querySelectorAll('.sa-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.sa-tab-content').forEach(el => el.style.display = 'none');
+  const content = document.getElementById(`sa-tab-${tab}`);
+  if (content) content.style.display = 'block';
+}
+
+function formatNum(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return n.toLocaleString();
+}
+
+function formatDate(ts) {
+  if (!ts) return '';
+  return new Date(ts).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+async function fetchSocialAnalytics() {
+  const btn = document.getElementById('saFetchBtn');
+  const btnText = document.getElementById('sa-btn-text');
+  btn.disabled = true;
+  btnText.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div> Fetching data...`;
+
+  const resultsEl = document.getElementById('sa-results');
+  resultsEl.style.display = 'none';
+
+  try {
+    const response = await fetch(`/api/social-analytics?market=${saMarket}&period=${saPeriod}`);
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error || 'Failed to fetch data');
+
+    const periodLabel = saPeriod === '7' ? 'Last 7 Days' : saPeriod === '30' ? 'Last 30 Days' : 'Last 90 Days';
+    const marketLabel = saMarket === 'SG' ? '🇸🇬 Singapore' : '🇲🇾 Malaysia';
+
+    // Build Facebook tab content
+    const fb = data.facebook;
+    const fbMetrics = `
+      <div class="sa-metrics-grid">
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.page.followers)}</div><div class="sa-metric-label">Followers</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_impressions || 0)}</div><div class="sa-metric-label">Impressions</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_impressions_unique || 0)}</div><div class="sa-metric-label">Reach</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_engaged_users || 0)}</div><div class="sa-metric-label">Engaged Users</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_fan_adds || 0)}</div><div class="sa-metric-label">New Followers</div></div>
+        <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(fb.insights.page_views_total || 0)}</div><div class="sa-metric-label">Page Views</div></div>
+      </div>`;
+
+    const fbPosts = fb.posts.length > 0 ? `
+      <div class="sa-posts-title">📝 Recent Posts (by engagement)</div>
+      ${fb.posts.map(p => `
+        <div class="sa-post-card">
+          <div class="sa-post-header">
+            <span class="sa-post-date">${formatDate(p.created_time)}</span>
+            ${p.url ? `<a class="sa-post-link" href="${p.url}" target="_blank" rel="noopener noreferrer">↗ View</a>` : ''}
+          </div>
+          <div class="sa-post-caption">${p.message}</div>
+          <div class="sa-post-stats">
+            <span class="sa-post-stat">👁 <strong>${formatNum(p.impressions)}</strong> Impressions</span>
+            <span class="sa-post-stat">📢 <strong>${formatNum(p.reach)}</strong> Reach</span>
+            <span class="sa-post-stat">💬 <strong>${formatNum(p.engaged_users)}</strong> Engaged</span>
+          </div>
+        </div>`).join('')}` : '<div class="sa-no-data">No recent posts found.</div>';
+
+    // Build Instagram tab content
+    let igContent = '<div class="sa-no-data">Instagram not connected to this page.</div>';
+    if (data.instagram) {
+      const ig = data.instagram;
+      igContent = `
+        <div class="sa-metrics-grid">
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.profile.followers)}</div><div class="sa-metric-label">Followers</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.impressions || 0)}</div><div class="sa-metric-label">Impressions</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.reach || 0)}</div><div class="sa-metric-label">Reach</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.profile_views || 0)}</div><div class="sa-metric-label">Profile Views</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.profile.media_count)}</div><div class="sa-metric-label">Total Posts</div></div>
+          <div class="sa-metric-card"><div class="sa-metric-value">${formatNum(ig.insights.website_clicks || 0)}</div><div class="sa-metric-label">Link Clicks</div></div>
+        </div>
+        ${ig.posts.length > 0 ? `
+        <div class="sa-posts-title">📝 Recent Posts (by engagement)</div>
+        ${ig.posts.map(p => `
+          <div class="sa-post-card">
+            <div class="sa-post-header">
+              <span class="sa-post-type">${p.media_type}</span>
+              <span class="sa-post-date">${formatDate(p.timestamp)}</span>
+              ${p.url ? `<a class="sa-post-link" href="${p.url}" target="_blank" rel="noopener noreferrer">↗ View</a>` : ''}
+            </div>
+            <div class="sa-post-caption">${p.caption}</div>
+            <div class="sa-post-stats">
+              <span class="sa-post-stat">❤️ <strong>${formatNum(p.likes)}</strong></span>
+              <span class="sa-post-stat">💬 <strong>${formatNum(p.comments)}</strong></span>
+              <span class="sa-post-stat">👁 <strong>${formatNum(p.impressions)}</strong> Impressions</span>
+              <span class="sa-post-stat">📢 <strong>${formatNum(p.reach)}</strong> Reach</span>
+              <span class="sa-post-stat">🔖 <strong>${formatNum(p.saved)}</strong> Saved</span>
+            </div>
+          </div>`).join('')}` : '<div class="sa-no-data">No recent posts found.</div>'}`;
+    }
+
+    // Render full results
+    resultsEl.innerHTML = `
+      <div class="output-card visible" style="margin-top:20px;">
+        <div class="output-header">
+          <h4>📊 ${marketLabel} · ${periodLabel}</h4>
+          <div class="output-actions">
+            <button class="copy-btn" onclick="copySaOutput()">Copy Report</button>
+          </div>
+        </div>
+        <div class="sa-platform-tabs">
+          <button class="sa-tab active" data-tab="facebook" onclick="setSaTab('facebook')">👥 Facebook</button>
+          <button class="sa-tab" data-tab="instagram" onclick="setSaTab('instagram')">📸 Instagram</button>
+          <button class="sa-tab" data-tab="analysis" onclick="setSaTab('analysis')">🤖 AI Analysis</button>
+        </div>
+        <div id="sa-tab-facebook" class="sa-tab-content">${fbMetrics}${fbPosts}</div>
+        <div id="sa-tab-instagram" class="sa-tab-content" style="display:none;">${igContent}</div>
+        <div id="sa-tab-analysis" class="sa-tab-content" style="display:none;">
+          <div class="sa-ai-section">
+            <div class="bm-summary-title">🤖 AI Analysis & Recommendations</div>
+            <div id="sa-ai-output" class="output-content streaming-cursor" style="font-size:14px;line-height:1.7;min-height:80px;">Generating analysis...</div>
+            <div class="bm-main-point" id="sa-main-point" style="display:none; margin-top:18px;">
+              <div class="bm-main-point-label">💡 What To Do Next</div>
+              <div class="bm-main-point-text" id="sa-main-point-text"></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    resultsEl.style.display = 'block';
+    window.scrollTo(0, resultsEl.offsetTop - 20);
+
+    // Build Claude prompt
+    const fbSummary = `
+FACEBOOK PAGE (${fb.page.name}):
+- Followers: ${fb.page.followers}
+- Impressions: ${fb.insights.page_impressions || 0}
+- Reach: ${fb.insights.page_impressions_unique || 0}
+- Engaged Users: ${fb.insights.page_engaged_users || 0}
+- New Followers: ${fb.insights.page_fan_adds || 0}
+- Page Views: ${fb.insights.page_views_total || 0}
+Top Posts:
+${fb.posts.slice(0, 5).map(p => `- "${p.message.substring(0, 80)}..." | Reach: ${p.reach} | Engaged: ${p.engaged_users}`).join('\n')}`;
+
+    const igSummary = data.instagram ? `
+INSTAGRAM (@${data.instagram.profile.username}):
+- Followers: ${data.instagram.profile.followers}
+- Impressions: ${data.instagram.insights.impressions || 0}
+- Reach: ${data.instagram.insights.reach || 0}
+- Profile Views: ${data.instagram.insights.profile_views || 0}
+- Website Clicks: ${data.instagram.insights.website_clicks || 0}
+Top Posts:
+${data.instagram.posts.slice(0, 5).map(p => `- "${p.caption.substring(0, 80)}..." | Likes: ${p.likes} | Reach: ${p.reach} | Saved: ${p.saved}`).join('\n')}` : 'INSTAGRAM: Not connected.';
+
+    const claudeResponse = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemPrompt: `You are a senior social media strategist for TROOPERS, a manpower and recruitment agency in Malaysia and Singapore. You analyse social media performance data and give clear, actionable recommendations to the marketing team.`,
+        userMessage: `Analyse the following social media performance data for TROOPERS ${marketLabel} over the ${periodLabel.toLowerCase()} and give recommendations.
+
+${fbSummary}
+
+${igSummary}
+
+Provide your analysis in this format:
+
+## Performance Summary
+3-4 sentences on overall performance. What's working, what's not. Be specific with numbers.
+
+## What's Working
+3 bullet points on the strongest performing content or metrics and why.
+
+## What Needs Improvement
+3 bullet points on underperforming areas with specific reasons why.
+
+## Recommendations For Next Posts
+5 specific, actionable content recommendations based on the data. Each should include the platform, content type, and why it should work based on the metrics.
+
+## What To Do Next
+In 2-3 sentences: the single most important action the team should take right now to improve performance.
+
+Be direct, specific, and data-driven. No fluff.`
+      })
+    });
+
+    const claudeData = await claudeResponse.json();
+    const claudeText = claudeData.result || 'Could not generate analysis.';
+
+    const nextStepMatch = claudeText.match(/##\s*What To Do Next\s*\n+([\s\S]+?)(?:\n##|$)/i);
+    const nextStep = nextStepMatch?.[1]?.trim() || '';
+    const analysisText = nextStep
+      ? claudeText.replace(/##\s*What To Do Next\s*\n+[\s\S]+?(?:\n##|$)/i, '').trim()
+      : claudeText;
+
+    document.getElementById('sa-ai-output').classList.remove('streaming-cursor');
+    document.getElementById('sa-ai-output').innerHTML = renderMarkdown(analysisText);
+
+    if (nextStep) {
+      document.getElementById('sa-main-point').style.display = 'block';
+      document.getElementById('sa-main-point-text').textContent = nextStep;
+    }
+
+    // Auto-switch to analysis tab
+    setSaTab('analysis');
+
+  } catch (err) {
+    resultsEl.innerHTML = `
+      <div class="output-card visible" style="margin-top:20px;">
+        <div class="bm-no-results">❌ ${err.message}<br><br>Please check your connection or token and try again.</div>
+      </div>`;
+    resultsEl.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btnText.innerHTML = '📊 Refresh Data';
+}
+
+function copySaOutput() {
+  const text = document.getElementById('sa-ai-output')?.textContent?.trim() || '';
+  const nextStep = document.getElementById('sa-main-point-text')?.textContent?.trim() || '';
+  const full = [text, nextStep ? '\nWhat To Do Next:\n' + nextStep : ''].join('').trim();
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.querySelector('#sa-results .copy-btn');
+    if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = 'Copy Report'; }, 2000); }
+  });
 }
 
 // ===== BRAND MONITOR =====
