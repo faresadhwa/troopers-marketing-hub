@@ -22,6 +22,33 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== PAGE TRANSITIONS ===== */
+    #home-page, #agent-page, #social-analytics-page, #brand-monitor-page {
+      animation-duration: 0.35s;
+      animation-fill-mode: both;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-12px); }
+    }
+    @keyframes pageInBack {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-enter  { animation-name: pageIn; }
+    .page-leave  { animation-name: pageOut; pointer-events: none; }
+    .page-enter-back { animation-name: pageInBack; }
+
+    .agent-card {
+      transition: transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.18s ease;
+    }
+    .agent-card:active { transform: scale(0.97); }
+
     /* ===== SOCIAL ANALYTICS ===== */
     .sa-charts-section { margin-bottom: 28px; }
     .sa-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -780,16 +807,16 @@
 
     <div class="agent-card" onclick="openSocialAnalytics()">
       <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="12" width="4" height="10" rx="1" fill="white"/><rect x="9" y="7" width="4" height="15" rx="1" fill="white"/><rect x="16" y="2" width="4" height="20" rx="1" fill="white"/></svg></div>
-      <h3>Social Media Analytics</h3>
-      <p>Pull live Facebook & Instagram metrics for Troopers SG, get AI-powered analysis and recommendations on what to post next.</p>
-      <span class="agent-tag">LIVE DATA</span>
+      <h3 data-i18n="agent6_title">Social Media Analytics</h3>
+      <p data-i18n="agent6_desc">Pull live Facebook & Instagram metrics for Troopers SG, get AI-powered analysis and recommendations on what to post next.</p>
+      <span class="agent-tag" data-i18n="agent6_tag">LIVE DATA</span>
     </div>
 
     <div class="agent-card" onclick="openBrandMonitor()">
       <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3" stroke="white" stroke-width="2"/><circle cx="11" cy="11" r="7" stroke="white" stroke-width="2" stroke-dasharray="3 2"/><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-      <h3>Brand Monitor</h3>
-      <p>Track what's being said about any brand or keyword across 25+ Malaysia & Singapore news sources, forums, and media — with AI analysis.</p>
-      <span class="agent-tag">LIVE MENTIONS</span>
+      <h3 data-i18n="agent7_title">Brand Monitor</h3>
+      <p data-i18n="agent7_desc">Track what's being said about any brand or keyword across 25+ Malaysia & Singapore news sources, forums, and media — with AI analysis.</p>
+      <span class="agent-tag" data-i18n="agent7_tag">LIVE MENTIONS</span>
     </div>
 
   </div>
@@ -840,8 +867,8 @@
       </svg>
     </div>
     <div>
-      <h2>Social Media Analytics</h2>
-      <p>Live Facebook & Instagram metrics with AI-powered analysis and recommendations</p>
+      <h2 data-i18n="agent6_title">Social Media Analytics</h2>
+      <p data-i18n="agent6_page_desc">Live Facebook & Instagram metrics with AI-powered analysis and recommendations</p>
     </div>
   </div>
 
@@ -885,8 +912,8 @@
       </svg>
     </div>
     <div>
-      <h2>Brand Monitor</h2>
-      <p>Track what's being said about any brand or keyword across 25+ sources in Malaysia & Singapore</p>
+      <h2 data-i18n="agent7_title">Brand Monitor</h2>
+      <p data-i18n="agent7_page_desc">Track what's being said about any brand or keyword across 25+ sources in Malaysia & Singapore</p>
     </div>
   </div>
 
@@ -954,7 +981,9 @@ const i18n = {
     opt_mix_bal: 'Balanced (hiring + brand + trends)', opt_mix_hiring: 'Mostly Hiring Posts', opt_mix_brand: 'Mostly Brand & Entertainment', opt_mix_edu: 'Mostly Educational',
     opt_focus_both: 'Both (Hiring + Brand)', opt_focus_workers: 'Attract Job Seekers', opt_focus_biz: 'Attract Business Clients', opt_focus_brand: 'Brand & Entertainment',
     opt_cnt_5: '5 Ideas (quick)', opt_cnt_7: '7 Ideas (recommended)', opt_cnt_10: '10 Ideas (full batch)',
-    opt_plat_gen: 'General'
+    opt_plat_gen: 'General',
+    agent6_title: 'Social Media Analytics', agent6_desc: 'Pull live Facebook & Instagram metrics, get AI-powered analysis and recommendations on what to post next.', agent6_tag: 'LIVE DATA', agent6_page_desc: 'Live Facebook & Instagram metrics with AI-powered analysis and recommendations',
+    agent7_title: 'Brand Monitor', agent7_desc: "Track what's being said about any brand or keyword across 25+ Malaysia & Singapore news sources, forums, and media — with AI analysis.", agent7_tag: 'LIVE MENTIONS', agent7_page_desc: 'Track what\'s being said about any brand or keyword across 25+ sources in Malaysia & Singapore'
   },
   bm: {
     hub_title: 'Hab Pemasaran',
@@ -983,7 +1012,9 @@ const i18n = {
     opt_mix_bal: 'Seimbang (pekerjaan + jenama + trend)', opt_mix_hiring: 'Kebanyakan Siaran Pekerjaan', opt_mix_brand: 'Kebanyakan Jenama & Hiburan', opt_mix_edu: 'Kebanyakan Pendidikan',
     opt_focus_both: 'Kedua-dua (Pekerjaan + Jenama)', opt_focus_workers: 'Tarik Pencari Kerja', opt_focus_biz: 'Tarik Klien Perniagaan', opt_focus_brand: 'Jenama & Hiburan',
     opt_cnt_5: '5 Idea (cepat)', opt_cnt_7: '7 Idea (disyorkan)', opt_cnt_10: '10 Idea (penuh)',
-    opt_plat_gen: 'Umum'
+    opt_plat_gen: 'Umum',
+    agent6_title: 'Analitik Media Sosial', agent6_desc: 'Tarik metrik Facebook & Instagram langsung, dapatkan analisis AI dan cadangan tentang apa yang perlu dipos seterusnya.', agent6_tag: 'DATA LANGSUNG', agent6_page_desc: 'Metrik Facebook & Instagram langsung dengan analisis AI dan cadangan',
+    agent7_title: 'Pemantau Jenama', agent7_desc: 'Jejak apa yang diperkatakan tentang mana-mana jenama atau kata kunci merentasi 25+ sumber berita Malaysia & Singapura dengan analisis AI.', agent7_tag: 'SEBUTAN LANGSUNG', agent7_page_desc: 'Jejak apa yang diperkatakan tentang mana-mana jenama atau kata kunci merentasi 25+ sumber'
   },
   zh: {
     hub_title: '营销中心',
@@ -1012,7 +1043,9 @@ const i18n = {
     opt_mix_bal: '均衡（招聘+品牌+趋势）', opt_mix_hiring: '主要招聘帖子', opt_mix_brand: '主要品牌与娱乐', opt_mix_edu: '主要教育',
     opt_focus_both: '两者（招聘+品牌）', opt_focus_workers: '吸引求职者', opt_focus_biz: '吸引商业客户', opt_focus_brand: '品牌与娱乐',
     opt_cnt_5: '5个创意（快速）', opt_cnt_7: '7个创意（推荐）', opt_cnt_10: '10个创意（完整）',
-    opt_plat_gen: '通用'
+    opt_plat_gen: '通用',
+    agent6_title: '社交媒体分析', agent6_desc: '获取Facebook和Instagram的实时指标，获得AI驱动的分析和下一步发布建议。', agent6_tag: '实时数据', agent6_page_desc: 'Facebook和Instagram实时指标，配备AI驱动的分析和建议',
+    agent7_title: '品牌监测', agent7_desc: '跟踪马来西亚和新加坡25个以上新闻来源对任何品牌或关键词的讨论，配备AI分析。', agent7_tag: '实时提及', agent7_page_desc: '跟踪任何品牌或关键词在25个以上来源中的讨论'
   },
   ta: {
     hub_title: 'மார்க்கெட்டிங் ஹப்',
@@ -1041,7 +1074,9 @@ const i18n = {
     opt_mix_bal: 'சமநிலை (ஆட்சேர்ப்பு + பிராண்ட் + போக்கு)', opt_mix_hiring: 'பெரும்பாலும் ஆட்சேர்ப்பு பதிவுகள்', opt_mix_brand: 'பெரும்பாலும் பிராண்ட் & பொழுதுபோக்கு', opt_mix_edu: 'பெரும்பாலும் கல்வி',
     opt_focus_both: 'இரண்டும் (ஆட்சேர்ப்பு + பிராண்ட்)', opt_focus_workers: 'வேலை தேடுபவர்களை ஈர்க்கவும்', opt_focus_biz: 'வணிக வாடிக்கையாளர்களை ஈர்க்கவும்', opt_focus_brand: 'பிராண்ட் & பொழுதுபோக்கு',
     opt_cnt_5: '5 யோசனைகள் (விரைவு)', opt_cnt_7: '7 யோசனைகள் (பரிந்துரை)', opt_cnt_10: '10 யோசனைகள் (முழு தொகுப்பு)',
-    opt_plat_gen: 'பொது'
+    opt_plat_gen: 'பொது',
+    agent6_title: 'சமூக ஊடக பகுப்பாய்வு', agent6_desc: 'Facebook & Instagram நேரடி அளவீடுகளை இழுத்து, AI பரிந்துரைகளைப் பெறுங்கள்.', agent6_tag: 'நேரடி தரவு', agent6_page_desc: 'AI பகுப்பாய்வு மற்றும் பரிந்துரைகளுடன் Facebook & Instagram நேரடி அளவீடுகள்',
+    agent7_title: 'பிராண்ட் மானிட்டர்', agent7_desc: 'மலேசியா & சிங்கப்பூரில் 25+ ஆதாரங்களில் எந்த பிராண்ட் அல்லது முக்கிய வார்த்தையையும் கண்காணிக்கவும்.', agent7_tag: 'நேரடி குறிப்புகள்', agent7_page_desc: 'மலேசியா & சிங்கப்பூரில் 25+ ஆதாரங்களில் பிராண்ட் கண்காணிப்பு'
   }
 };
 
@@ -1492,27 +1527,49 @@ function setLang(lang) {
   }
 }
 
+const ALL_PAGES = ['home-page', 'agent-page', 'social-analytics-page', 'brand-monitor-page'];
+
+function hideAllPages() {
+  ALL_PAGES.forEach(id => {
+    const el = document.getElementById(id);
+    el.style.display = 'none';
+    el.classList.remove('page-enter', 'page-leave', 'page-enter-back');
+  });
+}
+
+function transitionTo(showId, direction = 'forward') {
+  const incoming = document.getElementById(showId);
+  // find currently visible page and animate it out
+  ALL_PAGES.forEach(id => {
+    if (id === showId) return;
+    const el = document.getElementById(id);
+    if (el.style.display !== 'none') {
+      el.classList.add('page-leave');
+      setTimeout(() => { el.style.display = 'none'; el.classList.remove('page-leave'); }, 300);
+    }
+  });
+  incoming.style.display = 'block';
+  incoming.classList.remove('page-enter', 'page-enter-back');
+  void incoming.offsetWidth; // force reflow
+  incoming.classList.add(direction === 'back' ? 'page-enter-back' : 'page-enter');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function openAgent(agentId) {
   currentAgent = agentId;
   const agent = agents[agentId];
-  document.getElementById('home-page').style.display = 'none';
-  document.getElementById('agent-page').style.display = 'block';
   document.getElementById('agent-icon-lg').innerHTML = agent.icon;
   document.getElementById('agent-page-title').textContent = agent.title[currentLang] || agent.title.en;
   document.getElementById('agent-page-desc').textContent = agent.desc[currentLang] || agent.desc.en;
   document.getElementById('agent-form-content').innerHTML = agent.form;
   applyTranslations(currentLang);
   clearOutput();
-  window.scrollTo(0, 0);
+  transitionTo('agent-page', 'forward');
 }
 
 function goHome() {
-  document.getElementById('home-page').style.display = 'block';
-  document.getElementById('agent-page').style.display = 'none';
-  document.getElementById('brand-monitor-page').style.display = 'none';
-  document.getElementById('social-analytics-page').style.display = 'none';
   currentAgent = null;
-  window.scrollTo(0, 0);
+  transitionTo('home-page', 'back');
 }
 
 function getUserMessage() {
@@ -1690,13 +1747,9 @@ let saPeriod = '30';
 let saCurrentTab = 'facebook';
 
 function openSocialAnalytics() {
-  document.getElementById('home-page').style.display = 'none';
-  document.getElementById('agent-page').style.display = 'none';
-  document.getElementById('brand-monitor-page').style.display = 'none';
-  document.getElementById('social-analytics-page').style.display = 'block';
   document.getElementById('sa-results').style.display = 'none';
   currentAgent = null;
-  window.scrollTo(0, 0);
+  transitionTo('social-analytics-page', 'forward');
 }
 
 function setSaMarket(market) {
@@ -2180,9 +2233,6 @@ function copySaOutput() {
 let bmRegion = 'both';
 
 function openBrandMonitor() {
-  document.getElementById('home-page').style.display = 'none';
-  document.getElementById('agent-page').style.display = 'none';
-  document.getElementById('brand-monitor-page').style.display = 'block';
   document.getElementById('bm-keyword').value = '';
   document.getElementById('bm-results-card').style.display = 'none';
   document.getElementById('bm-prev-card').style.display = 'none';
@@ -2191,7 +2241,7 @@ function openBrandMonitor() {
   document.querySelectorAll('.bm-region-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.bm-region-btn[data-region="both"]').classList.add('active');
   currentAgent = null;
-  window.scrollTo(0, 0);
+  transitionTo('brand-monitor-page', 'forward');
 }
 
 function setBmRegion(region) {
