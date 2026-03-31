@@ -732,13 +732,80 @@
       line-height: 1.6;
     }
 
+    /* ===== SKELETON LOADING ===== */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #e8e8ee 25%, #f5f5f7 50%, #e8e8ee 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+      border-radius: 8px;
+    }
+    .sk-line { height: 14px; margin-bottom: 10px; }
+    .sk-line.short { width: 40%; }
+    .sk-line.mid   { width: 65%; }
+    .sk-line.long  { width: 90%; }
+    .sk-line.full  { width: 100%; }
+    .sk-title { height: 20px; width: 55%; margin-bottom: 16px; }
+    .sk-block { height: 80px; width: 100%; margin-bottom: 12px; }
+    .sk-metric { height: 72px; border-radius: 12px; }
+    .sk-chart  { height: 200px; border-radius: 12px; margin-bottom: 16px; }
+    .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .skeleton-section { padding: 20px; }
+
+    /* ===== SECTION COPY BUTTON ===== */
+    .section-copy-btn {
+      background: transparent;
+      border: 1px solid var(--gray-mid);
+      color: var(--gray-text);
+      font-size: 11px;
+      font-family: var(--font-main);
+      padding: 3px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .section-copy-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .section-copy-btn.copied { border-color: var(--success); color: var(--success); }
+    .section-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-header-row .bm-summary-title,
+    .section-header-row .bm-main-point-label,
+    .section-header-row .sa-posts-title { margin-bottom: 0; }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
       header { padding: 0 16px; }
       .hub-title { display: none; }
-      #home-page, #agent-page { padding: 24px 16px; }
-      .home-hero h1 { font-size: 24px; }
-      .agents-grid { grid-template-columns: 1fr; }
+      .lang-btn { padding: 3px 7px; font-size: 11px; }
+      #home-page { padding: 24px 16px; }
+      #agent-page { padding: 20px 14px; }
+      #social-analytics-page, #brand-monitor-page { padding: 20px 14px; }
+      .home-hero h1 { font-size: 22px; }
+      .home-hero p { font-size: 13px; }
+      .agents-grid { grid-template-columns: 1fr; gap: 14px; }
+      .agent-card { padding: 20px; }
+      .form-card { padding: 18px; }
+      .generate-btn { font-size: 14px; padding: 14px; }
+      .output-card { padding: 18px; }
+      .agent-header { gap: 12px; }
+      .agent-header h2 { font-size: 18px; }
+      .bm-region-group { gap: 6px; }
+      .bm-region-btn { padding: 7px 13px; font-size: 12px; }
+      .sa-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .sa-chart-row { grid-template-columns: 1fr; }
+      .sa-metric-value { font-size: 22px; }
+      .output-header { flex-wrap: wrap; gap: 8px; }
+      .output-actions { flex-wrap: wrap; gap: 6px; }
+      .intro-logo { width: 140px; }
+      .intro-text-main { font-size: 22px; }
+      .bm-modal { padding: 20px; }
+    }
+    @media (max-width: 400px) {
+      .sa-metrics-grid { grid-template-columns: 1fr 1fr; }
+      .lang-switcher { gap: 3px; }
     }
 
     /* ===== API KEY MODAL ===== */
@@ -1773,8 +1840,17 @@ async function generate() {
   const outputCard = document.getElementById('outputCard');
   const outputContent = document.getElementById('outputContent');
   outputCard.classList.add('visible');
-  outputContent.textContent = '';
-  outputContent.classList.add('streaming-cursor');
+  outputContent.innerHTML = `
+    <div class="skeleton-section">
+      <div class="skeleton sk-title"></div>
+      <div class="skeleton sk-line long"></div>
+      <div class="skeleton sk-line mid"></div>
+      <div class="skeleton sk-line full"></div>
+      <div class="skeleton sk-line short" style="margin-top:18px;"></div>
+      <div class="skeleton sk-block"></div>
+      <div class="skeleton sk-block"></div>
+    </div>`;
+  outputContent.classList.remove('streaming-cursor');
 
   try {
     const response = await fetch('/api/chat', {
@@ -2055,7 +2131,24 @@ async function fetchSocialAnalytics() {
   btnText.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div> Fetching data...`;
 
   const resultsEl = document.getElementById('sa-results');
-  resultsEl.style.display = 'none';
+
+  // Show skeleton while loading
+  resultsEl.innerHTML = `
+    <div class="output-card visible" style="margin-top:20px;">
+      <div class="skeleton-section">
+        <div class="skeleton-grid">
+          <div class="skeleton sk-metric"></div><div class="skeleton sk-metric"></div>
+          <div class="skeleton sk-metric"></div><div class="skeleton sk-metric"></div>
+          <div class="skeleton sk-metric"></div><div class="skeleton sk-metric"></div>
+        </div>
+        <div class="skeleton sk-chart"></div>
+        <div class="skeleton sk-title" style="width:40%;"></div>
+        <div class="skeleton sk-block"></div>
+        <div class="skeleton sk-block"></div>
+        <div class="skeleton sk-block"></div>
+      </div>
+    </div>`;
+  resultsEl.style.display = 'block';
 
   try {
     const response = await fetch(`/api/social-analytics?market=${saMarket}&period=${saPeriod}`);
@@ -2193,10 +2286,16 @@ async function fetchSocialAnalytics() {
         <div id="sa-tab-instagram" class="sa-tab-content" style="display:none;">${igContent}</div>
         <div id="sa-tab-analysis" class="sa-tab-content" style="display:none;">
           <div class="sa-ai-section">
-            <div class="bm-summary-title">🤖 AI Analysis & Recommendations</div>
+            <div class="section-header-row">
+              <div class="bm-summary-title">🤖 AI Analysis & Recommendations</div>
+              <button class="section-copy-btn" onclick="copySectionText('sa-ai-output', this)">📋 Copy</button>
+            </div>
             <div id="sa-ai-output" class="output-content streaming-cursor" style="font-size:14px;line-height:1.7;min-height:80px;">Generating analysis...</div>
             <div class="bm-main-point" id="sa-main-point" style="display:none; margin-top:18px;">
-              <div class="bm-main-point-label">💡 What To Do Next</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <div class="bm-main-point-label" style="margin-bottom:0;">💡 What To Do Next</div>
+                <button class="section-copy-btn" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);" onclick="copySectionText('sa-main-point-text', this)">📋 Copy</button>
+              </div>
               <div class="bm-main-point-text" id="sa-main-point-text"></div>
             </div>
           </div>
@@ -2342,8 +2441,26 @@ async function searchBrandMonitor() {
 
   const resultsCard = document.getElementById('bm-results-card');
   const prevCard = document.getElementById('bm-prev-card');
-  resultsCard.style.display = 'none';
   prevCard.style.display = 'none';
+
+  // Show skeleton while loading
+  resultsCard.innerHTML = `
+    <div class="skeleton-section">
+      <div class="skeleton sk-title"></div>
+      <div class="skeleton sk-line long"></div>
+      <div class="skeleton sk-line mid"></div>
+      <div style="margin-top:16px;"><div class="skeleton sk-title" style="width:30%;"></div>
+        <div class="skeleton sk-line full"></div>
+        <div class="skeleton sk-line long"></div>
+        <div class="skeleton sk-line mid"></div>
+      </div>
+      <div style="margin-top:16px;"><div class="skeleton sk-title" style="width:35%;"></div>
+        <div class="skeleton sk-line full"></div>
+        <div class="skeleton sk-line long"></div>
+      </div>
+    </div>`;
+  resultsCard.classList.add('visible');
+  resultsCard.style.display = 'block';
 
   // Check history for this brand+region combo
   const history = getBrandHistory();
@@ -2404,13 +2521,22 @@ async function searchBrandMonitor() {
           <button class="clear-btn" onclick="clearBmOutput()">Clear</button>
         </div>
       </div>
-      <div class="bm-results-meta">${data.total} mention${data.total !== 1 ? 's' : ''} found across ${data.results.length} source${data.results.length !== 1 ? 's' : ''}</div>
-      <div id="bm-headlines">${headlinesHtml}</div>
+      <div class="section-header-row" style="margin-bottom:0;">
+        <div class="bm-results-meta" style="margin-bottom:0;">${data.total} mention${data.total !== 1 ? 's' : ''} found across ${data.results.length} source${data.results.length !== 1 ? 's' : ''}</div>
+        <button class="section-copy-btn" onclick="copySectionText('bm-headlines', this)">📋 Copy Headlines</button>
+      </div>
+      <div id="bm-headlines" style="margin-top:16px;">${headlinesHtml}</div>
       <div class="bm-summary-section">
-        <div class="bm-summary-title">📊 AI Analysis</div>
+        <div class="section-header-row">
+          <div class="bm-summary-title">📊 AI Analysis</div>
+          <button class="section-copy-btn" onclick="copySectionText('bm-summary', this)">📋 Copy</button>
+        </div>
         <div id="bm-summary" class="output-content streaming-cursor" style="font-size:14px;line-height:1.7;min-height:60px;">Generating analysis...</div>
         <div class="bm-main-point" id="bm-main-point" style="display:none;">
-          <div class="bm-main-point-label">💡 Bottom Line</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div class="bm-main-point-label" style="margin-bottom:0;">💡 Bottom Line</div>
+            <button class="section-copy-btn" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);" onclick="copySectionText('bm-main-point-text', this)">📋 Copy</button>
+          </div>
           <div class="bm-main-point-text" id="bm-main-point-text"></div>
         </div>
       </div>`;
@@ -2612,6 +2738,37 @@ async function fetchLiveTrends() {
 
   btn.disabled = false;
 }
+
+// ===== SECTION COPY =====
+function copySectionText(elementId, btn) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.innerText?.trim() || el.textContent?.trim() || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ===== ENTER KEY SUPPORT =====
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter' || e.shiftKey || e.target.tagName === 'TEXTAREA') return;
+
+  // Agent page
+  if (document.getElementById('agent-page').style.display !== 'none') {
+    const btn = document.getElementById('generateBtn');
+    if (btn && !btn.disabled) btn.click();
+    return;
+  }
+  // Brand Monitor
+  if (document.getElementById('brand-monitor-page').style.display !== 'none') {
+    const btn = document.getElementById('bmSearchBtn');
+    if (btn && !btn.disabled) btn.click();
+    return;
+  }
+});
 
 // ===== INTRO SCREEN =====
 (function runIntro() {
