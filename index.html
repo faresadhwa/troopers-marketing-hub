@@ -108,10 +108,13 @@
 
     /* ===== BRAND ASSETS GALLERY ===== */
     #brand-assets-page { display:none; max-width:860px; margin:0 auto; padding:32px 24px; }
-    .ba-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:0; }
-    .ba-filter-btn { padding:7px 16px; border-radius:20px; border:1.5px solid var(--input-border); background:var(--card); color:var(--text-on-surface); font-family:var(--font-main); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
-    .ba-filter-btn:hover { border-color:var(--orange); color:var(--orange); }
-    .ba-filter-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+    .ba-filter-bar { display:flex; flex-wrap:wrap; gap:0; border-bottom:2px solid var(--input-border); margin-bottom:0; }
+    .ba-filter-btn { padding:8px 16px; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; background:transparent; color:var(--text-muted-surface); font-family:var(--font-main); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+    .ba-filter-btn:hover { color:var(--text-on-surface); }
+    .ba-filter-btn.active { color:var(--orange); border-bottom-color:var(--orange); font-weight:600; }
+    /* Hover preview */
+    #ba-preview { position:fixed; z-index:8500; pointer-events:none; display:none; padding:8px; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.18); border:1px solid #eee; }
+    #ba-preview img { width:180px; height:180px; object-fit:contain; display:block; border-radius:6px; }
     /* List layout */
     .ba-grid { display:flex; flex-direction:column; border:1.5px solid var(--input-border); border-radius:12px; overflow:hidden; }
     .ba-card { display:flex; align-items:center; gap:14px; padding:10px 16px; background:var(--card); border-bottom:1px solid var(--input-border); cursor:pointer; transition:background 0.15s; }
@@ -1541,6 +1544,9 @@
   <img id="ba-lightbox-img" src="" alt="" />
   <button class="ba-lightbox-dl" id="ba-lightbox-dl-btn" onclick="downloadAsset()">⬇ Download</button>
 </div>
+
+<!-- Hover Preview -->
+<div id="ba-preview"><img src="" alt="preview"></div>
 
 <!-- QR GENERATOR PAGE -->
 <div id="qr-generator-page" style="display:none; max-width:860px; margin:0 auto; padding:32px 24px;">
@@ -3799,50 +3805,54 @@ function downloadVisual() {
 const BRAND_ASSETS = [
   // Logos
   ...Array.from({length:15}, (_,i) => ({
+    label: `Troopers Logo ${i+1}`,
     name: `Troopers_Logo-${String(i+1).padStart(2,'0')}.png`,
     path: `Brand Assets/TROOPERS Logo/Troopers_Logo-${String(i+1).padStart(2,'0')}.png`,
     cat: 'logos', type: 'image'
   })),
-  { name: 'BetterPlace - Black & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Black&White .png`, cat: 'logos', type: 'image' },
-  { name: 'BetterPlace - Blue & Orange.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Blue &Orange.png`, cat: 'logos', type: 'image' },
-  { name: 'BetterPlace - Orange & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Orange&White.png`, cat: 'logos', type: 'image' },
-  { name: 'BetterPlace Logo.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company ).png`, cat: 'logos', type: 'image' },
+  { label: 'BetterPlace – Black & White', name: 'BetterPlace - Black & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Black&White .png`, cat: 'logos', type: 'image' },
+  { label: 'BetterPlace – Blue & Orange', name: 'BetterPlace - Blue & Orange.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Blue &Orange.png`, cat: 'logos', type: 'image' },
+  { label: 'BetterPlace – Orange & White', name: 'BetterPlace - Orange & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Orange&White.png`, cat: 'logos', type: 'image' },
+  { label: 'BetterPlace Logo', name: 'BetterPlace Logo.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company ).png`, cat: 'logos', type: 'image' },
   ...Array.from({length:4}, (_,i) => ({
+    label: `BetterPlace Logo ${i+1} (JPEG)`,
     name: `BetterPlace-${String(i+1).padStart(2,'0')}.jpg`,
     path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /JPEG/Troopers ( A BetterPlace Company )-${String(i+1).padStart(2,'0')}.jpg`,
     cat: 'logos', type: 'image'
   })),
   // Social Media Layouts
   ...Array.from({length:24}, (_,i) => ({
+    label: `Social Media Layout ${i+1}`,
     name: `Social Media Layout-${String(i+1).padStart(2,'0')}.png`,
     path: `Brand Assets/Social Media Layout/Social Media Layout-${String(i+1).padStart(2,'0')}.png`,
     cat: 'social', type: 'image'
   })),
-  { name: 'Social Media Layout.jpg', path: 'Brand Assets/Social Media Layout/Social Media Layout.jpg', cat: 'social', type: 'image' },
+  { label: 'Social Media Layout (Preview)', name: 'Social Media Layout.jpg', path: 'Brand Assets/Social Media Layout/Social Media Layout.jpg', cat: 'social', type: 'image' },
   // Certificates
-  { name: 'Certificate TROOPERS-01.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-01.png', cat: 'certificate', type: 'image' },
-  { name: 'Certificate TROOPERS-02.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-02.png', cat: 'certificate', type: 'image' },
-  { name: 'Certificate TROOPERS.jpg',    path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS.jpg',    cat: 'certificate', type: 'image' },
-  { name: 'Certificate 1 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 1 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
-  { name: 'Certificate 2 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 2 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
+  { label: 'Certificate 1',         name: 'Certificate TROOPERS-01.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-01.png', cat: 'certificate', type: 'image' },
+  { label: 'Certificate 2',         name: 'Certificate TROOPERS-02.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-02.png', cat: 'certificate', type: 'image' },
+  { label: 'Certificate (Preview)', name: 'Certificate TROOPERS.jpg',    path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS.jpg',    cat: 'certificate', type: 'image' },
+  { label: 'Certificate 1 (PDF)',   name: 'Certificate 1 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 1 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
+  { label: 'Certificate 2 (PDF)',   name: 'Certificate 2 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 2 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
   // CI Colors
-  { name: 'Color Code-14.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-14.png', cat: 'ci', type: 'image' },
-  { name: 'Color Code-19.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-19.png', cat: 'ci', type: 'image' },
+  { label: 'CI Color Palette 1', name: 'Color Code-14.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-14.png', cat: 'ci', type: 'image' },
+  { label: 'CI Color Palette 2', name: 'Color Code-19.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-19.png', cat: 'ci', type: 'image' },
   // Web QR
-  { name: 'Web QR - MY.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- MY.png', cat: 'qr', type: 'image' },
-  { name: 'Web QR - SG.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- SG.png', cat: 'qr', type: 'image' },
+  { label: 'Web QR – Malaysia', name: 'Web QR - MY.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- MY.png', cat: 'qr', type: 'image' },
+  { label: 'Web QR – Singapore', name: 'Web QR - SG.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- SG.png', cat: 'qr', type: 'image' },
   // Award Icons
-  { name: 'Award Icon-01.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-01.png', cat: 'award', type: 'image' },
-  { name: 'Award Icon-02.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-02.png', cat: 'award', type: 'image' },
-  { name: 'Award Icon-03.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-03.png', cat: 'award', type: 'image' },
+  { label: 'Award Icon 1', name: 'Award Icon-01.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-01.png', cat: 'award', type: 'image' },
+  { label: 'Award Icon 2', name: 'Award Icon-02.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-02.png', cat: 'award', type: 'image' },
+  { label: 'Award Icon 3', name: 'Award Icon-03.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-03.png', cat: 'award', type: 'image' },
   // App Download
   ...Array.from({length:4}, (_,i) => ({
+    label: `App Download Banner ${i+1}`,
     name: `Download App-${String(i+1).padStart(2,'0')}.png`,
     path: `Brand Assets/Download TROOPERS App/Download Troopers App-${String(i+1).padStart(2,'0')}.png`,
     cat: 'app', type: 'image'
   })),
   // Brand Guidelines
-  { name: 'Brand Guidelines Dec 2025.pdf', path: 'Brand Assets/TROOPERS _ Brand Guildeline @ Kits Dec 2025.pdf', cat: 'guidelines', type: 'pdf' },
+  { label: 'Brand Guidelines Dec 2025', name: 'Brand Guidelines Dec 2025.pdf', path: 'Brand Assets/TROOPERS _ Brand Guildeline @ Kits Dec 2025.pdf', cat: 'guidelines', type: 'pdf' },
 ];
 
 const BA_CATEGORIES = [
@@ -3894,45 +3904,59 @@ function renderBaGrid(cat) {
 
   const ext = name => name.split('.').pop().toUpperCase();
 
+  const cardHtml = a => {
+    const idx = BRAND_ASSETS.indexOf(a);
+    const src = encodeBaPath(a.path);
+    const thumb = a.type === 'pdf'
+      ? `<div class="ba-pdf-thumb">📄</div>`
+      : `<img class="ba-thumb" src="${src}" alt="${a.label}" loading="lazy" onmouseenter="showBaPreview(event,'${src}')" onmouseleave="hideBaPreview()">`;
+    return `<div class="ba-card" onclick="openBaLightbox(${idx})">
+      ${thumb}
+      <div class="ba-card-info">
+        <span class="ba-card-name">${a.label}</span>
+        <span class="ba-type-badge">${ext(a.name)}</span>
+        <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
+      </div>
+    </div>`;
+  };
+
   if (cat === 'all') {
-    // Group by category with section headers
     let html = '';
     BA_CATEGORIES.filter(c => c.key !== 'all').forEach(c => {
       const group = assets.filter(a => a.cat === c.key);
       if (!group.length) return;
       html += `<div class="ba-section-header">${c.label} <span style="font-weight:400;opacity:0.7;">(${group.length})</span></div>`;
-      html += group.map(a => {
-        const idx = BRAND_ASSETS.indexOf(a);
-        const thumb = a.type === 'pdf'
-          ? `<div class="ba-pdf-thumb">📄</div>`
-          : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
-        return `<div class="ba-card" onclick="openBaLightbox(${idx})">
-          ${thumb}
-          <div class="ba-card-info">
-            <span class="ba-card-name" title="${a.name}">${a.name}</span>
-            <span class="ba-type-badge">${ext(a.name)}</span>
-            <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
-          </div>
-        </div>`;
-      }).join('');
+      html += group.map(cardHtml).join('');
     });
     grid.innerHTML = html;
   } else {
-    grid.innerHTML = assets.map(a => {
-      const idx = BRAND_ASSETS.indexOf(a);
-      const thumb = a.type === 'pdf'
-        ? `<div class="ba-pdf-thumb">📄</div>`
-        : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
-      return `<div class="ba-card" onclick="openBaLightbox(${idx})">
-        ${thumb}
-        <div class="ba-card-info">
-          <span class="ba-card-name" title="${a.name}">${a.name}</span>
-          <span class="ba-type-badge">${ext(a.name)}</span>
-          <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
-        </div>
-      </div>`;
-    }).join('');
+    grid.innerHTML = assets.map(cardHtml).join('');
   }
+}
+
+function showBaPreview(e, src) {
+  const p = document.getElementById('ba-preview');
+  const img = p.querySelector('img');
+  img.src = src;
+  p.style.display = 'block';
+  moveBaPreview(e);
+  e.target.addEventListener('mousemove', moveBaPreview);
+}
+
+function moveBaPreview(e) {
+  const p = document.getElementById('ba-preview');
+  const gap = 14;
+  let x = e.clientX + gap;
+  let y = e.clientY - 100;
+  if (x + 200 > window.innerWidth) x = e.clientX - 200 - gap;
+  if (y < 8) y = 8;
+  p.style.left = x + 'px';
+  p.style.top = y + 'px';
+}
+
+function hideBaPreview() {
+  const p = document.getElementById('ba-preview');
+  p.style.display = 'none';
 }
 
 function openBaLightbox(idx) {
