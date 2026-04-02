@@ -1451,30 +1451,8 @@
     <div class="output-content" id="outputContent"></div>
   </div>
 
-  <!-- Character counter (copywriter only) -->
-  <div class="char-counter" id="charCounter">
-    <div class="char-counter-title">Character Count by Platform</div>
-    <div class="char-counter-row">
-      <span class="char-platform">Twitter / X</span>
-      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-tw" style="background:#1da1f2;"></div></div>
-      <span class="char-count" id="char-count-tw"></span>
-    </div>
-    <div class="char-counter-row">
-      <span class="char-platform">Instagram</span>
-      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-ig" style="background:#e1306c;"></div></div>
-      <span class="char-count" id="char-count-ig"></span>
-    </div>
-    <div class="char-counter-row">
-      <span class="char-platform">LinkedIn</span>
-      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-li" style="background:#0077b5;"></div></div>
-      <span class="char-count" id="char-count-li"></span>
-    </div>
-    <div class="char-counter-row">
-      <span class="char-platform">Facebook</span>
-      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-fb" style="background:#1877f2;"></div></div>
-      <span class="char-count" id="char-count-fb"></span>
-    </div>
-  </div>
+  <!-- Character counter (copywriter only, dynamically rendered) -->
+  <div class="char-counter" id="charCounter"></div>
 </div>
 
 <!-- SOCIAL ANALYTICS PAGE -->
@@ -2448,7 +2426,10 @@ function getUserMessage() {
     const lang = document.getElementById('f_lang').value;
     const audience = document.getElementById('f_audience').value;
     const extra = document.getElementById('f_extra').value;
-    return `Write social media captions for the following:\n\nTOPIC: ${topic}\nPLATFORMS: ${platforms}\nPOST TYPE: ${type}\nOUTPUT LANGUAGE: ${lang}\nTARGET AUDIENCE: ${audience}${extra ? '\nEXTRA DETAILS: ' + extra : ''}`;
+    const limits = { 'Twitter/X': 280, 'Instagram': 2200, 'TikTok': 2200, 'Facebook': 500, 'LinkedIn': 3000, 'Threads': 500 };
+    const selectedPlatforms = [...document.querySelectorAll('.platform-check:checked')].map(c => c.value);
+    const limitLines = selectedPlatforms.map(p => `- ${p}: max ${(limits[p]||500).toLocaleString()} characters`).join('\n');
+    return `Write social media captions for the following:\n\nTOPIC: ${topic}\nPLATFORMS: ${platforms}\nPOST TYPE: ${type}\nOUTPUT LANGUAGE: ${lang}\nTARGET AUDIENCE: ${audience}${extra ? '\nEXTRA DETAILS: ' + extra : ''}\n\nCHARACTER LIMITS — strictly enforce, do not exceed:\n${limitLines}\n\nFormat each platform as a clear section header (e.g. ## Instagram) so sections are easy to identify.`;
   }
   if (agent === 'editor') {
     const draft = document.getElementById('f_draft').value.trim();
@@ -4263,22 +4244,50 @@ function deleteHistoryItem(id) {
 }
 
 // ===== CHARACTER COUNTER =====
-const CHAR_LIMITS = { tw: 280, ig: 2200, li: 3000, fb: 63206 };
+const PLATFORM_LIMITS = { 'Twitter/X': 280, 'Instagram': 2200, 'TikTok': 2200, 'Facebook': 500, 'LinkedIn': 3000, 'Threads': 500 };
+const PLATFORM_COLORS = { 'Twitter/X': '#1da1f2', 'Instagram': '#e1306c', 'TikTok': '#010101', 'Facebook': '#1877f2', 'LinkedIn': '#0077b5', 'Threads': '#000000' };
+
+function extractPlatformSection(text, platformName) {
+  // Try to find the section under a header like ## Instagram or **Instagram** or just Instagram:
+  const escaped = platformName.replace('/', '\\/');
+  const patterns = [
+    new RegExp(`##\\s*(?:📸|🎵|👥|💼|🐦|🧵)?\\s*${escaped}[^\\n]*\\n([\\s\\S]*?)(?=\\n##|\\n\\*\\*[A-Z]|$)`, 'i'),
+    new RegExp(`\\*\\*(?:📸|🎵|👥|💼|🐦|🧵)?\\s*${escaped}[^*]*\\*\\*[^\\n]*\\n([\\s\\S]*?)(?=\\n\\*\\*[A-Z]|\\n##|$)`, 'i'),
+  ];
+  for (const re of patterns) {
+    const m = text.match(re);
+    if (m) return m[1].trim();
+  }
+  return null;
+}
 
 function updateCharCounter(text) {
   const counter = document.getElementById('charCounter');
   if (!text) { counter.classList.remove('visible'); return; }
+
+  const selectedPlatforms = [...document.querySelectorAll('.platform-check:checked')].map(c => c.value);
+  if (!selectedPlatforms.length) { counter.classList.remove('visible'); return; }
+
   counter.classList.add('visible');
-  const len = text.length;
-  [['tw', 280], ['ig', 2200], ['li', 3000], ['fb', 63206]].forEach(([id, limit]) => {
-    const pct = Math.min((len / limit) * 100, 100);
-    const bar = document.getElementById(`char-bar-${id}`);
-    const count = document.getElementById(`char-count-${id}`);
-    bar.style.width = pct + '%';
-    const cls = len <= limit * 0.8 ? 'char-ok' : len <= limit ? 'char-warn' : 'char-over';
-    count.className = 'char-count ' + cls;
-    count.textContent = `${len.toLocaleString()} / ${limit.toLocaleString()}`;
-  });
+
+  const rows = selectedPlatforms.map(platform => {
+    const limit = PLATFORM_LIMITS[platform] || 500;
+    const color = PLATFORM_COLORS[platform] || '#666';
+    const section = extractPlatformSection(text, platform);
+    const len = section !== null ? section.length : null;
+    const pct = len !== null ? Math.min((len / limit) * 100, 100) : 0;
+    const cls = len === null ? '' : len <= limit ? 'char-ok' : 'char-over';
+    const countLabel = len === null ? '<span style="color:var(--text-muted-surface);font-size:11px;">—</span>' : `<span class="char-count ${cls}">${len.toLocaleString()} / ${limit.toLocaleString()}</span>`;
+    const barHtml = len !== null ? `<div class="char-bar-wrap"><div class="char-bar" style="width:${pct}%;background:${color};"></div></div>` : `<div class="char-bar-wrap"></div>`;
+    return `<div class="char-counter-row">
+      <span class="char-platform">${platform}</span>
+      ${barHtml}
+      ${countLabel}
+    </div>`;
+  }).join('');
+
+  document.querySelector('.char-counter-title').textContent = 'Character Count per Platform Section';
+  document.getElementById('charCounter').innerHTML = `<div class="char-counter-title">Character Count per Platform Section</div>${rows}`;
 }
 
 // ===== BRAND ASSETS SEARCH =====
