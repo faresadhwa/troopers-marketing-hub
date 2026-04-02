@@ -107,27 +107,29 @@
     }
 
     /* ===== BRAND ASSETS GALLERY ===== */
-    #brand-assets-page { display:none; max-width:1000px; margin:0 auto; padding:32px 24px; }
-    .ba-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+    #brand-assets-page { display:none; max-width:860px; margin:0 auto; padding:32px 24px; }
+    .ba-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:0; }
     .ba-filter-btn { padding:7px 16px; border-radius:20px; border:1.5px solid var(--input-border); background:var(--card); color:var(--text-on-surface); font-family:var(--font-main); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
     .ba-filter-btn:hover { border-color:var(--orange); color:var(--orange); }
     .ba-filter-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
-    .ba-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; }
-    .ba-card { background:var(--card); border-radius:12px; overflow:hidden; border:1.5px solid var(--input-border); transition:box-shadow 0.2s, transform 0.2s; cursor:pointer; }
-    .ba-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.12); transform:translateY(-2px); }
-    .ba-thumb { width:100%; aspect-ratio:1; object-fit:contain; background:var(--card-alt); padding:8px; display:block; }
-    .ba-pdf-thumb { width:100%; aspect-ratio:1; background:var(--card-alt); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
-    .ba-card-info { padding:10px 10px 8px; }
-    .ba-card-name { font-size:11px; font-weight:600; color:var(--text-on-surface); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px; }
-    .ba-card-cat { font-size:10px; color:var(--text-muted-surface); margin-bottom:8px; }
-    .ba-dl-btn { width:100%; padding:6px; background:var(--navy); color:white; border:none; border-radius:7px; font-family:var(--font-main); font-size:11px; font-weight:600; cursor:pointer; transition:background 0.15s; }
-    .ba-dl-btn:hover { background:var(--orange); }
+    /* List layout */
+    .ba-grid { display:flex; flex-direction:column; border:1.5px solid var(--input-border); border-radius:12px; overflow:hidden; }
+    .ba-card { display:flex; align-items:center; gap:14px; padding:10px 16px; background:var(--card); border-bottom:1px solid var(--input-border); cursor:pointer; transition:background 0.15s; }
+    .ba-card:last-child { border-bottom:none; }
+    .ba-card:hover { background:var(--card-alt); }
+    .ba-thumb { width:48px; height:48px; object-fit:contain; border-radius:6px; background:var(--surface); flex-shrink:0; }
+    .ba-pdf-thumb { width:48px; height:48px; border-radius:6px; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .ba-card-info { flex:1; min-width:0; display:flex; align-items:center; gap:10px; }
+    .ba-card-name { font-size:13px; font-weight:500; color:var(--text-on-surface); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+    .ba-type-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px; background:var(--surface); color:var(--text-muted-surface); text-transform:uppercase; flex-shrink:0; }
+    .ba-dl-btn { padding:6px 14px; background:transparent; color:var(--navy); border:1.5px solid var(--input-border); border-radius:8px; font-family:var(--font-main); font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+    .ba-dl-btn:hover { background:var(--navy); color:white; border-color:var(--navy); }
+    .ba-section-header { padding:10px 16px 8px; background:var(--surface); border-bottom:1px solid var(--input-border); font-size:11px; font-weight:700; color:var(--text-muted-surface); text-transform:uppercase; letter-spacing:0.06em; }
     .ba-lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9000; display:none; align-items:center; justify-content:center; padding:20px; }
     .ba-lightbox.open { display:flex; }
     .ba-lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px; }
     .ba-lightbox-close { position:absolute; top:20px; right:24px; background:none; border:none; color:white; font-size:28px; cursor:pointer; line-height:1; }
     .ba-lightbox-dl { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:var(--orange); color:white; border:none; border-radius:10px; padding:10px 24px; font-family:var(--font-main); font-size:14px; font-weight:600; cursor:pointer; }
-    @media(max-width:768px) { .ba-grid { grid-template-columns:repeat(2,1fr); } }
 
     /* ===== QR COLOR SWATCHES ===== */
     .qr-color-swatch {
@@ -3886,22 +3888,51 @@ function renderBaGrid(cat) {
   const assets = cat === 'all' ? BRAND_ASSETS : BRAND_ASSETS.filter(a => a.cat === cat);
   const grid = document.getElementById('ba-grid');
   if (assets.length === 0) {
-    grid.innerHTML = '<p style="color:#666;grid-column:1/-1;">No assets in this category.</p>';
+    grid.innerHTML = '<p style="color:#666;padding:20px;">No assets in this category.</p>';
     return;
   }
-  grid.innerHTML = assets.map(a => {
-    const idx = BRAND_ASSETS.indexOf(a);
-    const thumb = a.type === 'pdf'
-      ? `<div class="ba-pdf-thumb">📄</div>`
-      : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
-    return `<div class="ba-card" onclick="openBaLightbox(${idx})">
-      ${thumb}
-      <div class="ba-card-info">
-        <span class="ba-card-name" title="${a.name}">${a.name}</span>
-        <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">⬇</button>
-      </div>
-    </div>`;
-  }).join('');
+
+  const ext = name => name.split('.').pop().toUpperCase();
+
+  if (cat === 'all') {
+    // Group by category with section headers
+    let html = '';
+    BA_CATEGORIES.filter(c => c.key !== 'all').forEach(c => {
+      const group = assets.filter(a => a.cat === c.key);
+      if (!group.length) return;
+      html += `<div class="ba-section-header">${c.label} <span style="font-weight:400;opacity:0.7;">(${group.length})</span></div>`;
+      html += group.map(a => {
+        const idx = BRAND_ASSETS.indexOf(a);
+        const thumb = a.type === 'pdf'
+          ? `<div class="ba-pdf-thumb">📄</div>`
+          : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
+        return `<div class="ba-card" onclick="openBaLightbox(${idx})">
+          ${thumb}
+          <div class="ba-card-info">
+            <span class="ba-card-name" title="${a.name}">${a.name}</span>
+            <span class="ba-type-badge">${ext(a.name)}</span>
+            <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
+          </div>
+        </div>`;
+      }).join('');
+    });
+    grid.innerHTML = html;
+  } else {
+    grid.innerHTML = assets.map(a => {
+      const idx = BRAND_ASSETS.indexOf(a);
+      const thumb = a.type === 'pdf'
+        ? `<div class="ba-pdf-thumb">📄</div>`
+        : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
+      return `<div class="ba-card" onclick="openBaLightbox(${idx})">
+        ${thumb}
+        <div class="ba-card-info">
+          <span class="ba-card-name" title="${a.name}">${a.name}</span>
+          <span class="ba-type-badge">${ext(a.name)}</span>
+          <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function openBaLightbox(idx) {
