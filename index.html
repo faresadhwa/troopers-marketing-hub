@@ -3315,32 +3315,10 @@ async function generateVisual() {
     }
 
     const imgEl = document.getElementById('vg-result-img');
-
-    const loadTimeout = setTimeout(() => {
-      imgEl.onload = null;
-      imgEl.onerror = null;
-      showToast('Generation is taking longer than usual — please try again.', 'error');
-      btn.disabled = false;
-      btnText.textContent = '🎨 Generate Visual';
-    }, 60000);
-
-    imgEl.onload = () => {
-      clearTimeout(loadTimeout);
-      document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
-      document.getElementById('vg-output').style.display = 'block';
-      document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      btn.disabled = false;
-      btnText.textContent = '🎨 Generate Visual';
-    };
-
-    imgEl.onerror = () => {
-      clearTimeout(loadTimeout);
-      showToast('Image service unavailable. Please try again in a moment.', 'error');
-      btn.disabled = false;
-      btnText.textContent = '🎨 Generate Visual';
-    };
-
-    imgEl.src = data.url;
+    imgEl.src = `data:${data.mimeType};base64,${data.image}`;
+    document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
+    document.getElementById('vg-output').style.display = 'block';
+    document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   } catch (err) {
     showToast('Network error: ' + err.message, 'error');
