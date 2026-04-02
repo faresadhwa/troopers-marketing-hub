@@ -3309,18 +3309,41 @@ async function generateVisual() {
 
     if (!res.ok || data.error) {
       showToast(data.error || 'Image generation failed.', 'error');
+      btn.disabled = false;
+      btnText.textContent = '🎨 Generate Visual';
       return;
     }
 
     const imgEl = document.getElementById('vg-result-img');
-    imgEl.src = `data:${data.mimeType};base64,${data.image}`;
-    document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
-    document.getElementById('vg-output').style.display = 'block';
-    document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const loadTimeout = setTimeout(() => {
+      imgEl.onload = null;
+      imgEl.onerror = null;
+      showToast('Generation is taking longer than usual — please try again.', 'error');
+      btn.disabled = false;
+      btnText.textContent = '🎨 Generate Visual';
+    }, 60000);
+
+    imgEl.onload = () => {
+      clearTimeout(loadTimeout);
+      document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
+      document.getElementById('vg-output').style.display = 'block';
+      document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      btn.disabled = false;
+      btnText.textContent = '🎨 Generate Visual';
+    };
+
+    imgEl.onerror = () => {
+      clearTimeout(loadTimeout);
+      showToast('Image service unavailable. Please try again in a moment.', 'error');
+      btn.disabled = false;
+      btnText.textContent = '🎨 Generate Visual';
+    };
+
+    imgEl.src = data.url;
 
   } catch (err) {
     showToast('Network error: ' + err.message, 'error');
-  } finally {
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
   }
@@ -3329,10 +3352,17 @@ async function generateVisual() {
 function downloadVisual() {
   const imgEl = document.getElementById('vg-result-img');
   if (!imgEl.src) return;
-  const a = document.createElement('a');
-  a.href = imgEl.src;
-  a.download = `troopers-visual-${Date.now()}.jpg`;
-  a.click();
+  fetch(imgEl.src)
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `troopers-visual-${Date.now()}.jpg`;
+      a.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(() => window.open(imgEl.src, '_blank'));
 }
 
 // ===== ENTER KEY SUPPORT =====
