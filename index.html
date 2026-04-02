@@ -103,7 +103,7 @@
     }
 
     /* ===== PAGE TRANSITIONS ===== */
-    #home-page, #agent-page, #social-analytics-page, #brand-monitor-page {
+    #home-page, #agent-page, #social-analytics-page, #brand-monitor-page, #visual-generator-page {
       animation-duration: 0.35s;
       animation-fill-mode: both;
       animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -804,7 +804,7 @@
       #home-page { padding: 20px 14px; }
       .home-hero { margin-bottom: 24px; }
       #agent-page { padding: 20px 14px; }
-      #social-analytics-page, #brand-monitor-page { padding: 20px 14px; }
+      #social-analytics-page, #brand-monitor-page, #visual-generator-page { padding: 20px 14px; }
       .home-hero h1 { font-size: 22px; }
       .home-hero p { font-size: 13px; }
       .agents-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1236,6 +1236,13 @@
       <span class="agent-tag" data-i18n="agent7_tag">LIVE MENTIONS</span>
     </div>
 
+    <div class="agent-card" onclick="openVisualGenerator()">
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3" stroke="white" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="white"/><path d="M21 15l-5-5L5 21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Visual Generator</h3>
+      <p>Generate on-brand marketing visuals for social media using Gemini AI — free, instant, no design skills needed.</p>
+      <span class="agent-tag">AI IMAGES</span>
+    </div>
+
   </div>
 </div>
 
@@ -1369,6 +1376,75 @@
 
   <!-- History modal -->
   <div id="bm-history-modal" style="display:none;"></div>
+
+</div>
+
+<!-- VISUAL GENERATOR PAGE -->
+<div id="visual-generator-page" style="display:none; max-width:860px; margin:0 auto; padding:32px 24px;">
+
+  <button class="back-btn" onclick="goHome()">← <span data-i18n="back">Back to Hub</span></button>
+
+  <div class="agent-header">
+    <div class="agent-icon-lg">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="18" rx="3" stroke="white" stroke-width="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
+        <path d="M21 15l-5-5L5 21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Visual Generator</h2>
+      <p>Generate on-brand marketing visuals for social media using Gemini AI — free, no design skills needed.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-group">
+      <label>Image Brief <span style="color:var(--orange)">*</span></label>
+      <textarea id="vg_brief" rows="3" placeholder="e.g. Part-time hiring campaign for Singapore youth, energetic and modern feel"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Visual Style</label>
+      <div class="bm-region-group">
+        <button class="bm-region-btn active" data-vg-style="photorealistic" onclick="setVgStyle('photorealistic')">📷 Photorealistic</button>
+        <button class="bm-region-btn" data-vg-style="illustrated" onclick="setVgStyle('illustrated')">🎨 Illustrated</button>
+        <button class="bm-region-btn" data-vg-style="minimal" onclick="setVgStyle('minimal')">⬜ Minimal</button>
+        <button class="bm-region-btn" data-vg-style="bold" onclick="setVgStyle('bold')">⚡ Bold Graphic</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Aspect Ratio</label>
+      <div class="bm-region-group">
+        <button class="bm-region-btn active" data-vg-ratio="square" onclick="setVgRatio('square')">◼ Square (1:1)</button>
+        <button class="bm-region-btn" data-vg-ratio="portrait" onclick="setVgRatio('portrait')">▬ Portrait (4:5)</button>
+        <button class="bm-region-btn" data-vg-ratio="landscape" onclick="setVgRatio('landscape')">▭ Landscape (16:9)</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:500;">
+        <input type="checkbox" id="vg_branding" style="width:16px; height:16px; accent-color:var(--orange); cursor:pointer;" />
+        Include TROOPERS branding context in prompt
+      </label>
+    </div>
+
+    <button class="generate-btn" id="vgGenerateBtn" onclick="generateVisual()">
+      <span id="vg-btn-text">🎨 Generate Visual</span>
+    </button>
+  </div>
+
+  <div id="vg-output" style="display:none; margin-top:20px;">
+    <div class="output-card" style="display:block;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <span style="font-weight:600; color:var(--text-on-surface); font-size:15px;">Generated Visual</span>
+        <button id="vg-download-btn" onclick="downloadVisual()" style="background:var(--navy); color:white; border:none; border-radius:8px; padding:8px 18px; font-family:var(--font-main); font-size:13px; font-weight:600; cursor:pointer;">⬇ Download</button>
+      </div>
+      <img id="vg-result-img" src="" alt="Generated visual" style="width:100%; border-radius:12px; display:block;" />
+      <p id="vg-prompt-used" style="margin-top:12px; font-size:12px; color:var(--text-muted-surface); font-style:italic; line-height:1.5;"></p>
+    </div>
+  </div>
 
 </div>
 
@@ -1966,7 +2042,7 @@ function setLang(lang) {
   }
 }
 
-const ALL_PAGES = ['home-page', 'agent-page', 'social-analytics-page', 'brand-monitor-page'];
+const ALL_PAGES = ['home-page', 'agent-page', 'social-analytics-page', 'brand-monitor-page', 'visual-generator-page'];
 
 function hideAllPages() {
   ALL_PAGES.forEach(id => {
@@ -3175,6 +3251,89 @@ function exportPDF(type) {
     window.print();
     setTimeout(() => { document.getElementById('print-header').style.display = 'none'; }, 800);
   }, 80);
+}
+
+// ===== VISUAL GENERATOR =====
+let vgStyle = 'photorealistic';
+let vgRatio = 'square';
+let vgCurrentImage = null;
+let vgCurrentMime = 'image/png';
+
+function openVisualGenerator() {
+  currentAgent = null;
+  document.getElementById('vg-output').style.display = 'none';
+  transitionTo('visual-generator-page', 'forward');
+}
+
+function setVgStyle(style) {
+  vgStyle = style;
+  document.querySelectorAll('[data-vg-style]').forEach(b => b.classList.toggle('active', b.dataset.vgStyle === style));
+}
+
+function setVgRatio(ratio) {
+  vgRatio = ratio;
+  document.querySelectorAll('[data-vg-ratio]').forEach(b => b.classList.toggle('active', b.dataset.vgRatio === ratio));
+}
+
+async function generateVisual() {
+  const brief = document.getElementById('vg_brief').value.trim();
+  if (!brief) { showToast('Please enter an image brief.', 'error'); return; }
+
+  const branding = document.getElementById('vg_branding').checked;
+  const ratioMap = { square: '1:1 square format', portrait: '4:5 portrait format', landscape: '16:9 landscape format' };
+  const styleMap = {
+    photorealistic: 'photorealistic, high quality photography style',
+    illustrated: 'digital illustration, vibrant colors, modern flat design',
+    minimal: 'minimal clean design, simple shapes, lots of white space',
+    bold: 'bold graphic design, high contrast, strong typography, vibrant colors'
+  };
+
+  let prompt = `Create a ${styleMap[vgStyle]} marketing visual in ${ratioMap[vgRatio]}. Subject: ${brief}.`;
+  if (branding) prompt += ` For TROOPERS, a recruitment and staffing company in Singapore and Malaysia. Brand colors: navy blue (#131249) and orange (#F47F20). Professional yet approachable.`;
+  prompt += ` Optimised for social media. No watermarks. High quality.`;
+
+  const btn = document.getElementById('vgGenerateBtn');
+  const btnText = document.getElementById('vg-btn-text');
+  btn.disabled = true;
+  btnText.textContent = '⏳ Generating...';
+
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      showToast(data.error || 'Image generation failed.', 'error');
+      return;
+    }
+
+    vgCurrentImage = data.image;
+    vgCurrentMime = data.mimeType || 'image/png';
+
+    const imgEl = document.getElementById('vg-result-img');
+    imgEl.src = `data:${vgCurrentMime};base64,${vgCurrentImage}`;
+    document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
+    document.getElementById('vg-output').style.display = 'block';
+    document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    showToast('Network error: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = '🎨 Generate Visual';
+  }
+}
+
+function downloadVisual() {
+  if (!vgCurrentImage) return;
+  const ext = vgCurrentMime.includes('png') ? 'png' : 'jpg';
+  const a = document.createElement('a');
+  a.href = `data:${vgCurrentMime};base64,${vgCurrentImage}`;
+  a.download = `troopers-visual-${Date.now()}.${ext}`;
+  a.click();
 }
 
 // ===== ENTER KEY SUPPORT =====
