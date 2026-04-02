@@ -14,13 +14,13 @@ module.exports = async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+          instances: [{ prompt: prompt.trim() }],
+          parameters: { sampleCount: 1 }
         })
       }
     );
@@ -31,16 +31,14 @@ module.exports = async function handler(req, res) {
       return res.status(response.status).json({ error: data.error?.message || 'Gemini API error' });
     }
 
-    const parts = data.candidates?.[0]?.content?.parts || [];
-    const imagePart = parts.find(p => p.inlineData);
-
-    if (!imagePart) {
+    const prediction = data.predictions?.[0];
+    if (!prediction?.bytesBase64Encoded) {
       return res.status(500).json({ error: 'No image was returned. Try rephrasing your prompt.' });
     }
 
     return res.status(200).json({
-      image: imagePart.inlineData.data,
-      mimeType: imagePart.inlineData.mimeType || 'image/png'
+      image: prediction.bytesBase64Encoded,
+      mimeType: prediction.mimeType || 'image/png'
     });
 
   } catch (err) {
