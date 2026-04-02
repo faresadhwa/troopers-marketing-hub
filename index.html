@@ -103,6 +103,16 @@
       to   { opacity: 1; width: 48px; }
     }
 
+    /* ===== QR COLOR SWATCHES ===== */
+    .qr-color-swatch {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
+    }
+    .qr-color-swatch:hover { transform: scale(1.15); }
+    .qr-color-swatch.active { box-shadow: 0 0 0 3px var(--orange); transform: scale(1.1); }
+
     /* ===== PAGE TRANSITIONS ===== */
     #home-page, #agent-page, #social-analytics-page, #brand-monitor-page, #visual-generator-page, #qr-generator-page {
       animation-duration: 0.35s;
@@ -1509,20 +1519,32 @@
         </div>
       </div>
 
-      <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-        <div>
-          <label>QR Color</label>
-          <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-            <input type="color" id="qr_fg" value="#131249" oninput="qrLiveUpdate()" style="width:40px; height:36px; border:none; border-radius:8px; cursor:pointer; background:none;" />
-            <input type="text" id="qr_fg_hex" value="#131249" maxlength="7" oninput="syncColorFromHex('qr_fg','qr_fg_hex')" style="flex:1; padding:8px; border-radius:8px; border:1.5px solid var(--input-border); background:var(--input-bg); color:var(--text-on-surface); font-family:var(--font-main); font-size:13px;" />
-          </div>
+      <div class="form-group">
+        <label>QR Color</label>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <button class="qr-color-swatch active" data-qr-fg="#131249" onclick="setQRFg('#131249')" style="background:#131249;" title="Troopers Navy"></button>
+          <button class="qr-color-swatch" data-qr-fg="#F47F20" onclick="setQRFg('#F47F20')" style="background:#F47F20;" title="Troopers Orange"></button>
+          <button class="qr-color-swatch" data-qr-fg="#000000" onclick="setQRFg('#000000')" style="background:#000000;" title="Black"></button>
+          <button class="qr-color-swatch" data-qr-fg="#444444" onclick="setQRFg('#444444')" style="background:#444444;" title="Dark Grey"></button>
+          <button class="qr-color-swatch" data-qr-fg="#1a6fbc" onclick="setQRFg('#1a6fbc')" style="background:#1a6fbc;" title="Blue"></button>
+          <button class="qr-color-swatch" data-qr-fg="#1e8a3e" onclick="setQRFg('#1e8a3e')" style="background:#1e8a3e;" title="Green"></button>
+          <label style="width:36px; height:36px; border-radius:50%; border:2px dashed var(--gray-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;" title="Custom color">
+            🎨<input type="color" id="qr_fg" value="#131249" oninput="setQRFg(this.value)" style="width:0;height:0;opacity:0;position:absolute;" />
+          </label>
         </div>
-        <div>
-          <label>Background</label>
-          <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-            <input type="color" id="qr_bg" value="#FFFFFF" oninput="qrLiveUpdate()" style="width:40px; height:36px; border:none; border-radius:8px; cursor:pointer; background:none;" />
-            <input type="text" id="qr_bg_hex" value="#FFFFFF" maxlength="7" oninput="syncColorFromHex('qr_bg','qr_bg_hex')" style="flex:1; padding:8px; border-radius:8px; border:1.5px solid var(--input-border); background:var(--input-bg); color:var(--text-on-surface); font-family:var(--font-main); font-size:13px;" />
-          </div>
+      </div>
+
+      <div class="form-group">
+        <label>Background Color</label>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <button class="qr-color-swatch active" data-qr-bg="#FFFFFF" onclick="setQRBg('#FFFFFF')" style="background:#FFFFFF; border:2px solid #ddd;" title="White"></button>
+          <button class="qr-color-swatch" data-qr-bg="#F5F5F7" onclick="setQRBg('#F5F5F7')" style="background:#F5F5F7; border:2px solid #ddd;" title="Light Grey"></button>
+          <button class="qr-color-swatch" data-qr-bg="#131249" onclick="setQRBg('#131249')" style="background:#131249;" title="Troopers Navy"></button>
+          <button class="qr-color-swatch" data-qr-bg="#F47F20" onclick="setQRBg('#F47F20')" style="background:#F47F20;" title="Troopers Orange"></button>
+          <button class="qr-color-swatch" data-qr-bg="#000000" onclick="setQRBg('#000000')" style="background:#000000;" title="Black"></button>
+          <label style="width:36px; height:36px; border-radius:50%; border:2px dashed var(--gray-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;" title="Custom color">
+            🎨<input type="color" id="qr_bg" value="#FFFFFF" oninput="setQRBg(this.value)" style="width:0;height:0;opacity:0;position:absolute;" />
+          </label>
         </div>
       </div>
 
@@ -3397,22 +3419,28 @@ function setQRSize(size) {
   qrLiveUpdate();
 }
 
-function syncColorFromHex(colorId, hexId) {
-  const hex = document.getElementById(hexId).value;
-  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-    document.getElementById(colorId).value = hex;
-    qrLiveUpdate();
-  }
+let qrFgColor = '#131249';
+let qrBgColor = '#FFFFFF';
+
+function setQRFg(color) {
+  qrFgColor = color;
+  document.getElementById('qr_fg').value = color;
+  document.querySelectorAll('[data-qr-fg]').forEach(b => b.classList.toggle('active', b.dataset.qrFg === color));
+  qrLiveUpdate();
+}
+
+function setQRBg(color) {
+  qrBgColor = color;
+  document.getElementById('qr_bg').value = color;
+  document.querySelectorAll('[data-qr-bg]').forEach(b => b.classList.toggle('active', b.dataset.qrBg === color));
+  qrLiveUpdate();
 }
 
 function qrLiveUpdate() {
   const url = document.getElementById('qr_url')?.value.trim();
-  const fg = document.getElementById('qr_fg')?.value || '#131249';
-  const bg = document.getElementById('qr_bg')?.value || '#FFFFFF';
+  const fg = qrFgColor;
+  const bg = qrBgColor;
   const useLogo = document.getElementById('qr_logo')?.checked;
-
-  document.getElementById('qr_fg_hex').value = fg;
-  document.getElementById('qr_bg_hex').value = bg;
 
   const container = document.getElementById('qr-preview');
   if (!url) {
@@ -3444,8 +3472,8 @@ function downloadQR() {
   const url = document.getElementById('qr_url')?.value.trim();
   if (!url) { showToast('Please enter a URL first.', 'error'); return; }
 
-  const fg = document.getElementById('qr_fg').value;
-  const bg = document.getElementById('qr_bg').value;
+  const fg = qrFgColor;
+  const bg = qrBgColor;
   const useLogo = document.getElementById('qr_logo').checked;
 
   const dlQr = new QRCodeStyling({
