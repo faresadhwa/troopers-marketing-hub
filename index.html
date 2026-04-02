@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet" />
   <link id="favicon-link" rel="icon" type="image/png" href="Troopers_Logo-05.png" />
   <style>
@@ -105,6 +106,29 @@
       to   { opacity: 1; width: 48px; }
     }
 
+    /* ===== BRAND ASSETS GALLERY ===== */
+    #brand-assets-page { display:none; max-width:1000px; margin:0 auto; padding:32px 24px; }
+    .ba-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+    .ba-filter-btn { padding:7px 16px; border-radius:20px; border:1.5px solid var(--input-border); background:var(--card); color:var(--text-on-surface); font-family:var(--font-main); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+    .ba-filter-btn:hover { border-color:var(--orange); color:var(--orange); }
+    .ba-filter-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+    .ba-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; }
+    .ba-card { background:var(--card); border-radius:12px; overflow:hidden; border:1.5px solid var(--input-border); transition:box-shadow 0.2s, transform 0.2s; cursor:pointer; }
+    .ba-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.12); transform:translateY(-2px); }
+    .ba-thumb { width:100%; aspect-ratio:1; object-fit:contain; background:var(--card-alt); padding:8px; display:block; }
+    .ba-pdf-thumb { width:100%; aspect-ratio:1; background:var(--card-alt); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+    .ba-card-info { padding:10px 10px 8px; }
+    .ba-card-name { font-size:11px; font-weight:600; color:var(--text-on-surface); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px; }
+    .ba-card-cat { font-size:10px; color:var(--text-muted-surface); margin-bottom:8px; }
+    .ba-dl-btn { width:100%; padding:6px; background:var(--navy); color:white; border:none; border-radius:7px; font-family:var(--font-main); font-size:11px; font-weight:600; cursor:pointer; transition:background 0.15s; }
+    .ba-dl-btn:hover { background:var(--orange); }
+    .ba-lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9000; display:none; align-items:center; justify-content:center; padding:20px; }
+    .ba-lightbox.open { display:flex; }
+    .ba-lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px; }
+    .ba-lightbox-close { position:absolute; top:20px; right:24px; background:none; border:none; color:white; font-size:28px; cursor:pointer; line-height:1; }
+    .ba-lightbox-dl { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); background:var(--orange); color:white; border:none; border-radius:10px; padding:10px 24px; font-family:var(--font-main); font-size:14px; font-weight:600; cursor:pointer; }
+    @media(max-width:768px) { .ba-grid { grid-template-columns:repeat(2,1fr); } }
+
     /* ===== QR COLOR SWATCHES ===== */
     .qr-color-swatch {
       width: 36px; height: 36px; border-radius: 50%;
@@ -116,7 +140,7 @@
     .qr-color-swatch.active { box-shadow: 0 0 0 3px var(--orange); transform: scale(1.1); }
 
     /* ===== PAGE TRANSITIONS ===== */
-    #home-page, #agent-page, #social-analytics-page, #brand-monitor-page, #visual-generator-page, #qr-generator-page {
+    #home-page, #agent-page, #social-analytics-page, #brand-monitor-page, #visual-generator-page, #qr-generator-page, #brand-assets-page {
       animation-duration: 0.35s;
       animation-fill-mode: both;
       animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -817,7 +841,7 @@
       #home-page { padding: 20px 14px; }
       .home-hero { margin-bottom: 24px; }
       #agent-page { padding: 20px 14px; }
-      #social-analytics-page, #brand-monitor-page, #visual-generator-page, #qr-generator-page { padding: 20px 14px; }
+      #social-analytics-page, #brand-monitor-page, #visual-generator-page, #qr-generator-page, #brand-assets-page { padding: 20px 14px; }
       .home-hero h1 { font-size: 22px; }
       .home-hero p { font-size: 13px; }
       .agents-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1256,6 +1280,13 @@
       <span class="agent-tag">AI IMAGES</span>
     </div>
 
+    <div class="agent-card" onclick="openBrandAssets()">
+      <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="white" stroke-width="2" stroke-linejoin="round"/><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="22.08" x2="12" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <h3>Brand Assets</h3>
+      <p>Download Troopers logos, social media layouts, certificates, CI colors, QR codes and brand guidelines.</p>
+      <span class="agent-tag">BRAND KIT</span>
+    </div>
+
     <div class="agent-card" onclick="openQRGenerator()">
       <div class="agent-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="2"/><rect x="5" y="5" width="3" height="3" fill="white"/><rect x="16" y="5" width="3" height="3" fill="white"/><rect x="5" y="16" width="3" height="3" fill="white"/><path d="M14 14h3v3h-3zM17 17h3v3h-3zM14 17h3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3>QR Generator</h3>
@@ -1470,6 +1501,43 @@
     </div>
   </div>
 
+</div>
+
+<!-- BRAND ASSETS PAGE -->
+<div id="brand-assets-page">
+
+  <button class="back-btn" onclick="goHome()">← <span data-i18n="back">Back to Hub</span></button>
+
+  <div class="agent-header">
+    <div class="agent-icon-lg">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="22.08" x2="12" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Brand Assets</h2>
+      <p>Preview and download Troopers brand materials — logos, layouts, certificates, and more.</p>
+    </div>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+    <div class="ba-filter-bar" style="margin-bottom:0;" id="ba-filters"></div>
+    <button onclick="downloadAllZip()" style="background:var(--navy); color:white; border:none; border-radius:10px; padding:10px 20px; font-family:var(--font-main); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;">
+      ⬇ Download All (ZIP)
+    </button>
+  </div>
+
+  <div class="ba-grid" id="ba-grid"></div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="ba-lightbox" id="ba-lightbox" onclick="closeLightbox(event)">
+  <button class="ba-lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="ba-lightbox-img" src="" alt="" />
+  <button class="ba-lightbox-dl" id="ba-lightbox-dl-btn" onclick="downloadAsset()">⬇ Download</button>
 </div>
 
 <!-- QR GENERATOR PAGE -->
@@ -2166,7 +2234,7 @@ function setLang(lang) {
   }
 }
 
-const ALL_PAGES = ['home-page', 'agent-page', 'social-analytics-page', 'brand-monitor-page', 'visual-generator-page', 'qr-generator-page'];
+const ALL_PAGES = ['home-page', 'agent-page', 'social-analytics-page', 'brand-monitor-page', 'visual-generator-page', 'qr-generator-page', 'brand-assets-page'];
 
 function hideAllPages() {
   ALL_PAGES.forEach(id => {
@@ -3723,6 +3791,182 @@ function downloadVisual() {
       URL.revokeObjectURL(url);
     })
     .catch(() => window.open(imgEl.src, '_blank'));
+}
+
+// ===== BRAND ASSETS =====
+const BRAND_ASSETS = [
+  // Logos
+  ...Array.from({length:15}, (_,i) => ({
+    name: `Troopers_Logo-${String(i+1).padStart(2,'0')}.png`,
+    path: `Brand Assets/TROOPERS Logo/Troopers_Logo-${String(i+1).padStart(2,'0')}.png`,
+    cat: 'logos', type: 'image'
+  })),
+  { name: 'BetterPlace - Black & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Black&White .png`, cat: 'logos', type: 'image' },
+  { name: 'BetterPlace - Blue & Orange.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Blue &Orange.png`, cat: 'logos', type: 'image' },
+  { name: 'BetterPlace - Orange & White.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company )-Orange&White.png`, cat: 'logos', type: 'image' },
+  { name: 'BetterPlace Logo.png', path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /PNG /Troopers ( A BetterPlace Company ).png`, cat: 'logos', type: 'image' },
+  ...Array.from({length:4}, (_,i) => ({
+    name: `BetterPlace-${String(i+1).padStart(2,'0')}.jpg`,
+    path: `Brand Assets/TROOPERS Logo/Troopers ( A BetterPlace Company ) /JPEG/Troopers ( A BetterPlace Company )-${String(i+1).padStart(2,'0')}.jpg`,
+    cat: 'logos', type: 'image'
+  })),
+  // Social Media Layouts
+  ...Array.from({length:24}, (_,i) => ({
+    name: `Social Media Layout-${String(i+1).padStart(2,'0')}.png`,
+    path: `Brand Assets/Social Media Layout/Social Media Layout-${String(i+1).padStart(2,'0')}.png`,
+    cat: 'social', type: 'image'
+  })),
+  { name: 'Social Media Layout.jpg', path: 'Brand Assets/Social Media Layout/Social Media Layout.jpg', cat: 'social', type: 'image' },
+  // Certificates
+  { name: 'Certificate TROOPERS-01.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-01.png', cat: 'certificate', type: 'image' },
+  { name: 'Certificate TROOPERS-02.png', path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS-02.png', cat: 'certificate', type: 'image' },
+  { name: 'Certificate TROOPERS.jpg',    path: 'Brand Assets/TROOPERS A4 Certificate/Certificate TROOPERS.jpg',    cat: 'certificate', type: 'image' },
+  { name: 'Certificate 1 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 1 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
+  { name: 'Certificate 2 TROOPERS.pdf',  path: 'Brand Assets/TROOPERS A4 Certificate/Certificate 2 TROOPERS.pdf',  cat: 'certificate', type: 'pdf' },
+  // CI Colors
+  { name: 'Color Code-14.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-14.png', cat: 'ci', type: 'image' },
+  { name: 'Color Code-19.png', path: 'Brand Assets/TROOPERS CI Color/Troopers_Color Code-19.png', cat: 'ci', type: 'image' },
+  // Web QR
+  { name: 'Web QR - MY.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- MY.png', cat: 'qr', type: 'image' },
+  { name: 'Web QR - SG.png', path: 'Brand Assets/TROOPERS Web QR_Folder/TROOPERS Web QR- SG.png', cat: 'qr', type: 'image' },
+  // Award Icons
+  { name: 'Award Icon-01.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-01.png', cat: 'award', type: 'image' },
+  { name: 'Award Icon-02.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-02.png', cat: 'award', type: 'image' },
+  { name: 'Award Icon-03.png', path: 'Brand Assets/Award Icon/Download Icon @ Troopers Award Icon _  Updated on 2024 _ 17cm x 5cm-03.png', cat: 'award', type: 'image' },
+  // App Download
+  ...Array.from({length:4}, (_,i) => ({
+    name: `Download App-${String(i+1).padStart(2,'0')}.png`,
+    path: `Brand Assets/Download TROOPERS App/Download Troopers App-${String(i+1).padStart(2,'0')}.png`,
+    cat: 'app', type: 'image'
+  })),
+  // Brand Guidelines
+  { name: 'Brand Guidelines Dec 2025.pdf', path: 'Brand Assets/TROOPERS _ Brand Guildeline @ Kits Dec 2025.pdf', cat: 'guidelines', type: 'pdf' },
+];
+
+const BA_CATEGORIES = [
+  { key: 'all',         label: 'All' },
+  { key: 'logos',       label: 'Logos' },
+  { key: 'social',      label: 'Social Media' },
+  { key: 'certificate', label: 'Certificates' },
+  { key: 'ci',          label: 'CI Colors' },
+  { key: 'qr',          label: 'Web QR' },
+  { key: 'award',       label: 'Award Icons' },
+  { key: 'app',         label: 'App Download' },
+  { key: 'guidelines',  label: 'Guidelines' },
+];
+
+let baCurrentFilter = 'all';
+let baLightboxIdx = -1;
+
+function encodeBaPath(path) {
+  return '/' + path.split('/').map(encodeURIComponent).join('/');
+}
+
+function openBrandAssets() {
+  baCurrentFilter = 'all';
+  transitionTo('brand-assets-page');
+  renderBaFilters();
+  renderBaGrid('all');
+}
+
+function renderBaFilters() {
+  const bar = document.getElementById('ba-filters');
+  bar.innerHTML = BA_CATEGORIES.map(c =>
+    `<button class="ba-filter-btn${c.key === baCurrentFilter ? ' active' : ''}" onclick="setBAFilter('${c.key}')">${c.label}</button>`
+  ).join('');
+}
+
+function setBAFilter(cat) {
+  baCurrentFilter = cat;
+  renderBaFilters();
+  renderBaGrid(cat);
+}
+
+function renderBaGrid(cat) {
+  const assets = cat === 'all' ? BRAND_ASSETS : BRAND_ASSETS.filter(a => a.cat === cat);
+  const grid = document.getElementById('ba-grid');
+  if (assets.length === 0) {
+    grid.innerHTML = '<p style="color:#666;grid-column:1/-1;">No assets in this category.</p>';
+    return;
+  }
+  grid.innerHTML = assets.map(a => {
+    const idx = BRAND_ASSETS.indexOf(a);
+    const thumb = a.type === 'pdf'
+      ? `<div class="ba-pdf-thumb">📄</div>`
+      : `<img class="ba-thumb" src="${encodeBaPath(a.path)}" alt="${a.name}" loading="lazy">`;
+    return `<div class="ba-card" onclick="openBaLightbox(${idx})">
+      ${thumb}
+      <div class="ba-card-info">
+        <span class="ba-card-name" title="${a.name}">${a.name}</span>
+        <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">⬇</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openBaLightbox(idx) {
+  const asset = BRAND_ASSETS[idx];
+  if (!asset) return;
+  if (asset.type === 'pdf') {
+    window.open(encodeBaPath(asset.path), '_blank');
+    return;
+  }
+  baLightboxIdx = idx;
+  const lb = document.getElementById('ba-lightbox');
+  document.getElementById('ba-lightbox-img').src = encodeBaPath(asset.path);
+  document.getElementById('ba-lightbox-dl-btn').textContent = '⬇ Download';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (e && e.target.id !== 'ba-lightbox') return;
+  document.getElementById('ba-lightbox').classList.remove('open');
+  document.getElementById('ba-lightbox-img').src = '';
+  document.body.style.overflow = '';
+  baLightboxIdx = -1;
+}
+
+function downloadAsset() {
+  if (baLightboxIdx < 0) return;
+  downloadSingleAsset(baLightboxIdx);
+}
+
+function downloadSingleAsset(idx) {
+  const asset = BRAND_ASSETS[idx];
+  if (!asset) return;
+  const a = document.createElement('a');
+  a.href = encodeBaPath(asset.path);
+  a.download = asset.name;
+  a.click();
+}
+
+async function downloadAllZip() {
+  const assets = baCurrentFilter === 'all' ? BRAND_ASSETS : BRAND_ASSETS.filter(a => a.cat === baCurrentFilter);
+  const label = BA_CATEGORIES.find(c => c.key === baCurrentFilter)?.label || 'All';
+  if (!window.JSZip) { showToast('JSZip not loaded. Please refresh and try again.', 'error'); return; }
+  showToast(`Building ZIP for "${label}" (${assets.length} files)…`, 'info');
+  try {
+    const zip = new JSZip();
+    await Promise.all(assets.map(async a => {
+      try {
+        const res = await fetch(encodeBaPath(a.path));
+        if (!res.ok) return;
+        const blob = await res.blob();
+        zip.file(a.name, blob);
+      } catch (_) {}
+    }));
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Troopers-Brand-Assets-${label}-${Date.now()}.zip`;
+    link.click();
+    URL.revokeObjectURL(url);
+    showToast('ZIP downloaded!', 'success');
+  } catch (err) {
+    showToast('ZIP failed: ' + err.message, 'error');
+  }
 }
 
 // ===== ENTER KEY SUPPORT =====
