@@ -33,6 +33,101 @@
       --input-border: #E0E0E0;
     }
 
+    [data-theme="dark"] {
+      --surface: #111827;
+      --card: #1f2937;
+      --card-alt: #243040;
+      --text-on-surface: #f1f5f9;
+      --text-muted-surface: #94a3b8;
+      --input-bg: #1f2937;
+      --input-border: #374151;
+      --gray-light: #1f2937;
+      --gray-mid: #374151;
+      --gray-text: #94a3b8;
+      --success: #4ade80;
+    }
+    [data-theme="dark"] .bm-prev-banner { background:#1a2a1a; }
+    [data-theme="dark"] .form-card,
+    [data-theme="dark"] .output-card,
+    [data-theme="dark"] .agent-card { background: var(--card); border-color: var(--input-border); }
+    [data-theme="dark"] input,
+    [data-theme="dark"] textarea,
+    [data-theme="dark"] select:not(.lang-select) { background: var(--input-bg) !important; color: var(--text-on-surface) !important; border-color: var(--input-border) !important; }
+    [data-theme="dark"] .sa-chart-card,
+    [data-theme="dark"] .sa-metric-card { background: var(--card-alt); }
+    [data-theme="dark"] .ba-lightbox img { background: var(--card); }
+    [data-theme="dark"] #ba-preview { background: var(--card); border-color: var(--input-border); }
+    [data-theme="dark"] .bm-modal { background: var(--card); }
+    [data-theme="dark"] .history-drawer { background: var(--card); }
+
+    /* ===== DARK TOGGLE BUTTON ===== */
+    .dark-toggle-btn {
+      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.8); width: 34px; height: 34px; border-radius: 50%;
+      font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .dark-toggle-btn:hover { background: rgba(244,127,32,0.2); border-color: var(--orange); }
+
+    /* ===== HISTORY DRAWER ===== */
+    .history-drawer {
+      position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
+      background: var(--card); z-index: 500; box-shadow: -4px 0 32px rgba(0,0,0,0.15);
+      transition: right 0.3s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column;
+    }
+    .history-drawer.open { right: 0; }
+    .history-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 499; display: none; }
+    .history-overlay.open { display: block; }
+    .history-drawer-head {
+      padding: 20px 24px 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--input-border); flex-shrink: 0;
+    }
+    .history-drawer-head h3 { font-size: 16px; font-weight: 700; color: var(--text-on-surface); }
+    .history-close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted-surface); line-height: 1; }
+    .history-list { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .history-item {
+      border: 1px solid var(--input-border); border-radius: 10px; padding: 14px 16px;
+      background: var(--card-alt);
+    }
+    .history-item-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
+    .history-item-agent { font-size: 12px; font-weight: 700; color: var(--orange); }
+    .history-item-date { font-size: 11px; color: var(--text-muted-surface); white-space: nowrap; }
+    .history-item-preview { font-size: 12px; color: var(--text-muted-surface); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+    .history-item-actions { display: flex; gap: 8px; }
+    .history-action-btn { padding: 5px 12px; border-radius: 7px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; }
+    .history-copy-btn { background: var(--navy); color: white; border: none; }
+    .history-copy-btn:hover { background: var(--orange); }
+    .history-del-btn { background: transparent; color: var(--text-muted-surface); border: 1px solid var(--input-border); }
+    .history-del-btn:hover { background: #fee2e2; color: #dc2626; border-color: #dc2626; }
+    .history-empty { text-align: center; color: var(--text-muted-surface); padding: 40px 20px; font-size: 13px; line-height: 1.8; }
+
+    /* ===== CHAR COUNTER ===== */
+    .char-counter {
+      display: none; margin-top: 12px; padding: 14px 16px;
+      background: var(--card-alt); border-radius: 10px; border: 1px solid var(--input-border);
+    }
+    .char-counter.visible { display: block; }
+    .char-counter-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted-surface); margin-bottom: 10px; }
+    .char-counter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .char-counter-row:last-child { margin-bottom: 0; }
+    .char-platform { font-size: 12px; font-weight: 600; color: var(--text-on-surface); width: 90px; flex-shrink: 0; }
+    .char-bar-wrap { flex: 1; height: 6px; background: var(--input-border); border-radius: 3px; overflow: hidden; }
+    .char-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .char-count { font-size: 12px; font-weight: 600; width: 80px; text-align: right; flex-shrink: 0; }
+    .char-ok { color: #16a34a; }
+    .char-warn { color: #d97706; }
+    .char-over { color: #dc2626; }
+
+    /* ===== BRAND ASSETS SEARCH ===== */
+    .ba-search-input {
+      width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid var(--input-border);
+      border-radius: 8px; font-family: var(--font-main); font-size: 13px; color: var(--text-on-surface);
+      background: var(--input-bg); outline: none; transition: border-color 0.15s;
+    }
+    .ba-search-input:focus { border-color: var(--orange); }
+    .ba-search-wrap { position: relative; margin-bottom: 16px; }
+    .ba-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted-surface); pointer-events: none; font-size: 14px; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ===== INTRO SCREEN ===== */
@@ -1211,6 +1306,11 @@
   <img src="Troopers_Logo-01.png" alt="TROOPERS Logo" class="logo" id="header-logo" />
   <div class="header-right">
     <span class="hub-title" data-i18n="hub_title">Marketing Hub</span>
+    <button class="dark-toggle-btn" id="darkToggleBtn" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+    <button onclick="openHistory()" style="background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);padding:5px 12px;border-radius:20px;font-family:var(--font-main);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+      Saved
+    </button>
     <select class="lang-select" onchange="setLang(this.value)">
       <option value="en">EN</option>
       <option value="bm">BM</option>
@@ -1219,6 +1319,16 @@
     </select>
   </div>
 </header>
+
+<!-- History Drawer -->
+<div class="history-overlay" id="historyOverlay" onclick="closeHistory()"></div>
+<div class="history-drawer" id="historyDrawer">
+  <div class="history-drawer-head">
+    <h3>Saved Outputs</h3>
+    <button class="history-close-btn" onclick="closeHistory()">✕</button>
+  </div>
+  <div class="history-list" id="historyList"></div>
+</div>
 
 <!-- HOME PAGE -->
 <div id="home-page">
@@ -1326,6 +1436,7 @@
       <h4 data-i18n="output_title">✅ Generated Output</h4>
       <div class="output-actions">
         <button class="copy-btn" onclick="copyOutput()" data-i18n="copy_btn">Copy All</button>
+        <button class="copy-btn" id="saveOutputBtn" onclick="saveOutput()" style="background:var(--orange);color:white;border-color:var(--orange);">💾 Save</button>
         <button class="export-pdf-btn" onclick="exportPDF('agent')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
           Export PDF
@@ -1338,6 +1449,31 @@
       </div>
     </div>
     <div class="output-content" id="outputContent"></div>
+  </div>
+
+  <!-- Character counter (copywriter only) -->
+  <div class="char-counter" id="charCounter">
+    <div class="char-counter-title">Character Count by Platform</div>
+    <div class="char-counter-row">
+      <span class="char-platform">Twitter / X</span>
+      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-tw" style="background:#1da1f2;"></div></div>
+      <span class="char-count" id="char-count-tw"></span>
+    </div>
+    <div class="char-counter-row">
+      <span class="char-platform">Instagram</span>
+      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-ig" style="background:#e1306c;"></div></div>
+      <span class="char-count" id="char-count-ig"></span>
+    </div>
+    <div class="char-counter-row">
+      <span class="char-platform">LinkedIn</span>
+      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-li" style="background:#0077b5;"></div></div>
+      <span class="char-count" id="char-count-li"></span>
+    </div>
+    <div class="char-counter-row">
+      <span class="char-platform">Facebook</span>
+      <div class="char-bar-wrap"><div class="char-bar" id="char-bar-fb" style="background:#1877f2;"></div></div>
+      <span class="char-count" id="char-count-fb"></span>
+    </div>
   </div>
 </div>
 
@@ -1525,6 +1661,11 @@
       <h2>Brand Assets</h2>
       <p>Preview and download Troopers brand materials — logos, layouts, certificates, and more.</p>
     </div>
+  </div>
+
+  <div class="ba-search-wrap">
+    <span class="ba-search-icon">🔍</span>
+    <input class="ba-search-input" id="baSearchInput" type="text" placeholder="Search assets…" oninput="filterBaSearch(this.value)">
   </div>
 
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
@@ -2448,6 +2589,7 @@ async function generate() {
     outputContent.classList.remove('streaming-cursor');
     lastOutputRaw = data.result || 'No response received.';
     outputContent.innerHTML = renderMarkdown(lastOutputRaw);
+    if (currentAgent === 'copywriter') updateCharCounter(lastOutputRaw);
   } catch (err) {
     outputContent.classList.remove('streaming-cursor');
     lastOutputRaw = '❌ Error: ' + err.message + '\n\nPlease check your API key or try again.';
@@ -2471,6 +2613,7 @@ function clearOutput() {
   document.getElementById('outputCard').classList.remove('visible');
   document.getElementById('outputContent').textContent = '';
   document.getElementById('generateBtn').querySelector('#btn-text').innerHTML = '✨ ' + (i18n[currentLang]?.generate_btn?.replace('✨ ','') || 'Generate');
+  document.getElementById('charCounter').classList.remove('visible');
 }
 
 // ===== SOCIAL ANALYTICS =====
@@ -3876,9 +4019,12 @@ function encodeBaPath(path) {
 
 function openBrandAssets() {
   baCurrentFilter = 'all';
+  baSearchQuery = '';
   transitionTo('brand-assets-page');
   renderBaFilters();
   renderBaGrid('all');
+  const inp = document.getElementById('baSearchInput');
+  if (inp) inp.value = '';
 }
 
 function renderBaFilters() {
@@ -4021,6 +4167,155 @@ async function downloadAllZip() {
     showToast('ZIP downloaded!', 'success');
   } catch (err) {
     showToast('ZIP failed: ' + err.message, 'error');
+  }
+}
+
+// ===== DARK MODE =====
+(function initDark() {
+  if (localStorage.getItem('troopers-dark') === '1') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    const btn = document.getElementById('darkToggleBtn');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+
+function toggleDark() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('troopers-dark', '0');
+    document.getElementById('darkToggleBtn').textContent = '🌙';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('troopers-dark', '1');
+    document.getElementById('darkToggleBtn').textContent = '☀️';
+  }
+}
+
+// ===== SAVED OUTPUTS =====
+function getSavedOutputs() {
+  try { return JSON.parse(localStorage.getItem('troopers-saved') || '[]'); } catch { return []; }
+}
+
+function saveOutput() {
+  if (!lastOutputRaw || !currentAgent) return;
+  const saved = getSavedOutputs();
+  const item = {
+    id: Date.now(),
+    agent: currentAgent,
+    title: agents[currentAgent]?.title?.en || currentAgent,
+    content: lastOutputRaw,
+    date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })
+  };
+  saved.unshift(item);
+  if (saved.length > 50) saved.pop();
+  localStorage.setItem('troopers-saved', JSON.stringify(saved));
+  const btn = document.getElementById('saveOutputBtn');
+  btn.textContent = '✅ Saved!';
+  setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+}
+
+function openHistory() {
+  document.getElementById('historyDrawer').classList.add('open');
+  document.getElementById('historyOverlay').classList.add('open');
+  renderHistoryList();
+}
+
+function closeHistory() {
+  document.getElementById('historyDrawer').classList.remove('open');
+  document.getElementById('historyOverlay').classList.remove('open');
+}
+
+function renderHistoryList() {
+  const list = document.getElementById('historyList');
+  const saved = getSavedOutputs();
+  if (!saved.length) {
+    list.innerHTML = '<div class="history-empty">No saved outputs yet.<br>Generate something and click 💾 Save.</div>';
+    return;
+  }
+  list.innerHTML = saved.map(item => `
+    <div class="history-item" id="hist-${item.id}">
+      <div class="history-item-head">
+        <span class="history-item-agent">${item.title}</span>
+        <span class="history-item-date">${item.date}</span>
+      </div>
+      <div class="history-item-preview">${item.content.replace(/</g,'&lt;')}</div>
+      <div class="history-item-actions">
+        <button class="history-action-btn history-copy-btn" onclick="copyHistoryItem(${item.id})">Copy</button>
+        <button class="history-action-btn history-del-btn" onclick="deleteHistoryItem(${item.id})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function copyHistoryItem(id) {
+  const item = getSavedOutputs().find(s => s.id === id);
+  if (!item) return;
+  navigator.clipboard.writeText(item.content).then(() => {
+    const btn = document.querySelector(`#hist-${id} .history-copy-btn`);
+    if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); }
+  });
+}
+
+function deleteHistoryItem(id) {
+  const saved = getSavedOutputs().filter(s => s.id !== id);
+  localStorage.setItem('troopers-saved', JSON.stringify(saved));
+  renderHistoryList();
+}
+
+// ===== CHARACTER COUNTER =====
+const CHAR_LIMITS = { tw: 280, ig: 2200, li: 3000, fb: 63206 };
+
+function updateCharCounter(text) {
+  const counter = document.getElementById('charCounter');
+  if (!text) { counter.classList.remove('visible'); return; }
+  counter.classList.add('visible');
+  const len = text.length;
+  [['tw', 280], ['ig', 2200], ['li', 3000], ['fb', 63206]].forEach(([id, limit]) => {
+    const pct = Math.min((len / limit) * 100, 100);
+    const bar = document.getElementById(`char-bar-${id}`);
+    const count = document.getElementById(`char-count-${id}`);
+    bar.style.width = pct + '%';
+    const cls = len <= limit * 0.8 ? 'char-ok' : len <= limit ? 'char-warn' : 'char-over';
+    count.className = 'char-count ' + cls;
+    count.textContent = `${len.toLocaleString()} / ${limit.toLocaleString()}`;
+  });
+}
+
+// ===== BRAND ASSETS SEARCH =====
+let baSearchQuery = '';
+
+function filterBaSearch(q) {
+  baSearchQuery = q.toLowerCase().trim();
+  const grid = document.getElementById('ba-grid');
+  const ext = name => name.split('.').pop().toUpperCase();
+  const cardHtml = a => {
+    const idx = BRAND_ASSETS.indexOf(a);
+    const src = encodeBaPath(a.path);
+    const thumb = a.type === 'pdf'
+      ? `<div class="ba-pdf-thumb">📄</div>`
+      : `<img class="ba-thumb" src="${src}" alt="${a.label}" loading="lazy" onmouseenter="showBaPreview(event,'${src}')" onmouseleave="hideBaPreview()">`;
+    return `<div class="ba-card" onclick="openBaLightbox(${idx})">
+      ${thumb}
+      <div class="ba-card-info">
+        <span class="ba-card-name">${a.label}</span>
+        <span class="ba-type-badge">${ext(a.name)}</span>
+        <button class="ba-dl-btn" onclick="event.stopPropagation();downloadSingleAsset(${idx})">↓ Download</button>
+      </div>
+    </div>`;
+  };
+
+  const baseAssets = baCurrentFilter === 'all' ? BRAND_ASSETS : BRAND_ASSETS.filter(a => a.cat === baCurrentFilter);
+  const assets = baSearchQuery ? baseAssets.filter(a => a.label.toLowerCase().includes(baSearchQuery)) : baseAssets;
+
+  if (!assets.length) {
+    grid.innerHTML = '<p style="color:var(--text-muted-surface);padding:20px;">No assets match your search.</p>';
+    return;
+  }
+
+  if (baSearchQuery) {
+    grid.innerHTML = assets.map(cardHtml).join('');
+  } else {
+    renderBaGrid(baCurrentFilter);
   }
 }
 
