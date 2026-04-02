@@ -3280,7 +3280,7 @@ async function generateVisual() {
   if (!brief) { showToast('Please enter an image brief.', 'error'); return; }
 
   const branding = document.getElementById('vg_branding').checked;
-  const ratioMap = { square: '1:1 square format', portrait: '4:5 portrait format', landscape: '16:9 landscape format' };
+  const ratioMap = { square: { w: 1024, h: 1024 }, portrait: { w: 864, h: 1080 }, landscape: { w: 1280, h: 720 } };
   const styleMap = {
     photorealistic: 'photorealistic, high quality photography style',
     illustrated: 'digital illustration, vibrant colors, modern flat design',
@@ -3288,52 +3288,51 @@ async function generateVisual() {
     bold: 'bold graphic design, high contrast, strong typography, vibrant colors'
   };
 
-  let prompt = `Create a ${styleMap[vgStyle]} marketing visual in ${ratioMap[vgRatio]}. Subject: ${brief}.`;
-  if (branding) prompt += ` For TROOPERS, a recruitment and staffing company in Singapore and Malaysia. Brand colors: navy blue (#131249) and orange (#F47F20). Professional yet approachable.`;
-  prompt += ` Optimised for social media. No watermarks. High quality.`;
+  let prompt = `${styleMap[vgStyle]} marketing visual. Subject: ${brief}.`;
+  if (branding) prompt += ` For TROOPERS, a recruitment and staffing company in Singapore and Malaysia. Brand colors: navy blue and orange. Professional yet approachable.`;
+  prompt += ` Social media post. No watermarks. High quality.`;
 
   const btn = document.getElementById('vgGenerateBtn');
   const btnText = document.getElementById('vg-btn-text');
   btn.disabled = true;
   btnText.textContent = '⏳ Generating...';
 
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
-    const data = await res.json();
+  const { w, h } = ratioMap[vgRatio];
+  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&seed=${Date.now()}`;
 
-    if (!res.ok || data.error) {
-      showToast(data.error || 'Image generation failed.', 'error');
-      return;
-    }
+  const imgEl = document.getElementById('vg-result-img');
 
-    vgCurrentImage = data.image;
-    vgCurrentMime = data.mimeType || 'image/png';
-
-    const imgEl = document.getElementById('vg-result-img');
-    imgEl.src = `data:${vgCurrentMime};base64,${vgCurrentImage}`;
+  imgEl.onload = () => {
     document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
     document.getElementById('vg-output').style.display = 'block';
     document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  } catch (err) {
-    showToast('Network error: ' + err.message, 'error');
-  } finally {
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
-  }
+  };
+
+  imgEl.onerror = () => {
+    showToast('Image generation failed. Please try again.', 'error');
+    btn.disabled = false;
+    btnText.textContent = '🎨 Generate Visual';
+  };
+
+  imgEl.src = imageUrl;
 }
 
 function downloadVisual() {
-  if (!vgCurrentImage) return;
-  const ext = vgCurrentMime.includes('png') ? 'png' : 'jpg';
-  const a = document.createElement('a');
-  a.href = `data:${vgCurrentMime};base64,${vgCurrentImage}`;
-  a.download = `troopers-visual-${Date.now()}.${ext}`;
-  a.click();
+  const imgEl = document.getElementById('vg-result-img');
+  if (!imgEl.src) return;
+  fetch(imgEl.src)
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `troopers-visual-${Date.now()}.jpg`;
+      a.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(() => window.open(imgEl.src, '_blank'));
 }
 
 // ===== ENTER KEY SUPPORT =====
