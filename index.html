@@ -1991,51 +1991,33 @@ Make it practical, specific to TROOPERS, and immediately usable by the team.`,
     icon: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M3 9h18M8 2v4M16 2v4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="14" r="1.2" fill="white"/><circle cx="12" cy="14" r="1.2" fill="white"/><circle cx="16" cy="14" r="1.2" fill="white"/><circle cx="8" cy="18" r="1.2" fill="white"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg>',
     title: { en: 'Content Calendar Planner', bm: 'Perancang Kalendar Kandungan', zh: '内容日历规划师', ta: 'உள்ளடக்க நாட்காட்டி திட்டமிடல்' },
     desc: { en: 'Get a structured content plan with topics, formats, and caption ideas', bm: 'Dapatkan pelan kandungan berstruktur dengan topik, format, dan idea kapsyen', zh: '获取包含主题、格式和标题创意的结构化内容计划', ta: 'தலைப்புகள், வடிவங்கள் மற்றும் கேப்ஷன் யோசனைகளுடன் உள்ளடக்கத் திட்டம் பெறுங்கள்' },
-    systemPrompt: `You are TROOPERS' content strategist and calendar planner. ${TROOPERS_CI}
+    systemPrompt: `You are TROOPERS' content strategist. ${TROOPERS_CI}
 
-Your job: Create a detailed, practical content calendar for the specified period.
+Create a concise, practical content calendar. Be brief — list posts efficiently.
 
-Output format — use this exact structure (NO markdown tables, NO | pipe characters):
+Output format (keep it tight):
 
 # CONTENT CALENDAR: [Period]
-**Focus Theme:** [Main theme]
-**Platforms:** [Selected platforms]
-**Total Posts:** [Number]
+Theme: [Theme] | Platforms: [Platforms] | Total: [N] posts
 
----
+## WEEK 1 — [Focus]
+**Mon** — [Platform] — [Type]: [Topic] | Hook: "[1 line]"
+**Tue** — [Platform] — [Type]: [Topic] | Hook: "[1 line]"
+**Wed** — [Platform] — [Type]: [Topic] | Hook: "[1 line]"
+[Continue for posting days only — skip non-posting days]
 
-## WEEK 1: [Theme/Focus]
-**Goal:** [Brief goal for the week]
+## WEEK 2 — [Focus]
+[Same format]
 
-**Day 1 (Mon) — [Platform]**
-- Content Type: [e.g. Static Post, Reel, Carousel, Stories]
-- Topic/Angle: [What the post is about]
-- Caption Hook: "[Opening line of caption]"
-- Hashtags: #tag1 #tag2 #tag3
+## KEY HASHTAGS
+[Platform]: #tag1 #tag2 #tag3
 
-**Day 2 (Tue) — [Platform]**
-- Content Type: ...
-- Topic/Angle: ...
-- Caption Hook: "..."
-- Hashtags: ...
+## 3 EXECUTION TIPS
+1. [Tip]
+2. [Tip]
+3. [Tip]
 
-[Continue for each posting day in the week]
-
-[Repeat ## WEEK section for each week]
-
----
-
-## CONTENT PILLARS BREAKDOWN
-- [Pillar 1]: X posts
-- [Pillar 2]: X posts
-
-## TIPS FOR THIS PERIOD
-1. [Tip 1]
-2. [Tip 2]
-3. [Tip 3]
-
-IMPORTANT: Never use markdown tables (| column | rows). Always use the bullet-point day format shown above.
-Make the calendar realistic for a team of 5, practical to execute, and varied in content types (reels, carousels, static posts, stories).`,
+RULES: No markdown tables. One line per post. Be concise.`,
 
     form: `
       <div class="form-group">
