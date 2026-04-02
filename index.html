@@ -3298,41 +3298,41 @@ async function generateVisual() {
   btnText.textContent = '⏳ Generating...';
 
   const { w, h } = ratioMap[vgRatio];
-  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&seed=${Date.now()}`;
 
-  const imgEl = document.getElementById('vg-result-img');
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, width: w, height: h })
+    });
+    const data = await res.json();
 
-  imgEl.onload = () => {
+    if (!res.ok || data.error) {
+      showToast(data.error || 'Image generation failed.', 'error');
+      return;
+    }
+
+    const imgEl = document.getElementById('vg-result-img');
+    imgEl.src = `data:${data.mimeType};base64,${data.image}`;
     document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
     document.getElementById('vg-output').style.display = 'block';
     document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    showToast('Network error: ' + err.message, 'error');
+  } finally {
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
-  };
-
-  imgEl.onerror = () => {
-    showToast('Image generation failed. Please try again.', 'error');
-    btn.disabled = false;
-    btnText.textContent = '🎨 Generate Visual';
-  };
-
-  imgEl.src = imageUrl;
+  }
 }
 
 function downloadVisual() {
   const imgEl = document.getElementById('vg-result-img');
   if (!imgEl.src) return;
-  fetch(imgEl.src)
-    .then(r => r.blob())
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `troopers-visual-${Date.now()}.jpg`;
-      a.click();
-      URL.revokeObjectURL(url);
-    })
-    .catch(() => window.open(imgEl.src, '_blank'));
+  const a = document.createElement('a');
+  a.href = imgEl.src;
+  a.download = `troopers-visual-${Date.now()}.jpg`;
+  a.click();
 }
 
 // ===== ENTER KEY SUPPORT =====
