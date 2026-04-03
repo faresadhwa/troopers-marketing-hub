@@ -11,19 +11,26 @@ module.exports = async function handler(req, res) {
 
   try {
     const encodedPrompt = encodeURIComponent(prompt.trim());
-    const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&enhance=true`;
+    const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&model=flux-schnell&seed=${Date.now()}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://image.pollinations.ai/' }
+    });
 
     if (!response.ok) {
       return res.status(response.status).json({ error: `Image generation failed: ${response.status}` });
     }
 
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    if (!contentType.startsWith('image/')) {
+      const text = await response.text();
+      return res.status(500).json({ error: `Unexpected response: ${text.slice(0, 200)}` });
+    }
+
     const buffer = await response.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
-    const mimeType = response.headers.get('content-type') || 'image/jpeg';
 
-    return res.status(200).json({ image: base64, mimeType });
+    return res.status(200).json({ image: base64, mimeType: contentType });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });

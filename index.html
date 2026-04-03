@@ -3881,37 +3881,32 @@ async function generateVisual() {
 
   const { w, h } = ratioMap[vgRatio];
 
-  const imgEl = document.getElementById('vg-result-img');
-  const seed = Date.now();
-  const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&model=flux-schnell&seed=${seed}`;
-  console.log('[VG] Requesting image from:', imgUrl);
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, width: w, height: h })
+    });
+    const data = await res.json();
 
-  const timeout = setTimeout(() => {
-    imgEl.onload = null;
-    imgEl.onerror = null;
-    showToast('Generation timed out. Please try again.', 'error');
-    btn.disabled = false;
-    btnText.textContent = '🎨 Generate Visual';
-  }, 60000);
+    if (!res.ok || data.error) {
+      showToast(data.error || 'Image generation failed.', 'error');
+      btn.disabled = false;
+      btnText.textContent = '🎨 Generate Visual';
+      return;
+    }
 
-  imgEl.onload = function() {
-    clearTimeout(timeout);
+    const imgEl = document.getElementById('vg-result-img');
+    imgEl.src = `data:${data.mimeType};base64,${data.image}`;
     document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
     document.getElementById('vg-output').style.display = 'block';
     document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    showToast('Network error: ' + err.message, 'error');
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
-  };
-
-  imgEl.onerror = function(e) {
-    clearTimeout(timeout);
-    console.error('[VG] Image load failed. URL was:', imgUrl, 'Error:', e);
-    showToast('Image generation failed. Please try again.', 'error');
-    btn.disabled = false;
-    btnText.textContent = '🎨 Generate Visual';
-  };
-
-  imgEl.src = imgUrl;
+  }
 }
 
 function downloadVisual() {
