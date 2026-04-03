@@ -6,27 +6,31 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { prompt, width = 1024, height = 1024 } = req.body;
+  const { prompt } = req.body;
   if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Missing prompt' });
 
-  try {
-    const encodedPrompt = encodeURIComponent(prompt.trim());
-    const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&model=flux-schnell&seed=${Date.now()}`;
+  const hfToken = process.env.HF_TOKEN;
+  if (!hfToken) return res.status(500).json({ error: 'HF_TOKEN not configured on server' });
 
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://image.pollinations.ai/' }
-    });
+  try {
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${hfToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ inputs: prompt.trim() })
+      }
+    );
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: `Image generation failed: ${response.status}` });
+      const errText = await response.text();
+      return res.status(response.status).json({ error: `Image service error: ${response.status}. ${errText}` });
     }
 
     const contentType = response.headers.get('content-type') || 'image/jpeg';
-    if (!contentType.startsWith('image/')) {
-      const text = await response.text();
-      return res.status(500).json({ error: `Unexpected response: ${text.slice(0, 200)}` });
-    }
-
     const buffer = await response.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
 
