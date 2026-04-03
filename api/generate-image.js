@@ -14,13 +14,13 @@ module.exports = async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt.trim() }] }],
-          generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+          instances: [{ prompt: prompt.trim() }],
+          parameters: { sampleCount: 1 }
         })
       }
     );
@@ -31,16 +31,15 @@ module.exports = async function handler(req, res) {
     }
 
     const data = await response.json();
-    const parts = data.candidates?.[0]?.content?.parts || [];
-    const imagePart = parts.find(p => p.inlineData);
+    const prediction = data.predictions?.[0];
 
-    if (!imagePart) {
+    if (!prediction?.bytesBase64Encoded) {
       return res.status(500).json({ error: 'No image returned from Gemini. Try a different prompt.' });
     }
 
     return res.status(200).json({
-      image: imagePart.inlineData.data,
-      mimeType: imagePart.inlineData.mimeType
+      image: prediction.bytesBase64Encoded,
+      mimeType: prediction.mimeType || 'image/png'
     });
 
   } catch (err) {
