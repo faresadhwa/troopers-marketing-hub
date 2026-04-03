@@ -3882,9 +3882,19 @@ async function generateVisual() {
   const { w, h } = ratioMap[vgRatio];
 
   const imgEl = document.getElementById('vg-result-img');
-  const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Date.now()}`;
+  const seed = Date.now();
+  const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&model=flux-schnell&seed=${seed}`;
+
+  const timeout = setTimeout(() => {
+    imgEl.onload = null;
+    imgEl.onerror = null;
+    showToast('Generation timed out. Please try again.', 'error');
+    btn.disabled = false;
+    btnText.textContent = '🎨 Generate Visual';
+  }, 60000);
 
   imgEl.onload = function() {
+    clearTimeout(timeout);
     document.getElementById('vg-prompt-used').textContent = `Prompt used: ${prompt}`;
     document.getElementById('vg-output').style.display = 'block';
     document.getElementById('vg-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3893,6 +3903,7 @@ async function generateVisual() {
   };
 
   imgEl.onerror = function() {
+    clearTimeout(timeout);
     showToast('Image generation failed. Please try again.', 'error');
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
