@@ -3884,6 +3884,7 @@ async function generateVisual() {
   const imgEl = document.getElementById('vg-result-img');
   const seed = Date.now();
   const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&model=flux-schnell&seed=${seed}`;
+  console.log('[VG] Requesting image from:', imgUrl);
 
   const timeout = setTimeout(() => {
     imgEl.onload = null;
@@ -3902,8 +3903,9 @@ async function generateVisual() {
     btnText.textContent = '🎨 Generate Visual';
   };
 
-  imgEl.onerror = function() {
+  imgEl.onerror = function(e) {
     clearTimeout(timeout);
+    console.error('[VG] Image load failed. URL was:', imgUrl, 'Error:', e);
     showToast('Image generation failed. Please try again.', 'error');
     btn.disabled = false;
     btnText.textContent = '🎨 Generate Visual';
