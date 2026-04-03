@@ -6,38 +6,42 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { prompt, width = 1024, height = 1024 } = req.body;
+  const { prompt } = req.body;
   if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Missing prompt' });
 
-  const hfToken = process.env.HF_TOKEN;
-  if (!hfToken) return res.status(500).json({ error: 'HF_TOKEN not configured on server' });
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY not configured on server' });
 
   try {
     const response = await fetch(
-      'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-dev',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${apiKey}`,
       {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${hfToken}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inputs: prompt.trim(),
-          parameters: { width, height }
+          contents: [{ parts: [{ text: prompt.trim() }] }],
+          generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
         })
       }
     );
 
     if (!response.ok) {
       const errText = await response.text();
-      return res.status(response.status).json({ error: `Image service error: ${response.status}. ${errText}` });
+      return res.status(response.status).json({ error: `Gemini error: ${response.status}. ${errText}` });
     }
 
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
-    const buffer = await response.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString('base64');
+    const data = await response.json();
+    const parts = data.candidates?.[0]?.content?.parts || [];
+    const imagePart = parts.find(p => p.inlineData);
 
-    return res.status(200).json({ image: base64, mimeType: contentType });
+    if (!imagePart) {
+      return res.status(500).json({ error: 'No image returned from Gemini. Try a different prompt.' });
+    }
+
+    return res.status(200).json({
+      image: imagePart.inlineData.data,
+      mimeType: imagePart.inlineData.mimeType
+    });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
